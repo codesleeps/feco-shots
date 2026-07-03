@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Navbar() {
+export default function Navbar({ cartCount, onCartClick }) {
   return (
     <nav className="navbar navbar-expand-lg fixed-top navbar">
       <div className="container-fluid">
@@ -44,7 +44,26 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
+        
         <div className="d-flex align-items-center">
+          {/* Header Cart Button */}
+          <button 
+            onClick={onCartClick} 
+            className="btn btn-link text-warning me-3 position-relative" 
+            style={{ padding: '8px' }}
+            aria-label="Toggle Cart View"
+          >
+            <i className="fas fa-shopping-cart fa-lg"></i>
+            {cartCount > 0 && (
+              <span 
+                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                style={{ fontSize: '10px' }}
+              >
+                {cartCount}
+              </span>
+            )}
+          </button>
+
           <div className="dropdown">
             <a
               className="dropdown-toggle d-flex align-items-center hidden-arrow"

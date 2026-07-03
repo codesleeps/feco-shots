@@ -6,9 +6,12 @@ import ProductSection from './components/ProductSection';
 import ProductCard from './components/ProductCard';
 import Footer from './components/Footer';
 import FeedbackModal from './components/FeedbackModal';
+import CartDrawer from './components/CartDrawer';
 
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,12 +29,71 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Product Data
+  // Add Item to Checkout Cart
+  const handleAddToCart = (productName, defaultImgSrc, flavor, quantitySelect, basePrice, priceCalculator, imageMap) => {
+    const itemPrice = priceCalculator ? priceCalculator(quantitySelect) : basePrice;
+    
+    // Resolve dynamic image based on flavor selection map
+    const itemImgSrc = (imageMap && imageMap[flavor]) || defaultImgSrc;
+    
+    // Dynamic ID key based on properties
+    const itemId = `${productName}-${flavor}-${quantitySelect}`;
+
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((i) => i.id === itemId);
+      if (existingItem) {
+        return prevCart.map((i) => 
+          i.id === itemId ? { ...i, count: i.count + 1 } : i
+        );
+      } else {
+        return [
+          ...prevCart,
+          {
+            id: itemId,
+            name: productName,
+            imgSrc: itemImgSrc,
+            flavor,
+            quantitySelect,
+            price: itemPrice,
+            count: 1
+          }
+        ];
+      }
+    });
+
+    setIsCartOpen(true);
+  };
+
+  const updateQty = (id, change) => {
+    setCart((prevCart) => 
+      prevCart.map((item) => {
+        if (item.id === id) {
+          const newQty = item.count + change;
+          return newQty > 0 ? { ...item, count: newQty } : item;
+        }
+        return item;
+      })
+    );
+  };
+
+  const removeItem = (id) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const getCartCount = () => {
+    return cart.reduce((sum, item) => sum + item.count, 0);
+  };
+
+  // Product Lists
   const smokelessFlavors = [
-    { value: 'pineapple', label: 'Pineapple' },
-    { value: 'mango', label: 'Mango' },
-    { value: 'apple', label: 'Apple' },
-    { value: 'orange', label: 'Orange' }
+    { value: 'Pineapple', label: 'Pineapple' },
+    { value: 'Mango', label: 'Mango' },
+    { value: 'Apple', label: 'Apple' },
+    { value: 'Orange', label: 'Orange' }
   ];
 
   const smokelessQuantities = [
@@ -42,14 +104,26 @@ export default function App() {
     { value: '500mg', label: '500mg' }
   ];
 
+  const calculateSmokelessPrice = (strength) => {
+    switch (strength) {
+      case '200mg': return 14.99;
+      case '300mg': return 19.99;
+      case '400mg': return 24.99;
+      case '500mg': return 29.99;
+      case '100mg':
+      default:
+        return 9.99;
+    }
+  };
+
   const shotsFlavors = [
-    { value: 'fruit_punch', label: 'Fruit Punch' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'kola_champagne', label: 'Kola Champagne' },
-    { value: 'grape', label: 'Grape' },
-    { value: 'pineapple', label: 'Pineapple' },
-    { value: 'mango', label: 'Mango' },
-    { value: 's_g', label: 'S&G' }
+    { value: 'Fruit Punch', label: 'Fruit Punch' },
+    { value: 'Strawberry', label: 'Strawberry' },
+    { value: 'Kola Champagne', label: 'Kola Champagne' },
+    { value: 'Grape', label: 'Grape' },
+    { value: 'Pineapple', label: 'Pineapple' },
+    { value: 'Mango', label: 'Mango' },
+    { value: 'S&G', label: 'S&G' }
   ];
 
   const genericQuantities = Array.from({ length: 7 }, (_, i) => ({
@@ -58,18 +132,52 @@ export default function App() {
   }));
 
   const chocolateFlavors = [
-    { value: 'dry_roasted', label: 'Dry roasted' },
-    { value: 'fruit_and_nut', label: 'Fruit & Nut' },
-    { value: 'rum_and_raisin', label: 'Rum & Raisin' },
-    { value: 'cashews', label: 'Cashews' }
+    { value: 'Dry roasted', label: 'Dry roasted' },
+    { value: 'Fruit & Nut', label: 'Fruit & Nut' },
+    { value: 'Rum & Raisin', label: 'Rum & Raisin' },
+    { value: 'Cashews', label: 'Cashews' }
   ];
+
+  // Image Mapping Sets (Map option value to local image file path)
+  const smokelessImages = {
+    Pineapple: '/app/img/smokeless/pineappleSmokeless-transformed.webp',
+    Mango: '/app/img/smokeless/mango.png',
+    Apple: '/app/img/smokeless/apple.png',
+    Orange: '/app/img/smokeless/orange.png'
+  };
+
+  const shotsImages = {
+    'Fruit Punch': '/app/img/shots/feco_shots.png',
+    Strawberry: '/app/img/shots/strawberry.png',
+    'Kola Champagne': '/app/img/shots/kola_champagne.png',
+    Grape: '/app/img/shots/grape.png',
+    Pineapple: '/app/img/shots/pineapple.png',
+    Mango: '/app/img/shots/mango.png',
+    'S&G': '/app/img/shots/s_g.png'
+  };
+
+  const contenderImages = {
+    Mango: '/app/img/contender/CONTENDER_MANGO400x280.webp',
+    'Kola Champagne': '/app/img/contender/kola_champagne.png',
+    Strawberry: '/app/img/contender/strawberry.png',
+    'Fruit Punch': '/app/img/contender/fruit_punch.png',
+    Grape: '/app/img/contender/grape.png',
+    Pineapple: '/app/img/contender/pineapple.png',
+    'S&G': '/app/img/contender/s_g.png'
+  };
+
+  const chocolateImages = {
+    'Dry roasted': '/app/img/chocolates/VODKA & CRANBERRIES 500MG.webp',
+    'Fruit & Nut': '/app/img/chocolates/fruit_and_nut.png',
+    'Rum & Raisin': '/app/img/chocolates/rum_and_raisin.png',
+    Cashews: '/app/img/chocolates/cashews.png'
+  };
 
   return (
     <div className="bg-black text-light min-vh-100">
-      <Navbar />
+      <Navbar cartCount={getCartCount()} onCartClick={() => setIsCartOpen(true)} />
       <Hero />
 
-      {/* Contact supplier header bar */}
       <section className="news-input p-4">
         <div className="container">
           <div className="d-md-flex justify-content-between align-items-center">
@@ -80,7 +188,7 @@ export default function App() {
 
       <About />
 
-      {/* Smokeless Selection */}
+      {/* Smokeless Section */}
       <ProductSection
         id="smokeless"
         title="Smokeless Selection"
@@ -102,10 +210,14 @@ export default function App() {
           quantities={smokelessQuantities}
           borderColorClass="border-warning"
           buttonId="feedbackButtonSmokeless"
+          imageMap={smokelessImages}
+          onAddToCart={(flavor, qty) => 
+            handleAddToCart('Smokeless Juice', '/app/img/smokeless/pineappleSmokeless-transformed.webp', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
+          }
         />
       </ProductSection>
 
-      {/* Shots Selection */}
+      {/* Shots Section */}
       <ProductSection
         id="shots"
         title="Shots Selection"
@@ -127,10 +239,14 @@ export default function App() {
           quantities={genericQuantities}
           borderColorClass="border-warning"
           buttonId="feedbackButtonShots"
+          imageMap={shotsImages}
+          onAddToCart={(flavor, qty) => 
+            handleAddToCart('Feco Shot', '/app/img/shots/feco_shots.png', flavor, qty, 19.99, null, shotsImages)
+          }
         />
       </ProductSection>
 
-      {/* Cocktails Selection */}
+      {/* Cocktails Section */}
       <ProductSection
         id="cocktails"
         title="Cocktails Selection"
@@ -149,14 +265,18 @@ export default function App() {
         <ProductCard
           imgSrc="/app/img/contender/CONTENDER_MANGO400x280.webp"
           imgAlt="CBD cocktails"
-          flavors={shotsFlavors} // Cocktails uses the same flavor list in original HTML
+          flavors={shotsFlavors}
           quantities={genericQuantities}
           borderColorClass="border-success"
           buttonId="feedbackButtonCocktails"
+          imageMap={contenderImages}
+          onAddToCart={(flavor, qty) => 
+            handleAddToCart('Contender Cocktail', '/app/img/contender/CONTENDER_MANGO400x280.webp', flavor, qty, 24.99, null, contenderImages)
+          }
         />
       </ProductSection>
 
-      {/* Chocolate Selection */}
+      {/* Chocolate Section */}
       <ProductSection
         id="chocolates"
         title="Chocolate Selection"
@@ -178,6 +298,10 @@ export default function App() {
           quantities={genericQuantities}
           borderColorClass="border-warning"
           buttonId="feedbackButtonChocolate"
+          imageMap={chocolateImages}
+          onAddToCart={(flavor, qty) => 
+            handleAddToCart('Infused Chocolate Bar', '/app/img/chocolates/VODKA & CRANBERRIES 500MG.webp', flavor, qty, 14.99, null, chocolateImages)
+          }
         />
       </ProductSection>
 
@@ -189,7 +313,6 @@ export default function App() {
           data-mdb-ride="carousel"
           style={{ maxWidth: '800px' }}
         >
-          {/* Indicators */}
           <div className="carousel-indicators">
             <button
               data-mdb-target="#carouselDarkVariant"
@@ -210,9 +333,7 @@ export default function App() {
             ></button>
           </div>
 
-          {/* Inner */}
           <div className="carousel-inner">
-            {/* Slide 1 */}
             <div className="carousel-item active">
               <img
                 src="/app/img/carousel/cannabisPlant.webp"
@@ -222,7 +343,6 @@ export default function App() {
                 style={{ height: '450px', objectFit: 'cover' }}
               />
             </div>
-            {/* Slide 2 */}
             <div className="carousel-item">
               <img
                 src="/app/img/about/chocolate_about_500x391.webp"
@@ -232,7 +352,6 @@ export default function App() {
                 style={{ height: '450px', objectFit: 'cover' }}
               />
             </div>
-            {/* Slide 3 */}
             <div className="carousel-item">
               <img
                 src="/app/img/carousel/tincturePipe.webp"
@@ -247,6 +366,18 @@ export default function App() {
       </section>
 
       <Footer />
+
+      {/* Floating Cart Button */}
+      <button 
+        className="floating-cart-btn" 
+        onClick={() => setIsCartOpen(true)}
+        aria-label="Open Shopping Cart"
+      >
+        <i className="fas fa-shopping-cart fa-lg"></i>
+        {getCartCount() > 0 && (
+          <span className="floating-cart-badge">{getCartCount()}</span>
+        )}
+      </button>
 
       {/* Scroll to Top Button */}
       {showScrollBtn && (
@@ -276,7 +407,16 @@ export default function App() {
         </button>
       )}
 
-      {/* MDB modal handles state internally via triggers */}
+      {/* Checkout Cart Drawer Component */}
+      <CartDrawer 
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cart={cart}
+        updateQty={updateQty}
+        removeItem={removeItem}
+        clearCart={clearCart}
+      />
+
       <FeedbackModal />
     </div>
   );

@@ -26,7 +26,7 @@
   <!-- title  -->
   <title>CLUB FECO</title>
   <!-- favicon -->
-  <link rel="icon" href="/app/img/logo/leaf.png" type="image/x-icon" width="50" height="45" />
+  <link rel="icon" href="./app/img/logo/leaf.png" type="image/x-icon" width="50" height="45" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <!-- Google Fonts Roboto -->
@@ -36,12 +36,18 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
   <!-- MDB -->
-  <link rel="stylesheet" href="/app/css/mdb.min.css" media="all" />
-  <link rel="stylesheet" href="/app/css/main.css" media="all" />
+  <link rel="stylesheet" href="./app/css/mdb.min.css" media="all" />
+  <link rel="stylesheet" href="./app/css/main.css" media="all" />
   <!-- web manifest  -->
-  <link rel="manifest" href="/manifest.json" >
+  <link rel="manifest" href="./manifest.json" >
   <!-- canonical  -->
   <link rel="canonical" href="https://codesleeps.github.io/club_feco/" >
+
+  <!-- Load React, ReactDOM and Babel Standalone for direct local browser preview -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <!-- Registering service worker  -->
   <script> 
     if ('serviceWorker' in navigator) {
@@ -50,14 +56,1360 @@
       });
     }
   </script>
+
+  <!-- Premium glassmorphic styling for checkout cart -->
+  <style>
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 420px;
+      height: 100vh;
+      background: rgba(10, 11, 13, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 3px solid #ffb338;
+      z-index: 1050;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-drawer.open {
+      right: 0;
+    }
+    @media (max-width: 450px) {
+      .cart-drawer {
+        width: 100%;
+        right: -100%;
+        border-left: none;
+      }
+    }
+    .cart-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 1040;
+    }
+    .cart-item-row {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background 0.3s;
+    }
+    .cart-item-row:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .floating-cart-btn {
+      position: fixed;
+      bottom: 90px;
+      right: 30px;
+      z-index: 99;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid #ffb338;
+      background: rgba(5, 6, 7, 0.9);
+      color: #ffb338;
+      box-shadow: 0 4px 15px rgba(255, 179, 56, 0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .floating-cart-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 179, 56, 0.5);
+    }
+    .floating-cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #dc3545;
+      color: white;
+      border-radius: 50%;
+      padding: 3px 7px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .btn-qty {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .btn-qty:hover {
+      background: #ffb338;
+      color: black;
+    }
+    .input-glass {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: white !important;
+      border-radius: 6px !important;
+    }
+    .input-glass:focus {
+      border-color: #ffb338 !important;
+      box-shadow: 0 0 0 0.25rem rgba(255, 179, 56, 0.25) !important;
+    }
+  </style>
 </head>
 
 <body>
   <div id="root"></div>
-  
-  <script type="module" src="/src/main.jsx"></script>
-  <!-- MDB JavaScript CDN (Optional, we can import things or use bootstrap utilities) -->
-  <script src="/app/js/mdb.min.js" type="text/javascript"></script>
+
+  <!-- React Code using Babel Standalone -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function Navbar({ cartCount, onCartClick }) {
+      return (
+        <nav className="navbar navbar-expand-lg fixed-top navbar">
+          <div className="container-fluid">
+            <button
+              className="navbar-toggler text-white"
+              type="button"
+              data-mdb-toggle="collapse"
+              data-mdb-target="#navbarExample01"
+              aria-controls="navbarExample01"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <i className="fas fa-bars text-warning"></i>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarExample01">
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                  <a className="nav-link text-warning" href="#about" aria-label="About Club Feco">
+                    About
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link text-warning" href="#smokeless" aria-label="Read more about our Smokeless Range">
+                    Smokeless
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link text-warning" href="#shots" aria-label="Read more about our CBD shots">
+                    Shots
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our CBD cocktails">
+                    Cocktails
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link text-warning" href="#chocolates" aria-label="Read more about our CBD chocolates">
+                    Chocolates
+                  </a>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="d-flex align-items-center">
+              {/* Header Cart Button */}
+              <button 
+                onClick={onCartClick} 
+                className="btn btn-link text-warning me-3 position-relative" 
+                style={{ padding: '8px' }}
+                aria-label="Toggle Cart View"
+              >
+                <i className="fas fa-shopping-cart fa-lg"></i>
+                {cartCount > 0 && (
+                  <span 
+                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style={{ fontSize: '10px' }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+              
+              <div className="dropdown">
+                <a
+                  className="dropdown-toggle d-flex align-items-center hidden-arrow"
+                  href="#about"
+                  id="navbarDropdownMenuAvatar"
+                  role="button"
+                  data-mdb-toggle="dropdown"
+                  aria-expanded="false"
+                  aria-label="Club Feco Logo"
+                >
+                  <img
+                    src="./app/img/logo/logo113x113.png"
+                    className="rounded-circle"
+                    width="75"
+                    height="75"
+                    alt="Brand Logo gold lion head with crown"
+                    loading="lazy"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      );
+    }
+
+    function Hero() {
+      return (
+        <section className="hero">
+          <div
+            className="p-5 text-center bg-image"
+            style={{
+              backgroundImage: "url('./app/img/logo/hero2_501x301.webp')",
+              height: '500px',
+            }}
+          >
+            <div className="mask" style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+              <div className="d-flex justify-content-center align-items-center h-100">
+                <div className="text-white">
+                  <div className="wrapper mb-5">
+                    <div className="bg">Club Feco</div>
+                    <div className="fg">Club Feco</div>
+                  </div>
+
+                  <a
+                    href="https://www.bccannabisstores.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="animated-button1 mt-5"
+                  >
+                    <h1>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      welcome
+                    </h1>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function About() {
+      return (
+        <section id="about" className="about bg-black text-light p-3 fs-3">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4">
+                <img
+                  src="./app/img/about/about_club_500x334.webp"
+                  width="500"
+                  height="334"
+                  loading="lazy"
+                  className="img-fluid mt-5 rounded rounded-3"
+                  alt="Cannabis indoor farm"
+                />
+              </div>
+              <div className="col-lg-8 pt-4 pt-lg-0">
+                <a
+                  href="https://codesleeps.github.io/solid-octo-enigma/"
+                  aria-label="Enter This Cannabis Quiz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <h2 className="text-success mb-3 display-2 fw-normal">About Us</h2>
+                </a>
+                <p className="mt-3">
+                  At <em>Club Feco</em>, we're dedicated to bringing you the finest Canna products that promote
+                  wellness and relaxation. Explore our <em>diverse range</em> of CBD products, including CBD-infused
+                  drinks, shots, cocktails, and chocolates, designed to cater to your unique preferences and needs.
+                  CBD is typically extracted from hemp, a variety of cannabis with low levels of THC. 😁
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function ProductCard({
+      imgSrc,
+      imgAlt,
+      flavors,
+      quantities,
+      borderColorClass = 'border-warning',
+      buttonId,
+      ratingText = '⭐⭐⭐⭐⭐',
+      onAddToCart,
+      imageMap
+    }) {
+      const [selectedFlavor, setSelectedFlavor] = useState(flavors[0]?.value || '');
+      const [selectedQuantity, setSelectedQuantity] = useState(quantities[0]?.value || '');
+
+      const handleOrderSubmit = () => {
+        onAddToCart(selectedFlavor, selectedQuantity);
+      };
+
+      // Resolve current image dynamically based on selected flavor mapping
+      const currentImgSrc = (imageMap && imageMap[selectedFlavor]) || imgSrc;
+
+      return (
+        <div className="col">
+          <div className={`card h-100 border border-3 ${borderColorClass}`}>
+            <img
+              src={currentImgSrc}
+              className="card-img-top"
+              alt={imgAlt}
+              loading="lazy"
+              style={{ objectFit: 'cover', height: '225px' }}
+            />
+            <div className="card-body px-2">
+              <div className="card-text text-light">
+                <a
+                  href="#exampleModal"
+                  type="button"
+                  data-mdb-toggle="modal"
+                  data-mdb-target="#exampleModal"
+                  aria-label="Submit Feedback"
+                  className="text-decoration-none"
+                >
+                  {ratingText}
+                </a>
+                <br />
+                <em className="fs-3">Selection</em>
+
+                {/* Flavor Select */}
+                <div className="product-size-container mt-2">
+                  <select
+                    value={selectedFlavor}
+                    onChange={(e) => setSelectedFlavor(e.target.value)}
+                    aria-label="flavours"
+                    className="form-select bg-dark text-light border-secondary py-1"
+                    style={{ width: '100%', borderRadius: '4px' }}
+                  >
+                    {flavors.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Quantity Select */}
+                <div className="product-quantity-container mt-2">
+                  <select
+                    value={selectedQuantity}
+                    onChange={(e) => setSelectedQuantity(e.target.value)}
+                    aria-label="quantity"
+                    className="form-select bg-dark text-light border-secondary py-1"
+                    style={{ width: '100%', borderRadius: '4px' }}
+                  >
+                    {quantities.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Add to Cart Trigger */}
+              <button 
+                id={buttonId} 
+                onClick={handleOrderSubmit}
+                className="button-85 mt-3 w-100 border-0" 
+                role="button"
+              >
+                <span className="text-light text-decoration-none d-block w-100 h-100 py-1">
+                  Add to Cart
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function ProductSection({
+      id,
+      title,
+      quizUrl = 'https://codesleeps.github.io/solid-octo-enigma/',
+      imgSrc,
+      imgAlt,
+      subTitle,
+      subTitleColorClass = 'text-danger',
+      description,
+      bullets = [],
+      children
+    }) {
+      return (
+        <section id={id} className="about bg-black text-light p-3">
+          <div>
+            <a
+              href={quizUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Enter This Cannabis Quiz"
+              className="text-decoration-none"
+            >
+              <h2 className="card-body text-center display-2 bg-black fw-normal pb-5 text-light">
+                <em>{title}</em>
+              </h2>
+            </a>
+          </div>
+
+          <div className="container mb-4">
+            <div className="row">
+              <div className="col-lg-4 d-flex align-items-center justify-content-center">
+                <img
+                  src={imgSrc}
+                  className="img-fluid rounded rounded-3"
+                  loading="lazy"
+                  alt={imgAlt}
+                  style={{ maxHeight: '350px', objectFit: 'cover' }}
+                />
+              </div>
+              <div className="col-lg-8 pt-4 pt-lg-0">
+                <h3 className={`${subTitleColorClass} mb-3 display-5 fw-normal`}>{subTitle}</h3>
+                <p className="fs-3">{description}</p>
+                {bullets.length > 0 && (
+                  <ul className="fs-4 text-success mt-3">
+                    {bullets.map((bullet, idx) => (
+                      <li key={idx}>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="container feco-shots pt-lg-0 pb-1 fs-3 bg-black">
+            <div className="row row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-3 mx-1 mb-5">
+              {children}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart }) {
+      const [view, setView] = useState('cart'); // 'cart' | 'checkout' | 'success'
+      const [orderNum, setOrderNum] = useState('');
+      const [checkoutForm, setCheckoutForm] = useState({
+        name: '',
+        email: '',
+        address: '',
+        payment: 'delivery'
+      });
+
+      const getSubtotal = () => {
+        return cart.reduce((total, item) => total + (item.price * item.count), 0);
+      };
+
+      const handleCheckoutSubmit = (e) => {
+        e.preventDefault();
+        if (!checkoutForm.name || !checkoutForm.email || !checkoutForm.address) {
+          alert('Please fill out all fields.');
+          return;
+        }
+        
+        const randomNum = 'F-' + Math.floor(10000 + Math.random() * 90000);
+        setOrderNum(randomNum);
+        setView('success');
+        clearCart();
+      };
+
+      const handleClose = () => {
+        onClose();
+        setTimeout(() => setView('cart'), 500);
+      };
+
+      return (
+        <React.Fragment>
+          {isOpen && <div className="cart-backdrop" onClick={handleClose}></div>}
+          
+          <div className={`cart-drawer ${isOpen ? 'open' : ''} p-4`}>
+            {/* Drawer Header */}
+            <div className="d-flex justify-content-between align-items-center border-bottom border-warning pb-3 mb-3">
+              <h3 className="text-warning mb-0 fs-2 font-weight-bold">
+                <i className="fas fa-shopping-cart me-2"></i> 
+                {view === 'cart' ? 'Your Cart' : view === 'checkout' ? 'Checkout' : 'Success!'}
+              </h3>
+              <button 
+                onClick={handleClose} 
+                className="btn btn-link text-warning p-0 fs-1 text-decoration-none" 
+                style={{ lineHeight: '1' }}
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* View 1: Cart Items */}
+            {view === 'cart' && (
+              <div className="d-flex flex-column flex-grow-1" style={{ overflow: 'hidden' }}>
+                {cart.length === 0 ? (
+                  <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted">
+                    <i className="fas fa-shopping-basket fa-3x mb-3 text-warning opacity-50"></i>
+                    <p className="fs-4">Your cart is empty</p>
+                  </div>
+                ) : (
+                  <React.Fragment>
+                    <div className="flex-grow-1" style={{ overflowY: 'auto' }}>
+                      {cart.map((item) => (
+                        <div key={item.id} className="cart-item-row d-flex py-3 align-items-center">
+                          <img 
+                            src={item.imgSrc} 
+                            alt={item.name} 
+                            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                            className="me-3"
+                          />
+                          <div className="flex-grow-1 text-light">
+                            <h5 className="fs-5 mb-0 fw-bold">{item.name}</h5>
+                            <span className="text-muted fs-6" style={{ letterSpacing: '0' }}>
+                              {item.flavor} / {item.quantitySelect}
+                            </span>
+                            <div className="d-flex align-items-center justify-content-between mt-2">
+                              <span className="text-warning fs-5 fw-bold">£{(item.price * item.count).toFixed(2)}</span>
+                              
+                              <div className="d-flex align-items-center">
+                                <button className="btn-qty" onClick={() => updateQty(item.id, -1)}>-</button>
+                                <span className="mx-3 text-white fw-bold fs-5">{item.count}</span>
+                                <button className="btn-qty" onClick={() => updateQty(item.id, 1)}>+</button>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <button 
+                            onClick={() => removeItem(item.id)} 
+                            className="btn btn-link text-danger ms-3 p-1 fs-4"
+                            aria-label="Remove Item"
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="border-top border-secondary pt-3 mt-3">
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <span className="fs-3 text-light">Subtotal:</span>
+                        <span className="fs-2 text-warning fw-bold">£{getSubtotal().toFixed(2)}</span>
+                      </div>
+                      <button 
+                        onClick={() => setView('checkout')}
+                        className="btn btn-warning btn-lg w-100 text-dark font-weight-bold"
+                        style={{ letterSpacing: '2px', borderRadius: '6px' }}
+                      >
+                        PROCEED TO CHECKOUT
+                      </button>
+                    </div>
+                  </React.Fragment>
+                )}
+              </div>
+            )}
+
+            {/* View 2: Checkout Form */}
+            {view === 'checkout' && (
+              <form onSubmit={handleCheckoutSubmit} className="d-flex flex-column flex-grow-1" style={{ overflowY: 'auto' }}>
+                <div className="mb-3">
+                  <label htmlFor="chkName" className="form-label text-light fs-5">Full Name</label>
+                  <input 
+                    type="text" 
+                    id="chkName"
+                    required
+                    placeholder="Enter your name" 
+                    className="form-control input-glass py-2"
+                    value={checkoutForm.name}
+                    onChange={(e) => setCheckoutForm({...checkoutForm, name: e.target.value})}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="chkEmail" className="form-label text-light fs-5">Email Address</label>
+                  <input 
+                    type="email" 
+                    id="chkEmail"
+                    required
+                    placeholder="name@example.com" 
+                    className="form-control input-glass py-2"
+                    value={checkoutForm.email}
+                    onChange={(e) => setCheckoutForm({...checkoutForm, email: e.target.value})}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="chkAddress" className="form-label text-light fs-5">Delivery Address</label>
+                  <textarea 
+                    id="chkAddress"
+                    required
+                    rows="3"
+                    placeholder="Street, City, Postal Code" 
+                    className="form-control input-glass py-2"
+                    value={checkoutForm.address}
+                    onChange={(e) => setCheckoutForm({...checkoutForm, address: e.target.value})}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="form-label text-light fs-5">Payment Method</label>
+                  <select 
+                    className="form-select input-glass py-2" 
+                    style={{ width: '100%' }}
+                    value={checkoutForm.payment}
+                    onChange={(e) => setCheckoutForm({...checkoutForm, payment: e.target.value})}
+                  >
+                    <option value="delivery">Cash on Delivery</option>
+                    <option value="transfer">Bank Transfer (Manual)</option>
+                  </select>
+                </div>
+
+                <div className="border-top border-secondary pt-3 mt-auto">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <span className="fs-3 text-light">Total Amount:</span>
+                    <span className="fs-2 text-warning fw-bold">£{getSubtotal().toFixed(2)}</span>
+                  </div>
+                  
+                  <div className="row g-2">
+                    <div className="col-6">
+                      <button 
+                        type="button" 
+                        onClick={() => setView('cart')}
+                        className="btn btn-outline-warning w-100 font-weight-bold"
+                        style={{ borderRadius: '6px' }}
+                      >
+                        BACK TO CART
+                      </button>
+                    </div>
+                    <div className="col-6">
+                      <button 
+                        type="submit" 
+                        className="btn btn-warning w-100 text-dark font-weight-bold"
+                        style={{ borderRadius: '6px' }}
+                      >
+                        PLACE ORDER
+                      </button>
+                    </div>
+                  </div>
+                </div>
+          </form>
+        )}
+
+        {/* View 3: Order Success Screen */}
+        {view === 'success' && (
+          <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center text-light">
+            <div className="mb-4">
+              <i className="fas fa-circle-check fa-5x text-success"></i>
+            </div>
+            <h4 className="text-warning fs-1 font-weight-bold mb-3">Order Received!</h4>
+            <p className="fs-4 px-2 mb-2">Thank you for your order, <strong>{checkoutForm.name}</strong>!</p>
+            <p className="fs-5 text-muted px-2">We have sent a receipt to {checkoutForm.email}. Your local supplier will contact you soon for delivery details.</p>
+            <div className="bg-dark border border-secondary p-3 rounded my-4 w-100">
+              <span className="text-muted d-block fs-6">Order Number</span>
+              <span className="text-warning font-weight-bold fs-3" style={{ letterSpacing: '3px' }}>{orderNum}</span>
+            </div>
+            <button 
+              onClick={handleClose} 
+              className="btn btn-warning text-dark font-weight-bold btn-lg px-5 mt-3"
+              style={{ borderRadius: '6px' }}
+            >
+              Continue Shopping
+            </button>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+    function FeedbackModal() {
+      const [feedbackText, setFeedbackText] = useState('');
+      const handleSubmit = () => {
+        if (feedbackText.trim()) {
+          alert(`Feedback submitted: "${feedbackText}"`);
+          setFeedbackText('');
+        }
+      };
+
+      return (
+        <div
+          className="modal fade"
+          id="exampleModal"
+          tabIndex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content bg-dark text-light border border-warning">
+              <div className="modal-header border-bottom border-warning">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Feedback
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  data-mdb-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <textarea
+                  name="feedback"
+                  id="modal"
+                  autoComplete="name"
+                  cols="30"
+                  rows="5"
+                  className="form-control bg-dark text-light border border-secondary"
+                  placeholder="Tell us your feedback..."
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                ></textarea>
+              </div>
+              <div className="modal-footer border-top border-warning">
+                <button type="button" className="btn btn-secondary" data-mdb-dismiss="modal">
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-warning text-dark"
+                  data-mdb-dismiss="modal"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function Footer() {
+      return (
+        <footer className="text-center text-lg-start">
+          <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom border-warning border-3">
+            <div className="me-5 d-none d-lg-block text-light">
+              <span>Get connected with us on social networks:</span>
+            </div>
+            <div className="text-light">
+              <a
+                href="https://www.facebook.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="me-4 text-reset"
+                aria-label="Read more on social media"
+              >
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="https://twitter.com/cannavissyrup"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="me-4 text-reset"
+                aria-label="Read more on social media"
+              >
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a
+                href="https://oaksterdamuniversity.com/feco-distillate-isolate-whats-the-difference/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="me-4 text-reset"
+                aria-label="Read more on social media"
+              >
+                <i className="fab fa-google"></i>
+              </a>
+              <a
+                href="https://www.instagram.com/unitedpatientsgroup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="me-4 text-reset"
+                aria-label="Read more on social media"
+              >
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a
+                href="https://www.youtube.com/channel/UCQNsgOEAzItPZzkjZZw5LwA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="me-4 text-reset"
+                aria-label="Read more on social media"
+              >
+                <i className="fab fa-youtube"></i>
+              </a>
+            </div>
+          </section>
+
+          <section id="contact">
+            <div className="container text-center text-md-start mt-5">
+              <div className="row mt-3">
+                <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4 text-light">
+                  <h4 className="text-uppercase fw-bold mb-4 display-6">
+                    <i className="fas fa-gem me-3 text-success"></i>Club Feco
+                  </h4>
+                  <p>
+                    <i className="fas fa-home me-3 text-light"></i> Brumstadam
+                  </p>
+                  <p>
+                    <i className="fas fa-envelope me-3 text-light"></i> info@example.com
+                  </p>
+                  <p>
+                    <i className="fas fa-phone me-3 text-light"></i> + 0121 456788
+                  </p>
+                  <p>
+                    <i className="fas fa-print me-3 text-light"></i> + 0121 456789
+                  </p>
+                </div>
+
+                <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4 text-light">
+                  <h5 id="mainProducts" className="text-uppercase fw-bold mb-4 text-warning">
+                    Products
+                  </h5>
+                  <p>
+                    <a href="#smokeless" className="text-reset text-decoration-none" aria-label="Read more about Club Feco products">
+                      Smokeless Range
+                    </a>
+                  </p>
+                  <p>
+                    <a href="#shots" className="text-reset text-decoration-none" aria-label="Read more about Club Feco products">
+                      Feco Shots
+                    </a>
+                  </p>
+                  <p>
+                    <a href="#cocktails" className="text-reset text-decoration-none" aria-label="Read more about Club Feco products">
+                      Contender (Cocktails)
+                    </a>
+                  </p>
+                  <p>
+                    <a href="#chocolates" className="text-reset text-decoration-none" aria-label="Read more about Club Feco products">
+                      Chocolates
+                    </a>
+                  </p>
+                </div>
+
+                <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4 text-light">
+                  <h6 className="text-uppercase fw-bold mb-4 text-warning">Useful links</h6>
+                  <p>
+                    <a
+                      href="https://homesteadandchill.com/how-to-decarboxylate-cannabis/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Read more about how to decarboxylate"
+                    >
+                      Decarbing
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://www.youtube.com/watch?v=huzhPzLwGz0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Watch cannabis comedy movie"
+                    >
+                      Movie
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://jcyounger.com/5-most-common-cannabis-extraction-methods-in-2020/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Read more about extraction methods"
+                    >
+                      Extraction
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://www.vice.com/en/article/k7qvyw/investigating-thc-syrup-cannabis-with-the-consistency-of-cough-medicine"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Read more about THC syrup"
+                    >
+                      THC Syrup Info
+                    </a>
+                  </p>
+                </div>
+
+                <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4 text-light">
+                  <h6 className="text-uppercase fw-bold mb-4 text-warning">More Links</h6>
+                  <p>
+                    <a
+                      href="https://codesleeps.github.io/Food-Analyzer/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Use this free AI food analyzer app"
+                    >
+                      AI Food Analyzer
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://www.youtube.com/watch?v=y3RIHnK0_NE"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Watch more on youtube"
+                    >
+                      A.I. Action
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href="https://codesleeps.github.io/solid-octo-enigma/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-reset text-decoration-none"
+                      aria-label="Enter this cannabis quiz"
+                    >
+                      Quiz
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div className="text-center p-4 text-light border-top border-secondary mt-4">
+            © 2026 Copyright Club Feco
+          </div>
+        </footer>
+      );
+    }
+
+    function App() {
+      const [showScrollBtn, setShowScrollBtn] = useState(false);
+      const [cart, setCart] = useState([]);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 20) {
+            setShowScrollBtn(true);
+          } else {
+            setShowScrollBtn(false);
+          }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      // Add Item to Checkout Cart
+      const handleAddToCart = (productName, defaultImgSrc, flavor, quantitySelect, basePrice, priceCalculator, imageMap) => {
+        const itemPrice = priceCalculator ? priceCalculator(quantitySelect) : basePrice;
+        
+        // Dynamic image based on flavor selection map
+        const itemImgSrc = (imageMap && imageMap[flavor]) || defaultImgSrc;
+        
+        // Dynamic ID key based on properties
+        const itemId = `${productName}-${flavor}-${quantitySelect}`;
+
+        setCart((prevCart) => {
+          const existingItem = prevCart.find((i) => i.id === itemId);
+          if (existingItem) {
+            return prevCart.map((i) => 
+              i.id === itemId ? { ...i, count: i.count + 1 } : i
+            );
+          } else {
+            return [
+              ...prevCart,
+              {
+                id: itemId,
+                name: productName,
+                imgSrc: itemImgSrc,
+                flavor,
+                quantitySelect,
+                price: itemPrice,
+                count: 1
+              }
+            ];
+          }
+        });
+
+        // Open cart drawer for confirmation
+        setIsCartOpen(true);
+      };
+
+      const updateQty = (id, change) => {
+        setCart((prevCart) => 
+          prevCart.map((item) => {
+            if (item.id === id) {
+              const newQty = item.count + change;
+              return newQty > 0 ? { ...item, count: newQty } : item;
+            }
+            return item;
+          })
+        );
+      };
+
+      const removeItem = (id) => {
+        setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+      };
+
+      const clearCart = () => {
+        setCart([]);
+      };
+
+      const getCartCount = () => {
+        return cart.reduce((sum, item) => sum + item.count, 0);
+      };
+
+      // Product Lists
+      const smokelessFlavors = [
+        { value: 'Pineapple', label: 'Pineapple' },
+        { value: 'Mango', label: 'Mango' },
+        { value: 'Apple', label: 'Apple' },
+        { value: 'Orange', label: 'Orange' }
+      ];
+
+      const smokelessQuantities = [
+        { value: '100mg', label: '100mg' },
+        { value: '200mg', label: '200mg' },
+        { value: '300mg', label: '300mg' },
+        { value: '400mg', label: '400mg' },
+        { value: '500mg', label: '500mg' }
+      ];
+
+      const calculateSmokelessPrice = (strength) => {
+        switch (strength) {
+          case '200mg': return 14.99;
+          case '300mg': return 19.99;
+          case '400mg': return 24.99;
+          case '500mg': return 29.99;
+          case '100mg':
+          default:
+            return 9.99;
+        }
+      };
+
+      const shotsFlavors = [
+        { value: 'Fruit Punch', label: 'Fruit Punch' },
+        { value: 'Strawberry', label: 'Strawberry' },
+        { value: 'Kola Champagne', label: 'Kola Champagne' },
+        { value: 'Grape', label: 'Grape' },
+        { value: 'Pineapple', label: 'Pineapple' },
+        { value: 'Mango', label: 'Mango' },
+        { value: 'S&G', label: 'S&G' }
+      ];
+
+      const genericQuantities = Array.from({ length: 7 }, (_, i) => ({
+        value: String(i + 1),
+        label: String(i + 1)
+      }));
+
+      const chocolateFlavors = [
+        { value: 'Dry roasted', label: 'Dry roasted' },
+        { value: 'Fruit & Nut', label: 'Fruit & Nut' },
+        { value: 'Rum & Raisin', label: 'Rum & Raisin' },
+        { value: 'Cashews', label: 'Cashews' }
+      ];
+
+      // Image Mapping Sets (Map option value to local image file path)
+      const smokelessImages = {
+        Pineapple: './app/img/smokeless/pineappleSmokeless-transformed.webp',
+        Mango: './app/img/smokeless/mango.png',
+        Apple: './app/img/smokeless/apple.png',
+        Orange: './app/img/smokeless/orange.png'
+      };
+
+      const shotsImages = {
+        'Fruit Punch': './app/img/shots/feco_shots.png',
+        Strawberry: './app/img/shots/strawberry.png',
+        'Kola Champagne': './app/img/shots/kola_champagne.png',
+        Grape: './app/img/shots/grape.png',
+        Pineapple: './app/img/shots/pineapple.png',
+        Mango: './app/img/shots/mango.png',
+        'S&G': './app/img/shots/s_g.png'
+      };
+
+      const contenderImages = {
+        Mango: './app/img/contender/CONTENDER_MANGO400x280.webp',
+        'Kola Champagne': './app/img/contender/kola_champagne.png',
+        Strawberry: './app/img/contender/strawberry.png',
+        'Fruit Punch': './app/img/contender/fruit_punch.png',
+        Grape: './app/img/contender/grape.png',
+        Pineapple: './app/img/contender/pineapple.png',
+        'S&G': './app/img/contender/s_g.png'
+      };
+
+      const chocolateImages = {
+        'Dry roasted': './app/img/chocolates/VODKA & CRANBERRIES 500MG.webp',
+        'Fruit & Nut': './app/img/chocolates/fruit_and_nut.png',
+        'Rum & Raisin': './app/img/chocolates/rum_and_raisin.png',
+        Cashews: './app/img/chocolates/cashews.png'
+      };
+
+      return (
+        <div className="bg-black text-light min-vh-100">
+          <Navbar cartCount={getCartCount()} onCartClick={() => setIsCartOpen(true)} />
+          <Hero />
+
+          <section className="news-input p-4">
+            <div className="container">
+              <div className="d-md-flex justify-content-between align-items-center">
+                <h2 className="mb-3 mb-md-0">Contact your local supplier...</h2>
+              </div>
+            </div>
+          </section>
+
+          <About />
+
+          {/* Smokeless Section */}
+          <ProductSection
+            id="smokeless"
+            title="Smokeless Selection"
+            imgSrc="./app/img/about/smokeless_about.webp"
+            imgAlt="CBD Fresh Juices in Glasses"
+            subTitle="CBD with a Burst of Freshness"
+            description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
+            bullets={[
+              '100% Pure & Natural.',
+              'Various strengths available',
+              'A Refreshing Twist on Wellness',
+              'Vegan Friendly'
+            ]}
+          >
+            <ProductCard
+              imgSrc="./app/img/smokeless/pineappleSmokeless-transformed.webp"
+              imgAlt="CBD Fresh Fruit Juices"
+              flavors={smokelessFlavors}
+              quantities={smokelessQuantities}
+              borderColorClass="border-warning"
+              buttonId="feedbackButtonSmokeless"
+              imageMap={smokelessImages}
+              onAddToCart={(flavor, qty) => 
+                handleAddToCart('Smokeless Juice', './app/img/smokeless/pineappleSmokeless-transformed.webp', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
+              }
+            />
+          </ProductSection>
+
+          {/* Shots Section */}
+          <ProductSection
+            id="shots"
+            title="Shots Selection"
+            imgSrc="./app/img/about/shots_selection_500x332.webp"
+            imgAlt="CBD Tincture Bottles"
+            subTitle="Pure, Potent, and Packed with Benefits"
+            description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
+            bullets={[
+              '100% Pure Sugar Cane Rum.',
+              'Rapid Long Lasting Effects',
+              'A Unique Blend Formulated by A.I.',
+              'Official Collector\'s Edition Rum'
+            ]}
+          >
+            <ProductCard
+              imgSrc="./app/img/shots/feco_shots.png"
+              imgAlt="Jar of topicals cream"
+              flavors={shotsFlavors}
+              quantities={genericQuantities}
+              borderColorClass="border-warning"
+              buttonId="feedbackButtonShots"
+              imageMap={shotsImages}
+              onAddToCart={(flavor, qty) => 
+                handleAddToCart('Feco Shot', './app/img/shots/feco_shots.png', flavor, qty, 19.99, null, shotsImages)
+              }
+            />
+          </ProductSection>
+
+          {/* Cocktails Section */}
+          <ProductSection
+            id="cocktails"
+            title="Cocktails Selection"
+            imgSrc="./app/img/about/club_feco_500x282.webp"
+            imgAlt="Various CBD drinks in glasses"
+            subTitle="Embrace the spirit of adventure"
+            description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
+            bullets={[
+              '100% Pure Sugar Cane Rum',
+              'An Exceptional Blend Perfected by Artificial Intelligence',
+              'Encounter Swift and Enduring Pleasures',
+              'The Apex of Distinction',
+              'An Official Collector\'s Edition Rum'
+            ]}
+          >
+            <ProductCard
+              imgSrc="./app/img/contender/CONTENDER_MANGO400x280.webp"
+              imgAlt="CBD cocktails"
+              flavors={shotsFlavors}
+              quantities={genericQuantities}
+              borderColorClass="border-success"
+              buttonId="feedbackButtonCocktails"
+              imageMap={contenderImages}
+              onAddToCart={(flavor, qty) => 
+                handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER_MANGO400x280.webp', flavor, qty, 24.99, null, contenderImages)
+              }
+            />
+          </ProductSection>
+
+          {/* Chocolate Section */}
+          <ProductSection
+            id="chocolates"
+            title="Chocolate Selection"
+            imgSrc="./app/img/about/chocolate_about_500x391.webp"
+            imgAlt="CBD Chocolate Selection"
+            subTitle="CBD-Infused Chocolates: A Decadent Delight"
+            description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
+            bullets={[
+              'Delicious Wellness',
+              'Various strengths available',
+              'New Alcohol Infused Chocolates',
+              'Wide selection available'
+            ]}
+          >
+            <ProductCard
+              imgSrc="./app/img/chocolates/VODKA & CRANBERRIES 500MG.webp"
+              imgAlt="CBD chocolates"
+              flavors={chocolateFlavors}
+              quantities={genericQuantities}
+              borderColorClass="border-warning"
+              buttonId="feedbackButtonChocolate"
+              imageMap={chocolateImages}
+              onAddToCart={(flavor, qty) => 
+                handleAddToCart('Infused Chocolate Bar', './app/img/chocolates/VODKA & CRANBERRIES 500MG.webp', flavor, qty, 14.99, null, chocolateImages)
+              }
+            />
+          </ProductSection>
+
+          <section className="bg-black py-5">
+            <div
+              id="carouselDarkVariant"
+              className="carousel slide carousel-fade carousel-dark mx-auto"
+              data-mdb-ride="carousel"
+              style={{ maxWidth: '800px' }}
+            >
+              <div className="carousel-indicators">
+                <button
+                  data-mdb-target="#carouselDarkVariant"
+                  data-mdb-slide-to="0"
+                  className="active"
+                  aria-current="true"
+                  aria-label="Slide 1"
+                ></button>
+                <button
+                  data-mdb-target="#carouselDarkVariant"
+                  data-mdb-slide-to="1"
+                  aria-label="Slide 2"
+                ></button>
+                <button
+                  data-mdb-target="#carouselDarkVariant"
+                  data-mdb-slide-to="2"
+                  aria-label="Slide 3"
+                ></button>
+              </div>
+
+              <div className="carousel-inner">
+                <div className="carousel-item active">
+                  <img
+                    src="./app/img/carousel/cannabisPlant.webp"
+                    loading="lazy"
+                    className="d-block w-100 rounded"
+                    alt="Cannabis Plant"
+                    style={{ height: '450px', objectFit: 'cover' }}
+                  />
+                </div>
+                <div className="carousel-item">
+                  <img
+                    src="./app/img/about/chocolate_about_500x391.webp"
+                    loading="lazy"
+                    className="d-block w-100 rounded"
+                    alt="CBD Chocolates"
+                    style={{ height: '450px', objectFit: 'cover' }}
+                  />
+                </div>
+                <div className="carousel-item">
+                  <img
+                    src="./app/img/carousel/tincturePipe.webp"
+                    loading="lazy"
+                    className="d-block w-100 rounded"
+                    alt="CBD Tincture Collection"
+                    style={{ height: '450px', objectFit: 'cover' }}
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <Footer />
+
+          {/* Floating Cart Button */}
+          <button 
+            className="floating-cart-btn" 
+            onClick={() => setIsCartOpen(true)}
+            aria-label="Open Shopping Cart"
+          >
+            <i className="fas fa-shopping-cart fa-lg"></i>
+            {getCartCount() > 0 && (
+              <span className="floating-cart-badge">{getCartCount()}</span>
+            )}
+          </button>
+
+          {/* Scroll to Top Button */}
+          {showScrollBtn && (
+            <button
+              onClick={scrollToTop}
+              id="myBtn"
+              title="Go to top"
+              className="d-block"
+              style={{
+                position: 'fixed',
+                bottom: '20px',
+                right: '30px',
+                zIndex: 99,
+                border: 'none',
+                outline: 'none',
+                backgroundColor: '#ffb338',
+                color: '#000',
+                cursor: 'pointer',
+                padding: '12px 18px',
+                borderRadius: '4px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)'
+              }}
+            >
+              top
+            </button>
+          )}
+
+          {/* Checkout Cart Drawer Component */}
+          <CartDrawer 
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            cart={cart}
+            updateQty={updateQty}
+            removeItem={removeItem}
+            clearCart={clearCart}
+          />
+
+          <FeedbackModal />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+
+  <!-- MDB JavaScript -->
+  <script src="./app/js/mdb.min.js" type="text/javascript"></script>
 </body>
 
 </html>

@@ -6,31 +6,26 @@ export default function ProductCard({
   flavors,
   quantities,
   borderColorClass = 'border-warning',
-  orderUrl = 'https://www.youtube.com/watch?v=-ZhxFtmAoXg',
   buttonId,
   ratingText = '⭐⭐⭐⭐⭐',
-  onFeedbackClick
+  onAddToCart,
+  imageMap
 }) {
   const [selectedFlavor, setSelectedFlavor] = useState(flavors[0]?.value || '');
   const [selectedQuantity, setSelectedQuantity] = useState(quantities[0]?.value || '');
 
-  // Generate order URL with query parameters for selection (useful interactive improvement!)
-  const getOrderLink = () => {
-    try {
-      const url = new URL(orderUrl);
-      url.searchParams.set('flavor', selectedFlavor);
-      url.searchParams.set('quantity', selectedQuantity);
-      return url.toString();
-    } catch (e) {
-      return orderUrl;
-    }
+  const handleOrderSubmit = () => {
+    onAddToCart(selectedFlavor, selectedQuantity);
   };
+
+  // Resolve current image dynamically based on selected flavor mapping
+  const currentImgSrc = (imageMap && imageMap[selectedFlavor]) || imgSrc;
 
   return (
     <div className="col">
       <div className={`card h-100 border border-3 ${borderColorClass}`}>
         <img
-          src={imgSrc}
+          src={currentImgSrc}
           className="card-img-top"
           alt={imgAlt}
           loading="lazy"
@@ -44,7 +39,6 @@ export default function ProductCard({
               data-mdb-toggle="modal"
               data-mdb-target="#exampleModal"
               aria-label="Submit Feedback"
-              onClick={onFeedbackClick}
               className="text-decoration-none"
             >
               {ratingText}
@@ -87,17 +81,16 @@ export default function ProductCard({
             </div>
           </div>
 
-          {/* Cart Button */}
-          <button id={buttonId} className="button-85 mt-3 w-100 border-0" role="button">
-            <a
-              href={getOrderLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-light text-decoration-none d-block w-100 h-100 py-1"
-              aria-label="Order Button"
-            >
-              Order
-            </a>
+          {/* Add to Cart Trigger */}
+          <button 
+            id={buttonId} 
+            onClick={handleOrderSubmit}
+            className="button-85 mt-3 w-100 border-0" 
+            role="button"
+          >
+            <span className="text-light text-decoration-none d-block w-100 h-100 py-1">
+              Add to Cart
+            </span>
           </button>
         </div>
       </div>
