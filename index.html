@@ -28,20 +28,20 @@
   <!-- favicon -->
   <link rel="icon" href="./app/img/logo/leaf.png" type="image/x-icon" width="50" height="45" />
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <!-- Google Fonts Roboto -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <!-- MDB -->
   <link rel="stylesheet" href="./app/css/mdb.min.css" media="all" />
   <link rel="stylesheet" href="./app/css/main.css" media="all" />
   <!-- web manifest  -->
-  <link rel="manifest" href="./manifest.json" >
+  <link rel="manifest" href="./manifest.json">
   <!-- canonical  -->
-  <link rel="canonical" href="https://codesleeps.github.io/club_feco/" >
+  <link rel="canonical" href="https://codesleeps.github.io/club_feco/">
 
   <!-- Load React, ReactDOM and Babel Standalone for direct local browser preview -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
@@ -49,7 +49,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!-- Registering service worker  -->
-  <script> 
+  <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js');
@@ -75,9 +75,11 @@
       display: flex;
       flex-direction: column;
     }
+
     .cart-drawer.open {
       right: 0;
     }
+
     @media (max-width: 450px) {
       .cart-drawer {
         width: 100%;
@@ -85,6 +87,7 @@
         border-left: none;
       }
     }
+
     .cart-backdrop {
       position: fixed;
       top: 0;
@@ -96,13 +99,16 @@
       -webkit-backdrop-filter: blur(3px);
       z-index: 1040;
     }
+
     .cart-item-row {
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       transition: background 0.3s;
     }
+
     .cart-item-row:hover {
       background: rgba(255, 255, 255, 0.03);
     }
+
     .floating-cart-btn {
       position: fixed;
       bottom: 90px;
@@ -121,10 +127,12 @@
       justify-content: center;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+
     .floating-cart-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 6px 20px rgba(255, 179, 56, 0.5);
     }
+
     .floating-cart-badge {
       position: absolute;
       top: -5px;
@@ -136,6 +144,7 @@
       font-size: 11px;
       font-weight: bold;
     }
+
     .btn-qty {
       background: rgba(255, 255, 255, 0.1);
       border: none;
@@ -150,16 +159,19 @@
       justify-content: center;
       transition: background 0.2s;
     }
+
     .btn-qty:hover {
       background: #ffb338;
       color: black;
     }
+
     .input-glass {
       background: rgba(255, 255, 255, 0.05) !important;
       border: 1px solid rgba(255, 255, 255, 0.2) !important;
       color: white !important;
       border-radius: 6px !important;
     }
+
     .input-glass:focus {
       border-color: #ffb338 !important;
       box-shadow: 0 0 0 0.25rem rgba(255, 179, 56, 0.25) !important;
@@ -218,18 +230,18 @@
                 </li>
               </ul>
             </div>
-            
+
             <div className="d-flex align-items-center">
               {/* Header Cart Button */}
-              <button 
-                onClick={onCartClick} 
-                className="btn btn-link text-warning me-3 position-relative" 
+              <button
+                onClick={onCartClick}
+                className="btn btn-link text-warning me-3 position-relative"
                 style={{ padding: '8px' }}
                 aria-label="Toggle Cart View"
               >
                 <i className="fas fa-shopping-cart fa-lg"></i>
                 {cartCount > 0 && (
-                  <span 
+                  <span
                     className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     style={{ fontSize: '10px' }}
                   >
@@ -237,7 +249,7 @@
                   </span>
                 )}
               </button>
-              
+
               <div className="dropdown">
                 <a
                   className="dropdown-toggle d-flex align-items-center hidden-arrow"
@@ -423,10 +435,10 @@
               </div>
 
               {/* Add to Cart Trigger */}
-              <button 
-                id={buttonId} 
+              <button
+                id={buttonId}
                 onClick={handleOrderSubmit}
-                className="button-85 mt-3 w-100 border-0" 
+                className="button-85 mt-3 w-100 border-0"
                 role="button"
               >
                 <span className="text-light text-decoration-none d-block w-100 h-100 py-1">
@@ -521,7 +533,7 @@
           alert('Please fill out all fields.');
           return;
         }
-        
+
         const randomNum = 'F-' + Math.floor(10000 + Math.random() * 90000);
         setOrderNum(randomNum);
         setView('success');
@@ -536,17 +548,17 @@
       return (
         <React.Fragment>
           {isOpen && <div className="cart-backdrop" onClick={handleClose}></div>}
-          
+
           <div className={`cart-drawer ${isOpen ? 'open' : ''} p-4`}>
             {/* Drawer Header */}
             <div className="d-flex justify-content-between align-items-center border-bottom border-warning pb-3 mb-3">
               <h3 className="text-warning mb-0 fs-2 font-weight-bold">
-                <i className="fas fa-shopping-cart me-2"></i> 
+                <i className="fas fa-shopping-cart me-2"></i>
                 {view === 'cart' ? 'Your Cart' : view === 'checkout' ? 'Checkout' : 'Success!'}
               </h3>
-              <button 
-                onClick={handleClose} 
-                className="btn btn-link text-warning p-0 fs-1 text-decoration-none" 
+              <button
+                onClick={handleClose}
+                className="btn btn-link text-warning p-0 fs-1 text-decoration-none"
                 style={{ lineHeight: '1' }}
               >
                 &times;
@@ -566,9 +578,9 @@
                     <div className="flex-grow-1" style={{ overflowY: 'auto' }}>
                       {cart.map((item) => (
                         <div key={item.id} className="cart-item-row d-flex py-3 align-items-center">
-                          <img 
-                            src={item.imgSrc} 
-                            alt={item.name} 
+                          <img
+                            src={item.imgSrc}
+                            alt={item.name}
                             style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
                             className="me-3"
                           />
@@ -579,7 +591,7 @@
                             </span>
                             <div className="d-flex align-items-center justify-content-between mt-2">
                               <span className="text-warning fs-5 fw-bold">£{(item.price * item.count).toFixed(2)}</span>
-                              
+
                               <div className="d-flex align-items-center">
                                 <button className="btn-qty" onClick={() => updateQty(item.id, -1)}>-</button>
                                 <span className="mx-3 text-white fw-bold fs-5">{item.count}</span>
@@ -587,9 +599,9 @@
                               </div>
                             </div>
                           </div>
-                          
-                          <button 
-                            onClick={() => removeItem(item.id)} 
+
+                          <button
+                            onClick={() => removeItem(item.id)}
                             className="btn btn-link text-danger ms-3 p-1 fs-4"
                             aria-label="Remove Item"
                           >
@@ -604,7 +616,7 @@
                         <span className="fs-3 text-light">Subtotal:</span>
                         <span className="fs-2 text-warning fw-bold">£{getSubtotal().toFixed(2)}</span>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setView('checkout')}
                         className="btn btn-warning btn-lg w-100 text-dark font-weight-bold"
                         style={{ letterSpacing: '2px', borderRadius: '6px' }}
@@ -622,50 +634,50 @@
               <form onSubmit={handleCheckoutSubmit} className="d-flex flex-column flex-grow-1" style={{ overflowY: 'auto' }}>
                 <div className="mb-3">
                   <label htmlFor="chkName" className="form-label text-light fs-5">Full Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     id="chkName"
                     required
-                    placeholder="Enter your name" 
+                    placeholder="Enter your name"
                     className="form-control input-glass py-2"
                     value={checkoutForm.name}
-                    onChange={(e) => setCheckoutForm({...checkoutForm, name: e.target.value})}
+                    onChange={(e) => setCheckoutForm({ ...checkoutForm, name: e.target.value })}
                   />
                 </div>
 
                 <div className="mb-3">
                   <label htmlFor="chkEmail" className="form-label text-light fs-5">Email Address</label>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     id="chkEmail"
                     required
-                    placeholder="name@example.com" 
+                    placeholder="name@example.com"
                     className="form-control input-glass py-2"
                     value={checkoutForm.email}
-                    onChange={(e) => setCheckoutForm({...checkoutForm, email: e.target.value})}
+                    onChange={(e) => setCheckoutForm({ ...checkoutForm, email: e.target.value })}
                   />
                 </div>
 
                 <div className="mb-3">
                   <label htmlFor="chkAddress" className="form-label text-light fs-5">Delivery Address</label>
-                  <textarea 
+                  <textarea
                     id="chkAddress"
                     required
                     rows="3"
-                    placeholder="Street, City, Postal Code" 
+                    placeholder="Street, City, Postal Code"
                     className="form-control input-glass py-2"
                     value={checkoutForm.address}
-                    onChange={(e) => setCheckoutForm({...checkoutForm, address: e.target.value})}
+                    onChange={(e) => setCheckoutForm({ ...checkoutForm, address: e.target.value })}
                   />
                 </div>
 
                 <div className="mb-4">
                   <label className="form-label text-light fs-5">Payment Method</label>
-                  <select 
-                    className="form-select input-glass py-2" 
+                  <select
+                    className="form-select input-glass py-2"
                     style={{ width: '100%' }}
                     value={checkoutForm.payment}
-                    onChange={(e) => setCheckoutForm({...checkoutForm, payment: e.target.value})}
+                    onChange={(e) => setCheckoutForm({ ...checkoutForm, payment: e.target.value })}
                   >
                     <option value="delivery">Cash on Delivery</option>
                     <option value="transfer">Bank Transfer (Manual)</option>
@@ -677,11 +689,11 @@
                     <span className="fs-3 text-light">Total Amount:</span>
                     <span className="fs-2 text-warning fw-bold">£{getSubtotal().toFixed(2)}</span>
                   </div>
-                  
+
                   <div className="row g-2">
                     <div className="col-6">
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => setView('cart')}
                         className="btn btn-outline-warning w-100 font-weight-bold"
                         style={{ borderRadius: '6px' }}
@@ -690,8 +702,8 @@
                       </button>
                     </div>
                     <div className="col-6">
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="btn btn-warning w-100 text-dark font-weight-bold"
                         style={{ borderRadius: '6px' }}
                       >
@@ -700,35 +712,35 @@
                     </div>
                   </div>
                 </div>
-          </form>
-        )}
+              </form>
+            )}
 
-        {/* View 3: Order Success Screen */}
-        {view === 'success' && (
-          <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center text-light">
-            <div className="mb-4">
-              <i className="fas fa-circle-check fa-5x text-success"></i>
-            </div>
-            <h4 className="text-warning fs-1 font-weight-bold mb-3">Order Received!</h4>
-            <p className="fs-4 px-2 mb-2">Thank you for your order, <strong>{checkoutForm.name}</strong>!</p>
-            <p className="fs-5 text-muted px-2">We have sent a receipt to {checkoutForm.email}. Your local supplier will contact you soon for delivery details.</p>
-            <div className="bg-dark border border-secondary p-3 rounded my-4 w-100">
-              <span className="text-muted d-block fs-6">Order Number</span>
-              <span className="text-warning font-weight-bold fs-3" style={{ letterSpacing: '3px' }}>{orderNum}</span>
-            </div>
-            <button 
-              onClick={handleClose} 
-              className="btn btn-warning text-dark font-weight-bold btn-lg px-5 mt-3"
-              style={{ borderRadius: '6px' }}
-            >
-              Continue Shopping
-            </button>
+            {/* View 3: Order Success Screen */}
+            {view === 'success' && (
+              <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center text-light">
+                <div className="mb-4">
+                  <i className="fas fa-circle-check fa-5x text-success"></i>
+                </div>
+                <h4 className="text-warning fs-1 font-weight-bold mb-3">Order Received!</h4>
+                <p className="fs-4 px-2 mb-2">Thank you for your order, <strong>{checkoutForm.name}</strong>!</p>
+                <p className="fs-5 text-muted px-2">We have sent a receipt to {checkoutForm.email}. Your local supplier will contact you soon for delivery details.</p>
+                <div className="bg-dark border border-secondary p-3 rounded my-4 w-100">
+                  <span className="text-muted d-block fs-6">Order Number</span>
+                  <span className="text-warning font-weight-bold fs-3" style={{ letterSpacing: '3px' }}>{orderNum}</span>
+                </div>
+                <button
+                  onClick={handleClose}
+                  className="btn btn-warning text-dark font-weight-bold btn-lg px-5 mt-3"
+                  style={{ borderRadius: '6px' }}
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </React.Fragment>
-  );
-}
+        </React.Fragment>
+      );
+    }
 
     function FeedbackModal() {
       const [feedbackText, setFeedbackText] = useState('');
@@ -910,7 +922,7 @@
                   </p>
                   <p>
                     <a
-                      href="https://www.youtube.com/watch?v=huzhPzLwGz0"
+                      href="https://www.youtube.com/watch?v=--uT_Ieh_vE"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-reset text-decoration-none"
@@ -1014,17 +1026,17 @@
       // Add Item to Checkout Cart
       const handleAddToCart = (productName, defaultImgSrc, flavor, quantitySelect, basePrice, priceCalculator, imageMap) => {
         const itemPrice = priceCalculator ? priceCalculator(quantitySelect) : basePrice;
-        
+
         // Dynamic image based on flavor selection map
         const itemImgSrc = (imageMap && imageMap[flavor]) || defaultImgSrc;
-        
+
         // Dynamic ID key based on properties
         const itemId = `${productName}-${flavor}-${quantitySelect}`;
 
         setCart((prevCart) => {
           const existingItem = prevCart.find((i) => i.id === itemId);
           if (existingItem) {
-            return prevCart.map((i) => 
+            return prevCart.map((i) =>
               i.id === itemId ? { ...i, count: i.count + 1 } : i
             );
           } else {
@@ -1048,7 +1060,7 @@
       };
 
       const updateQty = (id, change) => {
-        setCart((prevCart) => 
+        setCart((prevCart) =>
           prevCart.map((item) => {
             if (item.id === id) {
               const newQty = item.count + change;
@@ -1071,14 +1083,14 @@
         return cart.reduce((sum, item) => sum + item.count, 0);
       };
 
-  // Product Lists
-  const smokelessFlavors = [
-    { value: 'Pineapple', label: 'Pineapple' },
-    { value: 'Mango', label: 'Mango' },
-    { value: 'Apple', label: 'Apple' },
-    { value: 'Orange', label: 'Orange' },
-    { value: 'Grape', label: 'Grape' }
-  ];
+      // Product Lists
+      const smokelessFlavors = [
+        { value: 'Pineapple', label: 'Pineapple' },
+        { value: 'Mango', label: 'Mango' },
+        { value: 'Apple', label: 'Apple' },
+        { value: 'Orange', label: 'Orange' },
+        { value: 'Grape', label: 'Grape' }
+      ];
 
       const smokelessQuantities = [
         { value: '100mg', label: '100mg' },
@@ -1100,17 +1112,17 @@
         }
       };
 
-  const shotsFlavors = [
-    { value: 'Fruit Punch', label: 'Fruit Punch' },
-    { value: 'Strawberry', label: 'Strawberry' },
-    { value: 'Kola Champagne', label: 'Kola Champagne' },
-    { value: 'Grape', label: 'Grape' },
-    { value: 'Pineapple', label: 'Pineapple' },
-    { value: 'Mango', label: 'Mango' },
-    { value: 'Pineapple & Ginger', label: 'Pineapple & Ginger' },
-    { value: 'S&G', label: 'Sorrel & Ginger (S&G)' },
-    { value: 'Cherry', label: 'Cherry' }
-  ];
+      const shotsFlavors = [
+        { value: 'Fruit Punch', label: 'Fruit Punch' },
+        { value: 'Strawberry', label: 'Strawberry' },
+        { value: 'Kola Champagne', label: 'Kola Champagne' },
+        { value: 'Grape', label: 'Grape' },
+        { value: 'Pineapple', label: 'Pineapple' },
+        { value: 'Mango', label: 'Mango' },
+        { value: 'Pineapple & Ginger', label: 'Pineapple & Ginger' },
+        { value: 'S&G', label: 'Sorrel & Ginger (S&G)' },
+        { value: 'Cherry', label: 'Cherry' }
+      ];
 
       const genericQuantities = Array.from({ length: 7 }, (_, i) => ({
         value: String(i + 1),
@@ -1201,7 +1213,7 @@
               borderColorClass="border-warning"
               buttonId="feedbackButtonSmokeless"
               imageMap={smokelessImages}
-              onAddToCart={(flavor, qty) => 
+              onAddToCart={(flavor, qty) =>
                 handleAddToCart('Smokeless Juice', './app/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
               }
             />
@@ -1230,7 +1242,7 @@
               borderColorClass="border-warning"
               buttonId="feedbackButtonShots"
               imageMap={shotsImages}
-              onAddToCart={(flavor, qty) => 
+              onAddToCart={(flavor, qty) =>
                 handleAddToCart('Feco Shot', './app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
               }
             />
@@ -1260,7 +1272,7 @@
               borderColorClass="border-success"
               buttonId="feedbackButtonCocktails"
               imageMap={contenderImages}
-              onAddToCart={(flavor, qty) => 
+              onAddToCart={(flavor, qty) =>
                 handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
               }
             />
@@ -1289,7 +1301,7 @@
               borderColorClass="border-warning"
               buttonId="feedbackButtonChocolate"
               imageMap={chocolateImages}
-              onAddToCart={(flavor, qty) => 
+              onAddToCart={(flavor, qty) =>
                 handleAddToCart('Infused Chocolate Bar', './app/img/chocolates/VODKA & CRANBERRIES 500MG.webp', flavor, qty, 14.99, null, chocolateImages)
               }
             />
@@ -1357,8 +1369,8 @@
           <Footer />
 
           {/* Floating Cart Button */}
-          <button 
-            className="floating-cart-btn" 
+          <button
+            className="floating-cart-btn"
             onClick={() => setIsCartOpen(true)}
             aria-label="Open Shopping Cart"
           >
@@ -1397,7 +1409,7 @@
           )}
 
           {/* Checkout Cart Drawer Component */}
-          <CartDrawer 
+          <CartDrawer
             isOpen={isCartOpen}
             onClose={() => setIsCartOpen(false)}
             cart={cart}
