@@ -57,7 +57,7 @@ export default function ProductSection({
 
       {/* Cards Showcase Area */}
       <div className="container feco-shots pt-lg-0 pb-1 fs-3 bg-black">
-        <div className="row row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-3 mx-1 mb-5">
+        <div className="row row-cols-1 row-cols-lg-3 row-cols-md-2 g-4 mx-1 mb-5">
           {children}
         </div>
       </div>

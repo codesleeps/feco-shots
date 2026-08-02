@@ -29,7 +29,7 @@ export default function ProductCard({
           className="card-img-top"
           alt={imgAlt}
           loading="lazy"
-          style={{ objectFit: 'cover', height: '295px' }}
+          style={{ objectFit: 'contain', height: '295px', padding: '10px' }}
         />
         <div className="card-body px-2">
           <div className="card-text text-light">
