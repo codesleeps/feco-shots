@@ -314,6 +314,19 @@
                     Chocolates
                   </a>
                 </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link text-warning fw-bold"
+                    href="#cart"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onCartClick();
+                    }}
+                    aria-label="Open Shopping Cart"
+                  >
+                    <i className="fas fa-shopping-cart me-1"></i> Cart {cartCount > 0 && `(${cartCount})`}
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -338,15 +351,15 @@
               {/* Header Cart Button */}
               <button
                 onClick={onCartClick}
-                className="btn btn-link text-warning me-3 position-relative"
-                style={{ padding: '8px' }}
-                aria-label="Toggle Cart View"
+                className="btn btn-warning text-dark font-weight-bold btn-sm me-3 position-relative d-flex align-items-center"
+                style={{ borderRadius: '6px', padding: '6px 14px' }}
+                aria-label="Open Shopping Cart"
               >
-                <i className="fas fa-shopping-cart fa-lg"></i>
+                <i className="fas fa-shopping-cart me-1"></i> Cart
                 {cartCount > 0 && (
                   <span
-                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    style={{ fontSize: '10px' }}
+                    className="badge rounded-pill bg-danger ms-2"
+                    style={{ fontSize: '11px' }}
                   >
                     {cartCount}
                   </span>
