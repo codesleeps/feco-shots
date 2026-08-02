@@ -1685,43 +1685,30 @@
 
           <Footer />
 
-          {/* Floating Cart Button */}
-          <button
-            className="floating-cart-btn"
-            onClick={() => setIsCartOpen(true)}
-            aria-label="Open Shopping Cart"
-          >
-            <i className="fas fa-shopping-cart fa-lg"></i>
-            {getCartCount() > 0 && (
-              <span className="floating-cart-badge">{getCartCount()}</span>
-            )}
-          </button>
-
-          {/* Scroll to Top Button */}
+          {/* Back To Top Arrow Button */}
           {showScrollBtn && (
             <button
               onClick={scrollToTop}
               id="myBtn"
               title="Go to top"
-              className="d-block"
+              className="d-flex align-items-center justify-content-center shadow"
               style={{
                 position: 'fixed',
-                bottom: '20px',
+                bottom: '30px',
                 right: '30px',
-                zIndex: 99,
+                zIndex: 999,
                 border: 'none',
                 outline: 'none',
                 backgroundColor: '#ffb338',
                 color: '#000',
                 cursor: 'pointer',
-                padding: '12px 18px',
-                borderRadius: '4px',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)'
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                fontSize: '18px'
               }}
             >
-              top
+              <i className="fas fa-chevron-up"></i>
             </button>
           )}
 
