@@ -11,24 +11,29 @@ export default defineConfig({
       name: 'serve-app-assets',
       configureServer(server) {
         server.middlewares.use('/app', (req, res, next) => {
-          const cleanUrl = req.url.split('?')[0];
-          const filePath = path.join(__dirname, 'app', cleanUrl);
-          if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-            const ext = path.extname(filePath).toLowerCase();
-            const mimeTypes = {
-              '.png': 'image/png',
-              '.jpg': 'image/jpeg',
-              '.jpeg': 'image/jpeg',
-              '.webp': 'image/webp',
-              '.svg': 'image/svg+xml',
-              '.gif': 'image/gif',
-              '.css': 'text/css',
-              '.js': 'text/javascript'
-            };
-            if (mimeTypes[ext]) {
-              res.setHeader('Content-Type', mimeTypes[ext]);
+          try {
+            const rawUrl = req.url.split('?')[0];
+            const cleanUrl = decodeURIComponent(rawUrl);
+            const filePath = path.join(__dirname, 'app', cleanUrl);
+            if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+              const ext = path.extname(filePath).toLowerCase();
+              const mimeTypes = {
+                '.png': 'image/png',
+                '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.webp': 'image/webp',
+                '.svg': 'image/svg+xml',
+                '.gif': 'image/gif',
+                '.css': 'text/css',
+                '.js': 'text/javascript'
+              };
+              if (mimeTypes[ext]) {
+                res.setHeader('Content-Type', mimeTypes[ext]);
+              }
+              return res.end(fs.readFileSync(filePath));
             }
-            return res.end(fs.readFileSync(filePath));
+          } catch (err) {
+            console.error('Asset serve error:', err);
           }
           next();
         });
