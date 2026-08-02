@@ -256,7 +256,7 @@ export default function App() {
       {/* Cocktails Section */}
       <ProductSection
         id="cocktails"
-        title="Cocktails Selection"
+        title="Contender Selection"
         imgSrc="/img/about/club_feco_500x282.webp"
         imgAlt="Various CBD drinks in glasses"
         subTitle="Embrace the spirit of adventure"
