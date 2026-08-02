@@ -179,15 +179,15 @@ export default function App() {
   };
 
   const chocolateImages = {
-    'Baileys & Honeycomb': '/img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
-    Cashews: '/img/chocolates/CASHEWS 250MG.png',
-    'Dry Roasted Nuts': '/img/chocolates/DRY ROASTED NUTS 250MG.png',
-    'Fruit & Nut': '/img/chocolates/FRUIT & NUT 250MG.png',
-    'Honey Roasted Nuts': '/img/chocolates/HONEY ROASTED NUTS 250MG.png',
-    'Milk Chocolate': '/img/chocolates/MILK CHOCOLATE 250MG.png',
-    'Rum & Raisin': '/img/chocolates/RUM & RAISIN 250MG.png',
-    'Vodka & Cranberries': '/img/chocolates/VODKA & CRANBERRIES 250MG.png',
-    'Whiskey & Fruits': '/img/chocolates/WHISKEY & FRUITS  500MG.png'
+    'Baileys & Honeycomb': './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
+    Cashews: './public/img/chocolates/CASHEWS 250MG.png',
+    'Dry Roasted Nuts': './public/img/chocolates/DRY ROASTED NUTS 250MG.png',
+    'Fruit & Nut': './public/img/chocolates/FRUIT & NUT 250MG.png',
+    'Honey Roasted Nuts': './public/img/chocolates/HONEY ROASTED NUTS 250MG.png',
+    'Milk Chocolate': './public/img/chocolates/MILK CHOCOLATE 250MG.png',
+    'Rum & Raisin': './public/img/chocolates/RUM & RAISIN 250MG.png',
+    'Vodka & Cranberries': './public/img/chocolates/VODKA & CRANBERRIES 250MG.png',
+    'Whiskey & Fruits': './public/img/chocolates/WHISKEY & FRUITS  500MG.png'
   };
 
   return (
@@ -309,7 +309,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
+          imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
           imgAlt="CBD chocolates"
           flavors={chocolateFlavors}
           quantities={genericQuantities}
@@ -317,7 +317,7 @@ export default function App() {
           buttonId="feedbackButtonChocolate"
           imageMap={chocolateImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Infused Chocolate Bar', '/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
+            handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
           }
         />
       </ProductSection>

@@ -123,7 +123,7 @@ export default function Footer() {
               </p>
               <p>
                 <a
-                  href="https://www.youtube.com/watch?v=huzhPzLwGz0"
+                  href="https://www.youtube.com/watch?v=--uT_Ieh_vE"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-reset text-decoration-none"
