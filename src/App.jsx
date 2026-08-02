@@ -93,7 +93,8 @@ export default function App() {
     { value: 'Pineapple', label: 'Pineapple' },
     { value: 'Mango', label: 'Mango' },
     { value: 'Apple', label: 'Apple' },
-    { value: 'Orange', label: 'Orange' }
+    { value: 'Orange', label: 'Orange' },
+    { value: 'Grape', label: 'Grape' }
   ];
 
   const smokelessQuantities = [
@@ -123,7 +124,9 @@ export default function App() {
     { value: 'Grape', label: 'Grape' },
     { value: 'Pineapple', label: 'Pineapple' },
     { value: 'Mango', label: 'Mango' },
-    { value: 'S&G', label: 'S&G' }
+    { value: 'Pineapple & Ginger', label: 'Pineapple & Ginger' },
+    { value: 'S&G', label: 'Sorrel & Ginger (S&G)' },
+    { value: 'Cherry', label: 'Cherry' }
   ];
 
   const genericQuantities = Array.from({ length: 7 }, (_, i) => ({
@@ -140,30 +143,34 @@ export default function App() {
 
   // Image Mapping Sets (Map option value to local image file path)
   const smokelessImages = {
-    Pineapple: '/app/img/smokeless/pineappleSmokeless-transformed.webp',
-    Mango: '/app/img/smokeless/mango.png',
-    Apple: '/app/img/smokeless/apple.png',
-    Orange: '/app/img/smokeless/orange.png'
+    Pineapple: '/app/img/smokeless/Smokeless - Pineapple.png',
+    Mango: '/app/img/smokeless/Smokeless - Mango.png',
+    Apple: '/app/img/smokeless/Smokeless - Apple.png',
+    Orange: '/app/img/smokeless/Smokeless - Orange.png',
+    Grape: '/app/img/smokeless/Smokeless - Grape.png'
   };
 
   const shotsImages = {
-    'Fruit Punch': '/app/img/shots/feco_shots.png',
-    Strawberry: '/app/img/shots/strawberry.png',
-    'Kola Champagne': '/app/img/shots/kola_champagne.png',
-    Grape: '/app/img/shots/grape.png',
-    Pineapple: '/app/img/shots/pineapple.png',
-    Mango: '/app/img/shots/mango.png',
-    'S&G': '/app/img/shots/s_g.png'
+    'Fruit Punch': '/app/img/shots/FECO SHOTS - FRUIT PUNCH.png',
+    Strawberry: '/app/img/shots/FECO_SHOTS_STRAWBERRY.png',
+    'Kola Champagne': '/app/img/shots/FECO SHOTS - KOLA CHAMPAGNE.png',
+    Grape: '/app/img/shots/FECO SHOTS - GRAPE (2).png',
+    Pineapple: '/app/img/shots/FECO SHOTS - PINEAPPLE.png',
+    Mango: '/app/img/shots/FECO SHOTS - MANGO.png',
+    'Pineapple & Ginger': '/app/img/shots/FECO SHOTS - PINEAPPLE & GINGER.png',
+    'S&G': '/app/img/shots/FECO SHOTS - SORREL & GINGER_LITE.png',
+    Cherry: '/app/img/shots/FECO_SHOTS_CHERRY_LITE.webp'
   };
 
   const contenderImages = {
+    'Fruit Punch': '/app/img/contender/CONTENDER FRUIT PUNCH (2).png',
+    Strawberry: '/app/img/contender/CONTENDER STRAWBERRY (2).png',
+    'Kola Champagne': '/app/img/contender/CONTENDER KOLA CHAMPAGNE (2).png',
+    Grape: '/app/img/contender/CONTENDER GRAPE (2).png',
+    Pineapple: '/app/img/contender/CONTENDER PINEAPPLE (2).png',
     Mango: '/app/img/contender/CONTENDER_MANGO400x280.webp',
-    'Kola Champagne': '/app/img/contender/kola_champagne.png',
-    Strawberry: '/app/img/contender/strawberry.png',
-    'Fruit Punch': '/app/img/contender/fruit_punch.png',
-    Grape: '/app/img/contender/grape.png',
-    Pineapple: '/app/img/contender/pineapple.png',
-    'S&G': '/app/img/contender/s_g.png'
+    'S&G': '/app/img/contender/CONTENDER S&G.png',
+    Cherry: '/app/img/contender/CONTENDER CHERRY (2).png'
   };
 
   const chocolateImages = {
@@ -204,7 +211,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/smokeless/pineappleSmokeless-transformed.webp"
+          imgSrc="/app/img/smokeless/Smokeless - Pineapple.png"
           imgAlt="CBD Fresh Fruit Juices"
           flavors={smokelessFlavors}
           quantities={smokelessQuantities}
@@ -212,7 +219,7 @@ export default function App() {
           buttonId="feedbackButtonSmokeless"
           imageMap={smokelessImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Smokeless Juice', '/app/img/smokeless/pineappleSmokeless-transformed.webp', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
+            handleAddToCart('Smokeless Juice', '/app/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
           }
         />
       </ProductSection>
@@ -233,15 +240,15 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/shots/feco_shots.png"
-          imgAlt="Jar of topicals cream"
+          imgSrc="/app/img/shots/FECO SHOTS - FRUIT PUNCH.png"
+          imgAlt="Feco Shots Syrups"
           flavors={shotsFlavors}
           quantities={genericQuantities}
           borderColorClass="border-warning"
           buttonId="feedbackButtonShots"
           imageMap={shotsImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Feco Shot', '/app/img/shots/feco_shots.png', flavor, qty, 19.99, null, shotsImages)
+            handleAddToCart('Feco Shot', '/app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
           }
         />
       </ProductSection>
@@ -263,7 +270,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/contender/CONTENDER_MANGO400x280.webp"
+          imgSrc="/app/img/contender/CONTENDER FRUIT PUNCH (2).png"
           imgAlt="CBD cocktails"
           flavors={shotsFlavors}
           quantities={genericQuantities}
@@ -271,7 +278,7 @@ export default function App() {
           buttonId="feedbackButtonCocktails"
           imageMap={contenderImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Contender Cocktail', '/app/img/contender/CONTENDER_MANGO400x280.webp', flavor, qty, 24.99, null, contenderImages)
+            handleAddToCart('Contender Cocktail', '/app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
           }
         />
       </ProductSection>
