@@ -2216,25 +2216,25 @@ footer {
   color: #000;
 }
 
-/* Back To Top Floating Action Button - Arrow Icon */
+/* Back To Top Discreet Small Arrow Button */
 #myBtn {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 999;
+  bottom: 15px;
+  right: 15px;
+  z-index: 50;
   border: none;
   outline: none;
   background-color: #ffb338;
   color: #000;
   cursor: pointer;
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  font-size: 18px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 

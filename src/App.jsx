@@ -447,30 +447,30 @@ export default function App() {
 
       <Footer />
 
-      {/* Back To Top Arrow Button */}
-      {showScrollBtn && (
+      {/* Discreet Small Back To Top Arrow Button (Hidden when cart or modal is open) */}
+      {!isCartOpen && !isAdminOrdersOpen && !isPinModalOpen && showScrollBtn && (
         <button
           onClick={scrollToTop}
           id="myBtn"
           title="Go to top"
-          className="d-flex align-items-center justify-content-center shadow"
+          className="d-flex align-items-center justify-content-center shadow-sm"
           style={{
             position: 'fixed',
-            bottom: '30px',
-            right: '30px',
-            zIndex: 999,
+            bottom: '15px',
+            right: '15px',
+            zIndex: 50,
             border: 'none',
             outline: 'none',
             backgroundColor: '#ffb338',
             color: '#000',
             cursor: 'pointer',
-            width: '48px',
-            height: '48px',
+            width: '32px',
+            height: '32px',
             borderRadius: '50%',
-            fontSize: '18px'
+            fontSize: '14px'
           }}
         >
-          <i className="fas fa-chevron-up"></i>
+          <i className="fas fa-arrow-up"></i>
         </button>
       )}
 
