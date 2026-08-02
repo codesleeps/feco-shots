@@ -143,41 +143,41 @@ export default function App() {
 
   // Image Mapping Sets (Map option value to local image file path)
   const smokelessImages = {
-    Pineapple: '/app/img/smokeless/Smokeless - Pineapple.png',
-    Mango: '/app/img/smokeless/Smokeless - Mango.png',
-    Apple: '/app/img/smokeless/Smokeless - Apple.png',
-    Orange: '/app/img/smokeless/Smokeless - Orange.png',
-    Grape: '/app/img/smokeless/Smokeless - Grape.png'
+    Pineapple: '/img/smokeless/Smokeless - Pineapple.png',
+    Mango: '/img/smokeless/Smokeless - Mango.png',
+    Apple: '/img/smokeless/Smokeless - Apple.png',
+    Orange: '/img/smokeless/Smokeless - Orange.png',
+    Grape: '/img/smokeless/Smokeless - Grape.png'
   };
 
   const shotsImages = {
-    'Fruit Punch': '/app/img/shots/FECO SHOTS - FRUIT PUNCH.png',
-    Strawberry: '/app/img/shots/FECO_SHOTS_STRAWBERRY.png',
-    'Kola Champagne': '/app/img/shots/FECO SHOTS - KOLA CHAMPAGNE.png',
-    Grape: '/app/img/shots/FECO SHOTS - GRAPE (2).png',
-    Pineapple: '/app/img/shots/FECO SHOTS - PINEAPPLE.png',
-    Mango: '/app/img/shots/FECO SHOTS - MANGO.png',
-    'Pineapple & Ginger': '/app/img/shots/FECO SHOTS - PINEAPPLE & GINGER.png',
-    'S&G': '/app/img/shots/FECO SHOTS - SORREL & GINGER_LITE.png',
-    Cherry: '/app/img/shots/FECO_SHOTS_CHERRY_LITE.webp'
+    'Fruit Punch': '/img/shots/FECO SHOTS - FRUIT PUNCH.png',
+    Strawberry: '/img/shots/FECO_SHOTS_STRAWBERRY.png',
+    'Kola Champagne': '/img/shots/FECO SHOTS - KOLA CHAMPAGNE.png',
+    Grape: '/img/shots/FECO SHOTS - GRAPE (2).png',
+    Pineapple: '/img/shots/FECO SHOTS - PINEAPPLE.png',
+    Mango: '/img/shots/FECO SHOTS - MANGO.png',
+    'Pineapple & Ginger': '/img/shots/FECO SHOTS - PINEAPPLE & GINGER.png',
+    'S&G': '/img/shots/FECO SHOTS - SORREL & GINGER_LITE.png',
+    Cherry: '/img/shots/FECO_SHOTS_CHERRY_LITE.webp'
   };
 
   const contenderImages = {
-    'Fruit Punch': '/app/img/contender/CONTENDER FRUIT PUNCH (2).png',
-    Strawberry: '/app/img/contender/CONTENDER STRAWBERRY (2).png',
-    'Kola Champagne': '/app/img/contender/CONTENDER KOLA CHAMPAGNE (2).png',
-    Grape: '/app/img/contender/CONTENDER GRAPE (2).png',
-    Pineapple: '/app/img/contender/CONTENDER PINEAPPLE (2).png',
-    Mango: '/app/img/contender/CONTENDER_MANGO400x280.webp',
-    'S&G': '/app/img/contender/CONTENDER S&G.png',
-    Cherry: '/app/img/contender/CONTENDER CHERRY (2).png'
+    'Fruit Punch': '/img/contender/CONTENDER FRUIT PUNCH (2).png',
+    Strawberry: '/img/contender/CONTENDER STRAWBERRY (2).png',
+    'Kola Champagne': '/img/contender/CONTENDER KOLA CHAMPAGNE (2).png',
+    Grape: '/img/contender/CONTENDER GRAPE (2).png',
+    Pineapple: '/img/contender/CONTENDER PINEAPPLE (2).png',
+    Mango: '/img/contender/CONTENDER_MANGO400x280.webp',
+    'S&G': '/img/contender/CONTENDER S&G.png',
+    Cherry: '/img/contender/CONTENDER CHERRY (2).png'
   };
 
   const chocolateImages = {
-    'Dry roasted': '/app/img/chocolates/VODKA & CRANBERRIES 500MG.webp',
-    'Fruit & Nut': '/app/img/chocolates/fruit_and_nut.png',
-    'Rum & Raisin': '/app/img/chocolates/rum_and_raisin.png',
-    Cashews: '/app/img/chocolates/cashews.png'
+    'Dry roasted': '/img/chocolates/VODKA & CRANBERRIES 500MG.webp',
+    'Fruit & Nut': '/img/chocolates/fruit_and_nut.png',
+    'Rum & Raisin': '/img/chocolates/rum_and_raisin.png',
+    Cashews: '/img/chocolates/cashews.png'
   };
 
   return (
@@ -199,7 +199,7 @@ export default function App() {
       <ProductSection
         id="smokeless"
         title="Smokeless Selection"
-        imgSrc="/app/img/about/smokeless_about.webp"
+        imgSrc="/img/about/smokeless_about.webp"
         imgAlt="CBD Fresh Juices in Glasses"
         subTitle="CBD with a Burst of Freshness"
         description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
@@ -211,7 +211,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/smokeless/Smokeless - Pineapple.png"
+          imgSrc="/img/smokeless/Smokeless - Pineapple.png"
           imgAlt="CBD Fresh Fruit Juices"
           flavors={smokelessFlavors}
           quantities={smokelessQuantities}
@@ -219,7 +219,7 @@ export default function App() {
           buttonId="feedbackButtonSmokeless"
           imageMap={smokelessImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Smokeless Juice', '/app/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
+            handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
           }
         />
       </ProductSection>
@@ -228,7 +228,7 @@ export default function App() {
       <ProductSection
         id="shots"
         title="Shots Selection"
-        imgSrc="/app/img/about/shots_selection_500x332.webp"
+        imgSrc="/img/about/shots_selection_500x332.webp"
         imgAlt="CBD Tincture Bottles"
         subTitle="Pure, Potent, and Packed with Benefits"
         description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
@@ -240,7 +240,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/shots/FECO SHOTS - FRUIT PUNCH.png"
+          imgSrc="/img/shots/FECO SHOTS - FRUIT PUNCH.png"
           imgAlt="Feco Shots Syrups"
           flavors={shotsFlavors}
           quantities={genericQuantities}
@@ -248,7 +248,7 @@ export default function App() {
           buttonId="feedbackButtonShots"
           imageMap={shotsImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Feco Shot', '/app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
+            handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
           }
         />
       </ProductSection>
@@ -257,7 +257,7 @@ export default function App() {
       <ProductSection
         id="cocktails"
         title="Cocktails Selection"
-        imgSrc="/app/img/about/club_feco_500x282.webp"
+        imgSrc="/img/about/club_feco_500x282.webp"
         imgAlt="Various CBD drinks in glasses"
         subTitle="Embrace the spirit of adventure"
         description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
@@ -270,7 +270,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/contender/CONTENDER FRUIT PUNCH (2).png"
+          imgSrc="/img/contender/CONTENDER FRUIT PUNCH (2).png"
           imgAlt="CBD cocktails"
           flavors={shotsFlavors}
           quantities={genericQuantities}
@@ -278,7 +278,7 @@ export default function App() {
           buttonId="feedbackButtonCocktails"
           imageMap={contenderImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Contender Cocktail', '/app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
+            handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
           }
         />
       </ProductSection>
@@ -287,7 +287,7 @@ export default function App() {
       <ProductSection
         id="chocolates"
         title="Chocolate Selection"
-        imgSrc="/app/img/about/chocolate_about_500x391.webp"
+        imgSrc="/img/about/chocolate_about_500x391.webp"
         imgAlt="CBD Chocolate Selection"
         subTitle="CBD-Infused Chocolates: A Decadent Delight"
         description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
@@ -299,7 +299,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/app/img/chocolates/VODKA & CRANBERRIES 500MG.webp"
+          imgSrc="/img/chocolates/VODKA & CRANBERRIES 500MG.webp"
           imgAlt="CBD chocolates"
           flavors={chocolateFlavors}
           quantities={genericQuantities}
@@ -307,7 +307,7 @@ export default function App() {
           buttonId="feedbackButtonChocolate"
           imageMap={chocolateImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Infused Chocolate Bar', '/app/img/chocolates/VODKA & CRANBERRIES 500MG.webp', flavor, qty, 14.99, null, chocolateImages)
+            handleAddToCart('Infused Chocolate Bar', '/img/chocolates/VODKA & CRANBERRIES 500MG.webp', flavor, qty, 14.99, null, chocolateImages)
           }
         />
       </ProductSection>
@@ -343,7 +343,7 @@ export default function App() {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <img
-                src="/app/img/carousel/cannabisPlant.webp"
+                src="/img/carousel/cannabisPlant.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="Cannabis Plant"
@@ -352,7 +352,7 @@ export default function App() {
             </div>
             <div className="carousel-item">
               <img
-                src="/app/img/about/chocolate_about_500x391.webp"
+                src="/img/about/chocolate_about_500x391.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="CBD Chocolates"
@@ -361,7 +361,7 @@ export default function App() {
             </div>
             <div className="carousel-item">
               <img
-                src="/app/img/carousel/tincturePipe.webp"
+                src="/img/carousel/tincturePipe.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="CBD Tincture Collection"
