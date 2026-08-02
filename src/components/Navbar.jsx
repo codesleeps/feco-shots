@@ -33,8 +33,8 @@ export default function Navbar({ cartCount, onCartClick }) {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our CBD cocktails">
-                Cocktails
+              <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our Contender range">
+                Contender
               </a>
             </li>
             <li className="nav-item">

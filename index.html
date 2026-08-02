@@ -219,8 +219,8 @@
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our CBD cocktails">
-                    Cocktails
+                  <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our Contender range">
+                    Contender
                   </a>
                 </li>
                 <li className="nav-item">
@@ -1174,15 +1174,15 @@
       };
 
       const chocolateImages = {
-        'Baileys & Honeycomb': './app/img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
-        Cashews: './app/img/chocolates/CASHEWS 250MG.png',
-        'Dry Roasted Nuts': './app/img/chocolates/DRY ROASTED NUTS 250MG.png',
-        'Fruit & Nut': './app/img/chocolates/FRUIT & NUT 250MG.png',
-        'Honey Roasted Nuts': './app/img/chocolates/HONEY ROASTED NUTS 250MG.png',
-        'Milk Chocolate': './app/img/chocolates/MILK CHOCOLATE 250MG.png',
-        'Rum & Raisin': './app/img/chocolates/RUM & RAISIN 250MG.png',
-        'Vodka & Cranberries': './app/img/chocolates/VODKA & CRANBERRIES 250MG.png',
-        'Whiskey & Fruits': './app/img/chocolates/WHISKEY & FRUITS  500MG.png'
+        'Baileys & Honeycomb': './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
+        Cashews: './public/img/chocolates/CASHEWS 250MG.png',
+        'Dry Roasted Nuts': './public/img/chocolates/DRY ROASTED NUTS 250MG.png',
+        'Fruit & Nut': './public/img/chocolates/FRUIT & NUT 250MG.png',
+        'Honey Roasted Nuts': './public/img/chocolates/HONEY ROASTED NUTS 250MG.png',
+        'Milk Chocolate': './public/img/chocolates/MILK CHOCOLATE 250MG.png',
+        'Rum & Raisin': './public/img/chocolates/RUM & RAISIN 250MG.png',
+        'Vodka & Cranberries': './public/img/chocolates/VODKA & CRANBERRIES 250MG.png',
+        'Whiskey & Fruits': './public/img/chocolates/WHISKEY & FRUITS  500MG.png'
       };
 
       return (
@@ -1304,7 +1304,7 @@
             ]}
           >
             <ProductCard
-              imgSrc="./app/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
+              imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
               imgAlt="CBD chocolates"
               flavors={chocolateFlavors}
               quantities={genericQuantities}
@@ -1312,7 +1312,7 @@
               buttonId="feedbackButtonChocolate"
               imageMap={chocolateImages}
               onAddToCart={(flavor, qty) =>
-                handleAddToCart('Infused Chocolate Bar', './app/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
+                handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
               }
             />
           </ProductSection>
