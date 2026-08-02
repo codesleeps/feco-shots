@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart }) {
+export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart, onSaveOrder }) {
   const [view, setView] = useState('cart'); // 'cart' | 'checkout' | 'success'
   const [orderNum, setOrderNum] = useState('');
   const [checkoutForm, setCheckoutForm] = useState({
@@ -22,6 +22,19 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
     }
     
     const randomNum = 'F-' + Math.floor(10000 + Math.random() * 90000);
+    const newOrder = {
+      id: randomNum,
+      customer: { ...checkoutForm },
+      items: [...cart],
+      subtotal: getSubtotal(),
+      timestamp: new Date().toISOString(),
+      status: 'Pending'
+    };
+
+    if (onSaveOrder) {
+      onSaveOrder(newOrder);
+    }
+
     setOrderNum(randomNum);
     setView('success');
     clearCart();

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Navbar({ cartCount, onCartClick }) {
+export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
   return (
     <nav className="navbar navbar-expand-lg fixed-top navbar">
       <div className="container-fluid">
@@ -46,6 +46,23 @@ export default function Navbar({ cartCount, onCartClick }) {
         </div>
         
         <div className="d-flex align-items-center">
+          {/* Store Owner Orders Button */}
+          {onOpenAdminOrders && (
+            <button
+              onClick={onOpenAdminOrders}
+              className="btn btn-outline-warning btn-sm me-3 position-relative d-flex align-items-center"
+              style={{ borderRadius: '6px' }}
+              title="Store Owner - View Orders"
+            >
+              <i className="fas fa-clipboard-list me-1"></i> Orders
+              {pendingOrdersCount > 0 && (
+                <span className="badge rounded-pill bg-danger ms-1">
+                  {pendingOrdersCount}
+                </span>
+              )}
+            </button>
+          )}
+
           {/* Header Cart Button */}
           <button 
             onClick={onCartClick} 

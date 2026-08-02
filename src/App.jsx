@@ -7,11 +7,21 @@ import ProductCard from './components/ProductCard';
 import Footer from './components/Footer';
 import FeedbackModal from './components/FeedbackModal';
 import CartDrawer from './components/CartDrawer';
+import AdminOrdersModal from './components/AdminOrdersModal';
 
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
+  const [orders, setOrders] = useState(() => {
+    try {
+      const saved = localStorage.getItem('feco_orders');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +37,40 @@ export default function App() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSaveOrder = (newOrder) => {
+    setOrders((prevOrders) => {
+      const updated = [newOrder, ...prevOrders];
+      localStorage.setItem('feco_orders', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleUpdateOrderStatus = (orderId, newStatus) => {
+    setOrders((prevOrders) => {
+      const updated = prevOrders.map((order) =>
+        order.id === orderId ? { ...order, status: newStatus } : order
+      );
+      localStorage.setItem('feco_orders', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleDeleteOrder = (orderId) => {
+    setOrders((prevOrders) => {
+      const updated = prevOrders.filter((order) => order.id !== orderId);
+      localStorage.setItem('feco_orders', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleClearCompletedOrders = () => {
+    setOrders((prevOrders) => {
+      const updated = prevOrders.filter((order) => order.status !== 'Completed');
+      localStorage.setItem('feco_orders', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   // Add Item to Checkout Cart
@@ -192,7 +236,12 @@ export default function App() {
 
   return (
     <div className="bg-black text-light min-vh-100">
-      <Navbar cartCount={getCartCount()} onCartClick={() => setIsCartOpen(true)} />
+      <Navbar 
+        cartCount={getCartCount()} 
+        onCartClick={() => setIsCartOpen(true)} 
+        pendingOrdersCount={orders.filter((o) => o.status === 'Pending').length}
+        onOpenAdminOrders={() => setIsAdminOrdersOpen(true)}
+      />
       <Hero />
 
       <section className="news-input p-4">
@@ -432,6 +481,17 @@ export default function App() {
         updateQty={updateQty}
         removeItem={removeItem}
         clearCart={clearCart}
+        onSaveOrder={handleSaveOrder}
+      />
+
+      {/* Store Owner Orders Management Modal */}
+      <AdminOrdersModal
+        isOpen={isAdminOrdersOpen}
+        onClose={() => setIsAdminOrdersOpen(false)}
+        orders={orders}
+        onUpdateStatus={handleUpdateOrderStatus}
+        onDeleteOrder={handleDeleteOrder}
+        onClearCompleted={handleClearCompletedOrders}
       />
 
       <FeedbackModal />
