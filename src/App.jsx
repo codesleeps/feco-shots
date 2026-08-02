@@ -135,10 +135,15 @@ export default function App() {
   }));
 
   const chocolateFlavors = [
-    { value: 'Dry roasted', label: 'Dry roasted' },
-    { value: 'Fruit & Nut', label: 'Fruit & Nut' },
-    { value: 'Rum & Raisin', label: 'Rum & Raisin' },
-    { value: 'Cashews', label: 'Cashews' }
+    { value: 'Baileys & Honeycomb', label: 'Baileys & Honeycomb 250mg' },
+    { value: 'Cashews', label: 'Cashews 250mg' },
+    { value: 'Dry Roasted Nuts', label: 'Dry Roasted Nuts 250mg' },
+    { value: 'Fruit & Nut', label: 'Fruit & Nut 250mg' },
+    { value: 'Honey Roasted Nuts', label: 'Honey Roasted Nuts 250mg' },
+    { value: 'Milk Chocolate', label: 'Milk Chocolate 250mg' },
+    { value: 'Rum & Raisin', label: 'Rum & Raisin 250mg' },
+    { value: 'Vodka & Cranberries', label: 'Vodka & Cranberries 250mg' },
+    { value: 'Whiskey & Fruits', label: 'Whiskey & Fruits 500mg' }
   ];
 
   // Image Mapping Sets (Map option value to local image file path)
@@ -174,10 +179,15 @@ export default function App() {
   };
 
   const chocolateImages = {
-    'Dry roasted': '/img/chocolates/VODKA & CRANBERRIES 500MG.webp',
-    'Fruit & Nut': '/img/chocolates/fruit_and_nut.png',
-    'Rum & Raisin': '/img/chocolates/rum_and_raisin.png',
-    Cashews: '/img/chocolates/cashews.png'
+    'Baileys & Honeycomb': '/img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
+    Cashews: '/img/chocolates/CASHEWS 250MG.png',
+    'Dry Roasted Nuts': '/img/chocolates/DRY ROASTED NUTS 250MG.png',
+    'Fruit & Nut': '/img/chocolates/FRUIT & NUT 250MG.png',
+    'Honey Roasted Nuts': '/img/chocolates/HONEY ROASTED NUTS 250MG.png',
+    'Milk Chocolate': '/img/chocolates/MILK CHOCOLATE 250MG.png',
+    'Rum & Raisin': '/img/chocolates/RUM & RAISIN 250MG.png',
+    'Vodka & Cranberries': '/img/chocolates/VODKA & CRANBERRIES 250MG.png',
+    'Whiskey & Fruits': '/img/chocolates/WHISKEY & FRUITS  500MG.png'
   };
 
   return (
@@ -299,7 +309,7 @@ export default function App() {
         ]}
       >
         <ProductCard
-          imgSrc="/img/chocolates/VODKA & CRANBERRIES 500MG.webp"
+          imgSrc="/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
           imgAlt="CBD chocolates"
           flavors={chocolateFlavors}
           quantities={genericQuantities}
@@ -307,7 +317,7 @@ export default function App() {
           buttonId="feedbackButtonChocolate"
           imageMap={chocolateImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Infused Chocolate Bar', '/img/chocolates/VODKA & CRANBERRIES 500MG.webp', flavor, qty, 14.99, null, chocolateImages)
+            handleAddToCart('Infused Chocolate Bar', '/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
           }
         />
       </ProductSection>
