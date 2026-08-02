@@ -78,7 +78,14 @@ export default function AdminOrdersModal({ isOpen, onClose, orders, onUpdateStat
                     <option value="Completed">Completed</option>
                   </select>
                 </div>
-                <div className="col-md-3 text-end">
+                <div className="col-md-3 text-end d-flex gap-2 justify-content-end">
+                  <button
+                    className="btn btn-outline-warning btn-sm"
+                    onClick={() => window.print()}
+                    title="Print Orders Summary"
+                  >
+                    <i className="fas fa-print me-1"></i> Print
+                  </button>
                   <button
                     className="btn btn-outline-danger btn-sm"
                     onClick={onClearCompleted}

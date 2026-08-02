@@ -8,12 +8,18 @@ import Footer from './components/Footer';
 import FeedbackModal from './components/FeedbackModal';
 import CartDrawer from './components/CartDrawer';
 import AdminOrdersModal from './components/AdminOrdersModal';
+import AgeGateModal from './components/AgeGateModal';
+import OwnerPinModal from './components/OwnerPinModal';
+import ProductSearchBar from './components/ProductSearchBar';
 
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
   const [orders, setOrders] = useState(() => {
     try {
       const saved = localStorage.getItem('feco_orders');
@@ -240,9 +246,17 @@ export default function App() {
         cartCount={getCartCount()} 
         onCartClick={() => setIsCartOpen(true)} 
         pendingOrdersCount={orders.filter((o) => o.status === 'Pending').length}
-        onOpenAdminOrders={() => setIsAdminOrdersOpen(true)}
+        onOpenAdminOrders={() => setIsPinModalOpen(true)}
       />
       <Hero />
+
+      {/* Interactive Search & Category Filter Bar */}
+      <ProductSearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+      />
 
       <section className="news-input p-4">
         <div className="container">
@@ -493,6 +507,19 @@ export default function App() {
         onDeleteOrder={handleDeleteOrder}
         onClearCompleted={handleClearCompletedOrders}
       />
+
+      {/* Owner PIN Verification Lock Modal */}
+      <OwnerPinModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
+        onSuccess={() => {
+          setIsPinModalOpen(false);
+          setIsAdminOrdersOpen(true);
+        }}
+      />
+
+      {/* Age Verification Gate (18+) */}
+      <AgeGateModal />
 
       <FeedbackModal />
     </div>

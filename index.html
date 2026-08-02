@@ -45,6 +45,233 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
+    function AgeGateModal() {
+      const [isVerified, setIsVerified] = useState(true);
+      const [underAge, setUnderAge] = useState(false);
+
+      useEffect(() => {
+        const ageVerified = localStorage.getItem('feco_age_verified');
+        if (!ageVerified) {
+          setIsVerified(false);
+        }
+      }, []);
+
+      const handleConfirmAge = () => {
+        localStorage.setItem('feco_age_verified', 'true');
+        setIsVerified(true);
+      };
+
+      const handleUnderAge = () => {
+        setUnderAge(true);
+      };
+
+      if (isVerified) return null;
+
+      return (
+        <React.Fragment>
+          <div className="cart-backdrop" style={{ zIndex: 2000, background: 'rgba(0,0,0,0.95)' }}></div>
+          <div className="modal d-block" tabIndex="-1" role="dialog" style={{ zIndex: 2005 }}>
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content bg-black border border-warning text-light p-4 text-center">
+                <div className="mb-3">
+                  <img
+                    src="./app/img/logo/leaf.png"
+                    alt="Club Feco Leaf Logo"
+                    width="60"
+                    height="55"
+                    className="mb-2"
+                  />
+                  <h3 className="text-warning fw-bold">Age Verification Required</h3>
+                </div>
+
+                {underAge ? (
+                  <div className="py-4">
+                    <i className="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                    <h5 className="text-danger fw-bold mb-3">Access Restricted</h5>
+                    <p className="text-muted fs-5">
+                      You must be 18 years of age or older to enter Club Feco and view our infused products.
+                    </p>
+                    <button
+                      className="btn btn-outline-warning mt-3"
+                      onClick={() => setUnderAge(false)}
+                    >
+                      Back to Age Check
+                    </button>
+                  </div>
+                ) : (
+                  <div className="py-3">
+                    <p className="fs-4 mb-4">
+                      Welcome to <strong>Club Feco</strong>. Are you at least 18 years of age?
+                    </p>
+
+                    <div className="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                      <button
+                        className="btn btn-warning btn-lg px-4 font-weight-bold text-dark me-sm-2"
+                        onClick={handleConfirmAge}
+                        style={{ letterSpacing: '1px', borderRadius: '6px' }}
+                      >
+                        <i className="fas fa-check-circle me-2"></i> YES, I AM 18 OR OLDER
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-lg px-4"
+                        onClick={handleUnderAge}
+                        style={{ borderRadius: '6px' }}
+                      >
+                        I AM UNDER 18
+                      </button>
+                    </div>
+                    <p className="text-muted small mt-4 mb-0">
+                      By entering, you confirm you are of legal age to view infused product content in your jurisdiction.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+      );
+    }
+
+    function OwnerPinModal({ isOpen, onClose, onSuccess }) {
+      const [pin, setPin] = useState('');
+      const [error, setError] = useState('');
+
+      if (!isOpen) return null;
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const storedPin = localStorage.getItem('feco_owner_pin') || '1234';
+        if (pin === storedPin) {
+          setError('');
+          setPin('');
+          onSuccess();
+        } else {
+          setError('Incorrect PIN. Try default (1234)');
+        }
+      };
+
+      const handleClose = () => {
+        setPin('');
+        setError('');
+        onClose();
+      };
+
+      return (
+        <React.Fragment>
+          <div className="cart-backdrop" onClick={handleClose} style={{ zIndex: 1045 }}></div>
+          <div className="modal d-block" tabIndex="-1" role="dialog" style={{ zIndex: 1048 }}>
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content bg-black border border-warning text-light p-3">
+                <div className="modal-header border-bottom border-warning pb-2">
+                  <h5 className="modal-title text-warning fw-bold d-flex align-items-center">
+                    <i className="fas fa-lock me-2"></i> Owner Access Required
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn btn-link text-warning fs-2 p-0 text-decoration-none"
+                    onClick={handleClose}
+                    aria-label="Close Modal"
+                    style={{ lineHeight: 1 }}
+                  >
+                    &times;
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="modal-body py-4">
+                  <p className="text-muted fs-6 mb-3">
+                    Please enter your store owner 4-digit PIN to access customer orders.
+                  </p>
+
+                  {error && <div className="alert alert-danger py-2 mb-3">{error}</div>}
+
+                  <div className="mb-4">
+                    <label className="form-label text-light fs-5">4-Digit PIN</label>
+                    <input
+                      type="password"
+                      maxLength="6"
+                      className="form-control bg-dark text-warning border-warning fs-3 text-center py-2"
+                      style={{ letterSpacing: '8px' }}
+                      placeholder="••••"
+                      value={pin}
+                      onChange={(e) => setPin(e.target.value)}
+                      autoFocus
+                      required
+                    />
+                    <div className="form-text text-muted small mt-2">Default PIN: 1234</div>
+                  </div>
+
+                  <div className="d-grid gap-2">
+                    <button type="submit" className="btn btn-warning text-dark font-weight-bold py-2">
+                      Unlock Orders Dashboard
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+      );
+    }
+
+    function ProductSearchBar({ searchTerm, setSearchTerm, activeCategory, setActiveCategory }) {
+      const categories = [
+        { id: 'all', label: 'All Products' },
+        { id: 'smokeless', label: 'Smokeless Range' },
+        { id: 'shots', label: 'Feco Shots' },
+        { id: 'cocktails', label: 'Contender Selection' },
+        { id: 'chocolates', label: 'Chocolates' }
+      ];
+
+      return (
+        <section className="bg-black py-4 border-top border-bottom border-secondary">
+          <div className="container">
+            <div className="row g-3 align-items-center">
+              <div className="col-md-5">
+                <div className="input-group">
+                  <span className="input-group-text bg-dark text-warning border-secondary">
+                    <i className="fas fa-search"></i>
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control bg-dark text-light border-secondary py-2"
+                    placeholder="Search flavors, strength (250mg), or product..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  {searchTerm && (
+                    <button
+                      className="btn btn-dark text-warning border-secondary"
+                      onClick={() => setSearchTerm('')}
+                      title="Clear search"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-md-7">
+                <div className="d-flex flex-wrap gap-2 justify-content-md-end">
+                  {categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`btn btn-sm ${
+                        activeCategory === cat.id ? 'btn-warning text-dark fw-bold' : 'btn-outline-secondary text-light'
+                      }`}
+                      style={{ borderRadius: '20px', padding: '6px 14px' }}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
     function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
       return (
         <nav className="navbar navbar-expand-lg fixed-top navbar">
@@ -616,13 +843,22 @@
                   <span className="text-muted d-block fs-6">Order Number</span>
                   <span className="text-warning font-weight-bold fs-3" style={{ letterSpacing: '3px' }}>{orderNum}</span>
                 </div>
-                <button
-                  onClick={handleClose}
-                  className="btn btn-warning text-dark font-weight-bold btn-lg px-5 mt-3"
-                  style={{ borderRadius: '6px' }}
-                >
-                  Continue Shopping
-                </button>
+                <div className="d-flex gap-2 justify-content-center w-100 mt-2">
+                  <button
+                    onClick={() => window.print()}
+                    className="btn btn-outline-warning font-weight-bold py-2 px-3 me-2"
+                    style={{ borderRadius: '6px' }}
+                  >
+                    <i className="fas fa-print me-1"></i> Print Receipt
+                  </button>
+                  <button
+                    onClick={handleClose}
+                    className="btn btn-warning text-dark font-weight-bold py-2 px-4"
+                    style={{ borderRadius: '6px' }}
+                  >
+                    Continue Shopping
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -708,7 +944,14 @@
                         <option value="Completed">Completed</option>
                       </select>
                     </div>
-                    <div className="col-md-3 text-end">
+                    <div className="col-md-3 text-end d-flex gap-2 justify-content-end">
+                      <button
+                        className="btn btn-outline-warning btn-sm"
+                        onClick={() => window.print()}
+                        title="Print Orders Summary"
+                      >
+                        <i className="fas fa-print me-1"></i> Print
+                      </button>
                       <button
                         className="btn btn-outline-danger btn-sm"
                         onClick={onClearCompleted}
@@ -1008,7 +1251,10 @@
       const [showScrollBtn, setShowScrollBtn] = useState(false);
       const [cart, setCart] = useState([]);
       const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isPinModalOpen, setIsPinModalOpen] = useState(false);
       const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [activeCategory, setActiveCategory] = useState('all');
       const [orders, setOrders] = useState(() => {
         try {
           const saved = localStorage.getItem('feco_orders');
@@ -1216,15 +1462,32 @@
         'Whiskey & Fruits': './public/img/chocolates/WHISKEY & FRUITS  500MG.png'
       };
 
+      const filterMatches = (title, flavorsList) => {
+        if (!searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        const titleMatch = title.toLowerCase().includes(term);
+        const flavorMatch = flavorsList.some((f) =>
+          f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
+        );
+        return titleMatch || flavorMatch;
+      };
+
       return (
         <div className="bg-black text-light min-vh-100">
           <Navbar
             cartCount={getCartCount()}
             onCartClick={() => setIsCartOpen(true)}
             pendingOrdersCount={orders.filter((o) => o.status === 'Pending').length}
-            onOpenAdminOrders={() => setIsAdminOrdersOpen(true)}
+            onOpenAdminOrders={() => setIsPinModalOpen(true)}
           />
           <Hero />
+
+          <ProductSearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
 
           <section className="news-input p-4">
             <div className="container">
@@ -1237,121 +1500,129 @@
           <About />
 
           {/* Smokeless Section */}
-          <ProductSection
-            id="smokeless"
-            title="Smokeless Selection"
-            imgSrc="./app/img/about/smokeless_about.webp"
-            imgAlt="CBD Fresh Juices in Glasses"
-            subTitle="CBD with a Burst of Freshness"
-            description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
-            bullets={[
-              '100% Pure & Natural.',
-              'Various strengths available',
-              'A Refreshing Twist on Wellness',
-              'Vegan Friendly'
-            ]}
-          >
-            <ProductCard
-              imgSrc="./app/img/smokeless/Smokeless - Pineapple.png"
-              imgAlt="CBD Fresh Fruit Juices"
-              flavors={smokelessFlavors}
-              quantities={smokelessQuantities}
-              borderColorClass="border-warning"
-              buttonId="feedbackButtonSmokeless"
-              imageMap={smokelessImages}
-              onAddToCart={(flavor, qty) =>
-                handleAddToCart('Smokeless Juice', './app/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
-              }
-            />
-          </ProductSection>
+          {(activeCategory === 'all' || activeCategory === 'smokeless') && filterMatches('Smokeless Selection', smokelessFlavors) && (
+            <ProductSection
+              id="smokeless"
+              title="Smokeless Selection"
+              imgSrc="./app/img/about/smokeless_about.webp"
+              imgAlt="CBD Fresh Juices in Glasses"
+              subTitle="CBD with a Burst of Freshness"
+              description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
+              bullets={[
+                '100% Pure & Natural.',
+                'Various strengths available',
+                'A Refreshing Twist on Wellness',
+                'Vegan Friendly'
+              ]}
+            >
+              <ProductCard
+                imgSrc="./app/img/smokeless/Smokeless - Pineapple.png"
+                imgAlt="CBD Fresh Fruit Juices"
+                flavors={smokelessFlavors}
+                quantities={smokelessQuantities}
+                borderColorClass="border-warning"
+                buttonId="feedbackButtonSmokeless"
+                imageMap={smokelessImages}
+                onAddToCart={(flavor, qty) =>
+                  handleAddToCart('Smokeless Juice', './app/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
+                }
+              />
+            </ProductSection>
+          )}
 
           {/* Shots Section */}
-          <ProductSection
-            id="shots"
-            title="Shots Selection"
-            imgSrc="./app/img/about/shots_selection_500x332.webp"
-            imgAlt="CBD Tincture Bottles"
-            subTitle="Pure, Potent, and Packed with Benefits"
-            description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
-            bullets={[
-              '100% Pure Sugar Cane Rum.',
-              'Rapid Long Lasting Effects',
-              'A Unique Blend Formulated by A.I.',
-              'Official Collector\'s Edition Rum'
-            ]}
-          >
-            <ProductCard
-              imgSrc="./app/img/shots/FECO SHOTS - FRUIT PUNCH.png"
-              imgAlt="Jar of topicals cream"
-              flavors={shotsFlavors}
-              quantities={genericQuantities}
-              borderColorClass="border-warning"
-              buttonId="feedbackButtonShots"
-              imageMap={shotsImages}
-              onAddToCart={(flavor, qty) =>
-                handleAddToCart('Feco Shot', './app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
-              }
-            />
-          </ProductSection>
+          {(activeCategory === 'all' || activeCategory === 'shots') && filterMatches('Shots Selection', shotsFlavors) && (
+            <ProductSection
+              id="shots"
+              title="Shots Selection"
+              imgSrc="./app/img/about/shots_selection_500x332.webp"
+              imgAlt="CBD Tincture Bottles"
+              subTitle="Pure, Potent, and Packed with Benefits"
+              description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
+              bullets={[
+                '100% Pure Sugar Cane Rum.',
+                'Rapid Long Lasting Effects',
+                'A Unique Blend Formulated by A.I.',
+                'Official Collector\'s Edition Rum'
+              ]}
+            >
+              <ProductCard
+                imgSrc="./app/img/shots/FECO SHOTS - FRUIT PUNCH.png"
+                imgAlt="Jar of topicals cream"
+                flavors={shotsFlavors}
+                quantities={genericQuantities}
+                borderColorClass="border-warning"
+                buttonId="feedbackButtonShots"
+                imageMap={shotsImages}
+                onAddToCart={(flavor, qty) =>
+                  handleAddToCart('Feco Shot', './app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
+                }
+              />
+            </ProductSection>
+          )}
 
           {/* Contender Section */}
-          <ProductSection
-            id="cocktails"
-            title="Contender Selection"
-            imgSrc="./app/img/about/club_feco_500x282.webp"
-            imgAlt="Various CBD drinks in glasses"
-            subTitle="Embrace the spirit of adventure"
-            description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
-            bullets={[
-              '100% Pure Sugar Cane Rum',
-              'An Exceptional Blend Perfected by Artificial Intelligence',
-              'Encounter Swift and Enduring Pleasures',
-              'The Apex of Distinction',
-              'An Official Collector\'s Edition Rum'
-            ]}
-          >
-            <ProductCard
-              imgSrc="./app/img/contender/CONTENDER FRUIT PUNCH (2).png"
-              imgAlt="CBD cocktails"
-              flavors={shotsFlavors}
-              quantities={genericQuantities}
-              borderColorClass="border-success"
-              buttonId="feedbackButtonCocktails"
-              imageMap={contenderImages}
-              onAddToCart={(flavor, qty) =>
-                handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
-              }
-            />
-          </ProductSection>
+          {(activeCategory === 'all' || activeCategory === 'cocktails') && filterMatches('Contender Selection', shotsFlavors) && (
+            <ProductSection
+              id="cocktails"
+              title="Contender Selection"
+              imgSrc="./app/img/about/club_feco_500x282.webp"
+              imgAlt="Various CBD drinks in glasses"
+              subTitle="Embrace the spirit of adventure"
+              description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
+              bullets={[
+                '100% Pure Sugar Cane Rum',
+                'An Exceptional Blend Perfected by Artificial Intelligence',
+                'Encounter Swift and Enduring Pleasures',
+                'The Apex of Distinction',
+                'An Official Collector\'s Edition Rum'
+              ]}
+            >
+              <ProductCard
+                imgSrc="./app/img/contender/CONTENDER FRUIT PUNCH (2).png"
+                imgAlt="CBD cocktails"
+                flavors={shotsFlavors}
+                quantities={genericQuantities}
+                borderColorClass="border-success"
+                buttonId="feedbackButtonCocktails"
+                imageMap={contenderImages}
+                onAddToCart={(flavor, qty) =>
+                  handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
+                }
+              />
+            </ProductSection>
+          )}
 
           {/* Chocolate Section */}
-          <ProductSection
-            id="chocolates"
-            title="Chocolate Selection"
-            imgSrc="./app/img/about/chocolate_about_500x391.webp"
-            imgAlt="CBD Chocolate Selection"
-            subTitle="CBD-Infused Chocolates: A Decadent Delight"
-            description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
-            bullets={[
-              'Delicious Wellness',
-              'Various strengths available',
-              'New Alcohol Infused Chocolates',
-              'Wide selection available'
-            ]}
-          >
-            <ProductCard
-              imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
-              imgAlt="CBD chocolates"
-              flavors={chocolateFlavors}
-              quantities={genericQuantities}
-              borderColorClass="border-warning"
-              buttonId="feedbackButtonChocolate"
-              imageMap={chocolateImages}
-              onAddToCart={(flavor, qty) =>
-                handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
-              }
-            />
-          </ProductSection>
+          {(activeCategory === 'all' || activeCategory === 'chocolates') && filterMatches('Chocolate Selection', chocolateFlavors) && (
+            <ProductSection
+              id="chocolates"
+              title="Chocolate Selection"
+              imgSrc="./app/img/about/chocolate_about_500x391.webp"
+              imgAlt="CBD Chocolate Selection"
+              subTitle="CBD-Infused Chocolates: A Decadent Delight"
+              description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
+              bullets={[
+                'Delicious Wellness',
+                'Various strengths available',
+                'New Alcohol Infused Chocolates',
+                'Wide selection available'
+              ]}
+            >
+              <ProductCard
+                imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
+                imgAlt="CBD chocolates"
+                flavors={chocolateFlavors}
+                quantities={genericQuantities}
+                borderColorClass="border-warning"
+                buttonId="feedbackButtonChocolate"
+                imageMap={chocolateImages}
+                onAddToCart={(flavor, qty) =>
+                  handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
+                }
+              />
+            </ProductSection>
+          )}
 
           <section className="bg-black py-5">
             <div
@@ -1474,6 +1745,19 @@
             onDeleteOrder={handleDeleteOrder}
             onClearCompleted={handleClearCompletedOrders}
           />
+
+          {/* Owner PIN Verification Lock Modal */}
+          <OwnerPinModal
+            isOpen={isPinModalOpen}
+            onClose={() => setIsPinModalOpen(false)}
+            onSuccess={() => {
+              setIsPinModalOpen(false);
+              setIsAdminOrdersOpen(true);
+            }}
+          />
+
+          {/* Age Verification Gate (18+) */}
+          <AgeGateModal />
 
           <FeedbackModal />
         </div>

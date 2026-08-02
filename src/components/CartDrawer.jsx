@@ -228,13 +228,22 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
               <span className="text-muted d-block fs-6">Order Number</span>
               <span className="text-warning font-weight-bold fs-3" style={{ letterSpacing: '3px' }}>{orderNum}</span>
             </div>
-            <button 
-              onClick={handleClose} 
-              className="btn btn-warning text-dark font-weight-bold btn-lg px-5 mt-3"
-              style={{ borderRadius: '6px' }}
-            >
-              Continue Shopping
-            </button>
+            <div className="d-flex gap-2 justify-content-center w-100 mt-2">
+              <button 
+                onClick={() => window.print()} 
+                className="btn btn-outline-warning font-weight-bold py-2 px-3 me-2"
+                style={{ borderRadius: '6px' }}
+              >
+                <i className="fas fa-print me-1"></i> Print Receipt
+              </button>
+              <button 
+                onClick={handleClose} 
+                className="btn btn-warning text-dark font-weight-bold py-2 px-4"
+                style={{ borderRadius: '6px' }}
+              >
+                Continue Shopping
+              </button>
+            </div>
           </div>
         )}
       </div>
