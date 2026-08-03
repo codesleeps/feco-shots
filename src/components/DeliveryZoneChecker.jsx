@@ -5,7 +5,7 @@ export default function DeliveryZoneChecker({ onDeliveryAvailable }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const allowedPrefixes = ['SW', 'SE', 'N', 'NW', 'W', 'E', 'EC', 'WC', 'BR', 'CR', 'DA', 'EN', 'IG', 'KT', 'RM', 'SM', 'TN', 'TW', 'UB', 'W', 'WD'];
+  const allowedPrefixes = ['SW', 'SE', 'N', 'NW', 'W', 'E', 'EC', 'WC', 'BR', 'CR', 'DA', 'EN', 'HA', 'IG', 'KT', 'RM', 'SM', 'TN', 'TW', 'UB', 'WD'];
 
   const checkDelivery = (e) => {
     e.preventDefault();
@@ -13,12 +13,14 @@ export default function DeliveryZoneChecker({ onDeliveryAvailable }) {
     setResult(null);
     setTimeout(() => {
       const upper = postcode.trim().toUpperCase();
-      const available = allowedPrefixes.some((prefix) => upper.startsWith(prefix));
-      const estimate = available ? 'Same day or next day' : '3-5 business days';
+      const match = upper.match(/^[A-Z]{1,2}/);
+      const prefix = match ? match[0] : '';
+      const available = allowedPrefixes.includes(prefix);
+      const estimate = available ? 'Express Same-Day / Next-Day Delivery' : 'Standard 3-5 Business Days Courier';
       setResult({ available, estimate, postcode: upper });
       setLoading(false);
       if (onDeliveryAvailable) onDeliveryAvailable(available);
-    }, 600);
+    }, 400);
   };
 
   return (

@@ -339,15 +339,15 @@ export default function App() {
   };
 
   const chocolateImages = {
-    'Baileys & Honeycomb': './public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
-    Cashews: './public./img/chocolates/CASHEWS 250MG.png',
-    'Dry Roasted Nuts': './public./img/chocolates/DRY ROASTED NUTS 250MG.png',
-    'Fruit & Nut': './public./img/chocolates/FRUIT & NUT 250MG.png',
-    'Honey Roasted Nuts': './public./img/chocolates/HONEY ROASTED NUTS 250MG.png',
-    'Milk Chocolate': './public./img/chocolates/MILK CHOCOLATE 250MG.png',
-    'Rum & Raisin': './public./img/chocolates/RUM & RAISIN 250MG.png',
-    'Vodka & Cranberries': './public./img/chocolates/VODKA & CRANBERRIES 250MG.png',
-    'Whiskey & Fruits': './public./img/chocolates/WHISKEY & FRUITS  500MG.png'
+    'Baileys & Honeycomb': './img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
+    Cashews: './img/chocolates/CASHEWS 250MG.png',
+    'Dry Roasted Nuts': './img/chocolates/DRY ROASTED NUTS 250MG.png',
+    'Fruit & Nut': './img/chocolates/FRUIT & NUT 250MG.png',
+    'Honey Roasted Nuts': './img/chocolates/HONEY ROASTED NUTS 250MG.png',
+    'Milk Chocolate': './img/chocolates/MILK CHOCOLATE 250MG.png',
+    'Rum & Raisin': './img/chocolates/RUM & RAISIN 250MG.png',
+    'Vodka & Cranberries': './img/chocolates/VODKA & CRANBERRIES 250MG.png',
+    'Whiskey & Fruits': './img/chocolates/WHISKEY & FRUITS  500MG.png'
   };
 
   return (
@@ -380,7 +380,7 @@ export default function App() {
       <ProductSection
           id="smokeless"
           title="Smokeless Selection"
-          imgSrc="../img/about/smokeless_about.webp"
+          imgSrc="./img/about/smokeless_about.webp"
           imgAlt="CBD Fresh Juices in Glasses"
           subTitle="CBD with a Burst of Freshness"
           description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
@@ -492,7 +492,7 @@ export default function App() {
           ]}
         >
           <ProductCard
-            imgSrc="./public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
+            imgSrc="./img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
             imgAlt="CBD chocolates"
             flavors={chocolateFlavors}
             strengths={chocolateStrengths}
@@ -504,7 +504,7 @@ export default function App() {
             wishlistIds={wishlist.map((i) => i.id)}
             onToggleWishlist={toggleWishlist}
             onAddToCart={(flavor, strength, amount) => 
-              handleAddToCart('Infused Chocolate Bar', './public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
+              handleAddToCart('Infused Chocolate Bar', './img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
             }
           />
         </ProductSection>
@@ -540,7 +540,7 @@ export default function App() {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <img
-                src="../img/carousel/cannabisPlant.webp"
+                src="./img/carousel/cannabisPlant.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="Cannabis Plant"
@@ -549,7 +549,7 @@ export default function App() {
             </div>
             <div className="carousel-item">
               <img
-                src="../img/about/chocolate_about_500x391.webp"
+                src="./img/about/chocolate_about_500x391.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="CBD Chocolates"
@@ -558,7 +558,7 @@ export default function App() {
             </div>
             <div className="carousel-item">
               <img
-                src="../img/carousel/tincturePipe.webp"
+                src="./img/carousel/tincturePipe.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="CBD Tincture Collection"

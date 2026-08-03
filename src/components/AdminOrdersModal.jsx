@@ -161,6 +161,22 @@ export default function AdminOrdersModal({ isOpen, onClose, orders, onUpdateStat
                                 {order.customer.email}
                               </a>
                             </p>
+                            {order.customer.phone && (
+                              <p className="mb-1">
+                                <strong>Phone / SMS:</strong>{' '}
+                                <a href={`tel:${order.customer.phone}`} className="text-warning me-2">
+                                  {order.customer.phone}
+                                </a>
+                                <a
+                                  href={`https://wa.me/${order.customer.phone.replace(/[^0-9]/g, '')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn btn-sm btn-outline-success py-0 px-1 ms-1"
+                                >
+                                  <i className="fab fa-whatsapp me-1"></i> WhatsApp
+                                </a>
+                              </p>
+                            )}
                             <p className="mb-1">
                               <strong>Delivery Address:</strong>
                               <br />

@@ -6,8 +6,10 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
   const [checkoutForm, setCheckoutForm] = useState({
     name: '',
     email: '',
+    phone: '',
     address: '',
-    payment: 'delivery'
+    payment: 'delivery',
+    notifySmsEmail: true
   });
 
   const getSubtotal = () => {
@@ -16,8 +18,8 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
 
   const handleCheckoutSubmit = (e) => {
     e.preventDefault();
-    if (!checkoutForm.name || !checkoutForm.email || !checkoutForm.address) {
-      alert('Please fill out all fields.');
+    if (!checkoutForm.name || !checkoutForm.email || !checkoutForm.phone || !checkoutForm.address) {
+      alert('Please fill out all required fields.');
       return;
     }
     
@@ -180,6 +182,32 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
             </div>
 
             <div className="mb-3">
+              <label htmlFor="chkPhone" className="form-label text-light fs-5">Mobile Number (SMS Dispatch Updates)</label>
+              <input 
+                type="tel" 
+                id="chkPhone"
+                required
+                placeholder="+44 7123 456789" 
+                className="form-control input-glass py-2"
+                value={checkoutForm.phone}
+                onChange={(e) => setCheckoutForm({...checkoutForm, phone: e.target.value})}
+              />
+            </div>
+
+            <div className="form-check mb-3 text-start">
+              <input 
+                className="form-check-input" 
+                type="checkbox" 
+                id="notifyCheck"
+                checked={checkoutForm.notifySmsEmail}
+                onChange={(e) => setCheckoutForm({...checkoutForm, notifySmsEmail: e.target.checked})}
+              />
+              <label className="form-check-label text-light small" htmlFor="notifyCheck">
+                Send me Email & SMS dispatch & order tracking updates
+              </label>
+            </div>
+
+            <div className="mb-3">
               <label htmlFor="chkAddress" className="form-label text-light fs-5">Delivery Address</label>
               <textarea 
                 id="chkAddress"
@@ -252,7 +280,12 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
             </div>
             <h4 className="text-warning fs-1 font-weight-bold mb-3">Order Received!</h4>
             <p className="fs-4 px-2 mb-2">Thank you for your order, <strong>{checkoutForm.name}</strong>!</p>
-            <p className="fs-5 text-muted px-2">We have sent a receipt to {checkoutForm.email}. Your local supplier will contact you soon for delivery details.</p>
+            <p className="fs-5 text-muted px-2">
+              Receipt dispatched to <strong>{checkoutForm.email}</strong>.
+              {checkoutForm.phone && (
+                <span> SMS tracking notification sent to <strong>{checkoutForm.phone}</strong>.</span>
+              )}
+            </p>
             <div className="bg-dark border border-secondary p-3 rounded my-4 w-100">
               <span className="text-muted d-block fs-6">Order Number</span>
               <span className="text-warning font-weight-bold fs-3" style={{ letterSpacing: '3px' }}>{orderNum}</span>
