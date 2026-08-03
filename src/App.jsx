@@ -53,6 +53,7 @@ export default function App() {
       return [];
     }
   });
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleOpenReviews = (key, title) => {
     setActiveReviewProduct({ key, title });
@@ -80,6 +81,13 @@ export default function App() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   const scrollToTop = () => {
@@ -543,58 +551,60 @@ export default function App() {
       <section className="bg-black py-5">
         <div
           id="carouselDarkVariant"
-          className="carousel slide carousel-fade carousel-dark mx-auto"
-          data-mdb-ride="carousel"
+          className="carousel slide carousel-fade mx-auto"
           style={{ maxWidth: '800px' }}
         >
-          <div className="carousel-indicators">
-            <button
-              data-mdb-target="#carouselDarkVariant"
-              data-mdb-slide-to="0"
-              className="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            ></button>
-            <button
-              data-mdb-target="#carouselDarkVariant"
-              data-mdb-slide-to="1"
-              aria-label="Slide 2"
-            ></button>
-            <button
-              data-mdb-target="#carouselDarkVariant"
-              data-mdb-slide-to="2"
-              aria-label="Slide 3"
-            ></button>
+          <div className="carousel-inner">
+            {[
+              { src: './img/carousel/cannabisPlant.webp', alt: 'Cannabis Plant' },
+              { src: './img/about/chocolate_about_500x391.webp', alt: 'CBD Chocolates' },
+              { src: './img/carousel/tincturePipe.webp', alt: 'CBD Tincture Collection' }
+            ].map((slide, index) => (
+              <div
+                key={index}
+                className={`carousel-item ${index === currentSlide ? 'active' : ''}`}
+              >
+                <img
+                  src={slide.src}
+                  loading="lazy"
+                  className="d-block w-100 rounded"
+                  alt={slide.alt}
+                  style={{ height: '450px', objectFit: 'cover' }}
+                />
+              </div>
+            ))}
           </div>
 
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img
-                src="./img/carousel/cannabisPlant.webp"
-                loading="lazy"
-                className="d-block w-100 rounded"
-                alt="Cannabis Plant"
-                style={{ height: '450px', objectFit: 'cover' }}
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                src="./img/about/chocolate_about_500x391.webp"
-                loading="lazy"
-                className="d-block w-100 rounded"
-                alt="CBD Chocolates"
-                style={{ height: '450px', objectFit: 'cover' }}
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                src="./img/carousel/tincturePipe.webp"
-                loading="lazy"
-                className="d-block w-100 rounded"
-                alt="CBD Tincture Collection"
-                style={{ height: '450px', objectFit: 'cover' }}
-              />
-            </div>
+          <button
+            className="carousel-control-prev"
+            type="button"
+            onClick={() => setCurrentSlide((prev) => (prev - 1 + 3) % 3)}
+            style={{ width: '50px', height: '50px', top: '50%', transform: 'translateY(-50%)', marginLeft: '10px' }}
+          >
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="sr-only">Previous</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            onClick={() => setCurrentSlide((prev) => (prev + 1) % 3)}
+            style={{ width: '50px', height: '50px', top: '50%', transform: 'translateY(-50%)', marginRight: '10px' }}
+          >
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="sr-only">Next</span>
+          </button>
+
+          <div className="carousel-indicators d-flex justify-content-center gap-2 mt-3">
+            {[0, 1, 2].map((index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setCurrentSlide(index)}
+                className={`rounded-circle border-0 ${index === currentSlide ? 'bg-warning' : 'bg-secondary'}`}
+                style={{ width: '12px', height: '12px' }}
+                aria-label={`Slide ${index + 1}`}
+              ></button>
+            ))}
           </div>
         </div>
       </section>
