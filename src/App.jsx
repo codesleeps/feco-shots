@@ -16,12 +16,16 @@ import DeliveryZoneChecker from './components/DeliveryZoneChecker';
 import WishlistDrawer from './components/WishlistDrawer';
 import OrderTracking from './components/OrderTracking';
 
+import ProductReviewsModal from './components/ProductReviewsModal';
+
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
+  const [isReviewsOpen, setIsReviewsOpen] = useState(false);
+  const [activeReviewProduct, setActiveReviewProduct] = useState(null);
   const [wishlist, setWishlist] = useState(() => {
     try {
       const saved = localStorage.getItem('feco_wishlist');
@@ -30,6 +34,11 @@ export default function App() {
       return [];
     }
   });
+
+  const handleOpenReviews = (key, title) => {
+    setActiveReviewProduct({ key, title });
+    setIsReviewsOpen(true);
+  };
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isTrackingOpen, setIsTrackingOpen] = useState(false);
   const [deliveryAvailable, setDeliveryAvailable] = useState(null);
@@ -399,6 +408,7 @@ export default function App() {
             productKey="smokeless"
             wishlistIds={wishlist.map((i) => i.id)}
             onToggleWishlist={toggleWishlist}
+            onOpenReviews={handleOpenReviews}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Smokeless Juice', './img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
             }
@@ -432,6 +442,7 @@ export default function App() {
             productKey="shots"
             wishlistIds={wishlist.map((i) => i.id)}
             onToggleWishlist={toggleWishlist}
+            onOpenReviews={handleOpenReviews}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Feco Shot', './img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
             }
@@ -466,6 +477,7 @@ export default function App() {
             productKey="contender"
             wishlistIds={wishlist.map((i) => i.id)}
             onToggleWishlist={toggleWishlist}
+            onOpenReviews={handleOpenReviews}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Contender Cocktail', './img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
             }
@@ -499,6 +511,7 @@ export default function App() {
             productKey="chocolate"
             wishlistIds={wishlist.map((i) => i.id)}
             onToggleWishlist={toggleWishlist}
+            onOpenReviews={handleOpenReviews}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Infused Chocolate Bar', './img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
             }
@@ -566,6 +579,7 @@ export default function App() {
       </section>
 
       <Footer />
+      <WhatsAppButton />
 
       {/* Discreet Small Back To Top Arrow Button (Hidden when cart or modal is open) */}
       {!isCartOpen && !isAdminOrdersOpen && !isPinModalOpen && showScrollBtn && (
@@ -605,6 +619,7 @@ export default function App() {
         onSaveOrder={handleSaveOrder}
         deliveryAvailable={deliveryAvailable}
         onReorder={reorder}
+        pastOrders={orders}
       />
 
       {/* Wishlist Drawer */}
@@ -641,6 +656,13 @@ export default function App() {
           setIsPinModalOpen(false);
           setIsAdminOrdersOpen(true);
         }}
+      />
+
+      {/* Product Reviews & Feedback Modal */}
+      <ProductReviewsModal
+        isOpen={isReviewsOpen}
+        onClose={() => setIsReviewsOpen(false)}
+        activeProduct={activeReviewProduct}
       />
 
       {/* Age Verification Gate (18+) */}

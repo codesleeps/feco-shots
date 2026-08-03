@@ -16,6 +16,7 @@ export default function ProductCard({
   productKey,
   wishlistIds = [],
   onToggleWishlist,
+  onOpenReviews,
   outOfStock = false
 }) {
   const [selectedFlavor, setSelectedFlavor] = useState(flavors && flavors[0] && flavors[0].value ? flavors[0].value : '');
@@ -73,17 +74,17 @@ export default function ProductCard({
         </div>
         <div className="card-body px-2">
           <div className="card-text text-light">
-            <a
-              href="#exampleModal"
+            <button
               type="button"
-              data-mdb-toggle="modal"
-              data-mdb-target="#exampleModal"
-              aria-label="Submit Feedback"
-              className="text-decoration-none"
+              onClick={() => onOpenReviews && onOpenReviews(productKey, imgAlt)}
+              className="btn btn-link p-0 border-0 text-decoration-none d-flex align-items-center mb-2"
+              title="View & Submit Product Reviews"
             >
-              {ratingText}
-            </a>
-            <br />
+              <span className="text-warning me-2 fs-5">⭐⭐⭐⭐⭐</span>
+              <span className="small text-info text-decoration-underline">
+                Reviews
+              </span>
+            </button>
             <em className="fs-3">Selection</em>
 
             {/* Flavor Select */}
@@ -158,7 +159,6 @@ export default function ProductCard({
             </button>
           )}
 
-          {productKey && <ProductReviews productKey={productKey} />}
           {outOfStock && <NotifyMeButton productKey={productKey} flavor={selectedFlavor} />}
         </div>
       </div>
