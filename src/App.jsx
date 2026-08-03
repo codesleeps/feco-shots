@@ -364,8 +364,11 @@ export default function App() {
       <Hero />
 
 
-      <NewsletterSignup />
-      <DeliveryZoneChecker onDeliveryAvailable={setDeliveryAvailable} />
+      <section className="bg-black py-4 border-top border-secondary">
+        <div className="container">
+          <DeliveryZoneChecker onDeliveryAvailable={setDeliveryAvailable} />
+        </div>
+      </section>
 
       <About />
 
