@@ -10,7 +10,11 @@ import CartDrawer from './components/CartDrawer';
 import AdminOrdersModal from './components/AdminOrdersModal';
 import AgeGateModal from './components/AgeGateModal';
 import OwnerPinModal from './components/OwnerPinModal';
-import ProductSearchBar from './components/ProductSearchBar';
+import WhatsAppButton from './components/WhatsAppButton';
+import NewsletterSignup from './components/NewsletterSignup';
+import DeliveryZoneChecker from './components/DeliveryZoneChecker';
+import WishlistDrawer from './components/WishlistDrawer';
+import OrderTracking from './components/OrderTracking';
 
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
@@ -18,8 +22,17 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('feco_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isTrackingOpen, setIsTrackingOpen] = useState(false);
+  const [deliveryAvailable, setDeliveryAvailable] = useState(null);
   const [orders, setOrders] = useState(() => {
     try {
       const saved = localStorage.getItem('feco_orders');
@@ -28,23 +41,6 @@ export default function App() {
       return [];
     }
   });
-
-  const filterMatches = (title, flavorsList, strengthsList) => {
-    try {
-      if (!searchTerm) return true;
-      const term = searchTerm.toLowerCase();
-      const titleMatch = title.toLowerCase().includes(term);
-      const flavorMatch = Array.isArray(flavorsList) && flavorsList.some((f) =>
-        f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
-      );
-      const strengthMatch = Array.isArray(strengthsList) && strengthsList.some((s) =>
-        s.value.toLowerCase().includes(term) || s.label.toLowerCase().includes(term)
-      );
-      return titleMatch || flavorMatch || strengthMatch;
-    } catch (e) {
-      return true;
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,15 +53,6 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      const firstSection = document.querySelector('section[id]');
-      if (firstSection) {
-        firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-  }, [searchTerm]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -163,6 +150,56 @@ export default function App() {
   const getCartCount = () => {
     return cart.reduce((sum, item) => sum + item.count, 0);
   };
+
+  const addToWishlist = (item) => {
+    setWishlist((prev) => {
+      const exists = prev.find((i) => i.id === item.id);
+      if (exists) return prev;
+      const updated = [...prev, item];
+      localStorage.setItem('feco_wishlist', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const removeFromWishlist = (id) => {
+    setWishlist((prev) => {
+      const updated = prev.filter((i) => i.id !== id);
+      localStorage.setItem('feco_wishlist', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const moveToCart = (id) => {
+    const item = wishlist.find((i) => i.id === id);
+    if (item) {
+      handleAddToCart(item.name, item.imgSrc, item.flavor, item.strength, '1', item.price, null, {});
+      removeFromWishlist(id);
+    }
+  };
+
+  const toggleWishlist = (item) => {
+    setWishlist((prev) => {
+      const exists = prev.find((i) => i.id === item.id);
+      let updated;
+      if (exists) {
+        updated = prev.filter((i) => i.id !== item.id);
+      } else {
+        updated = [...prev, item];
+      }
+      localStorage.setItem('feco_wishlist', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const isInWishlist = (id) => wishlist.some((i) => i.id === id);
+
+  const reorder = (order) => {
+    order.items.forEach((item) => {
+      handleAddToCart(item.name, item.imgSrc, item.flavor, item.strength, String(item.count || 1), item.price, null, {});
+    });
+  };
+
+  const wishlistCount = wishlist.reduce((sum, item) => sum + item.count, 0);
 
   const smokelessFlavors = [
     { value: 'Pineapple', label: 'Pineapple' },
@@ -317,19 +354,14 @@ export default function App() {
     <div className="bg-black text-light min-vh-100">
       <Navbar 
         cartCount={getCartCount()} 
-        onCartClick={() => setIsCartOpen(true)} 
+        onCartClick={() => setIsCartOpen(true)}
+        wishlistCount={wishlistCount}
+        onWishlistClick={() => setIsWishlistOpen(true)}
         pendingOrdersCount={orders.filter((o) => o.status === 'Pending').length}
         onOpenAdminOrders={() => setIsPinModalOpen(true)}
+        onOpenTracking={() => setIsTrackingOpen(true)}
       />
       <Hero />
-
-      {/* Interactive Search & Category Filter Bar */}
-      <ProductSearchBar
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
-      />
 
       <section className="news-input p-4">
         <div className="container">
@@ -339,11 +371,13 @@ export default function App() {
         </div>
       </section>
 
+      <NewsletterSignup />
+      <DeliveryZoneChecker onDeliveryAvailable={setDeliveryAvailable} />
+
       <About />
 
       {/* Smokeless Section */}
-      {(activeCategory === 'all' || activeCategory === 'smokeless') && filterMatches('Smokeless Selection', smokelessFlavors, smokelessStrengths) && (
-        <ProductSection
+      <ProductSection
           id="smokeless"
           title="Smokeless Selection"
           imgSrc="../img/about/smokeless_about.webp"
@@ -366,16 +400,17 @@ export default function App() {
             borderColorClass="border-warning"
             buttonId="feedbackButtonSmokeless"
             imageMap={smokelessImages}
+            productKey="smokeless"
+            wishlistIds={wishlist.map((i) => i.id)}
+            onToggleWishlist={toggleWishlist}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Smokeless Juice', './img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
             }
           />
-        </ProductSection>
-      )}
+          </ProductSection>
 
       {/* Shots Section */}
-      {(activeCategory === 'all' || activeCategory === 'shots') && filterMatches('Shots Selection', shotsFlavors, shotsStrengths) && (
-        <ProductSection
+      <ProductSection
           id="shots"
           title="Shots Selection"
           imgSrc="./img/about/shots_selection_500x332.webp"
@@ -398,15 +433,16 @@ export default function App() {
             borderColorClass="border-warning"
             buttonId="feedbackButtonShots"
             imageMap={shotsImages}
+            productKey="shots"
+            wishlistIds={wishlist.map((i) => i.id)}
+            onToggleWishlist={toggleWishlist}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Feco Shot', './img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
             }
           />
         </ProductSection>
-      )}
 
       {/* Cocktails Section */}
-      {(activeCategory === 'all' || activeCategory === 'cocktails') && filterMatches('Contender Selection', shotsFlavors, contenderStrengths) && (
         <ProductSection
           id="cocktails"
           title="Contender Selection"
@@ -431,15 +467,16 @@ export default function App() {
             borderColorClass="border-success"
             buttonId="feedbackButtonCocktails"
             imageMap={contenderImages}
+            productKey="contender"
+            wishlistIds={wishlist.map((i) => i.id)}
+            onToggleWishlist={toggleWishlist}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Contender Cocktail', './img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
             }
           />
         </ProductSection>
-      )}
 
       {/* Chocolate Section */}
-      {(activeCategory === 'all' || activeCategory === 'chocolates') && filterMatches('Chocolate Selection', chocolateFlavors, chocolateStrengths) && (
         <ProductSection
           id="chocolates"
           title="Chocolate Selection"
@@ -463,12 +500,14 @@ export default function App() {
             borderColorClass="border-warning"
             buttonId="feedbackButtonChocolate"
             imageMap={chocolateImages}
+            productKey="chocolate"
+            wishlistIds={wishlist.map((i) => i.id)}
+            onToggleWishlist={toggleWishlist}
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Infused Chocolate Bar', './public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
             }
           />
         </ProductSection>
-      )}
 
       {/* Carousel */}
       <section className="bg-black py-5">
@@ -568,6 +607,24 @@ export default function App() {
         removeItem={removeItem}
         clearCart={clearCart}
         onSaveOrder={handleSaveOrder}
+        deliveryAvailable={deliveryAvailable}
+        onReorder={reorder}
+      />
+
+      {/* Wishlist Drawer */}
+      <WishlistDrawer
+        isOpen={isWishlistOpen}
+        onClose={() => setIsWishlistOpen(false)}
+        wishlist={wishlist}
+        onRemove={removeFromWishlist}
+        onMoveToCart={moveToCart}
+      />
+
+      {/* Order Tracking Modal */}
+      <OrderTracking
+        isOpen={isTrackingOpen}
+        onClose={() => setIsTrackingOpen(false)}
+        orders={orders}
       />
 
       {/* Store Owner Orders Management Modal */}

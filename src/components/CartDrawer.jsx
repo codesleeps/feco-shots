@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart, onSaveOrder }) {
+export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart, onSaveOrder, deliveryAvailable, onReorder, pastOrders = [] }) {
   const [view, setView] = useState('cart'); // 'cart' | 'checkout' | 'success'
   const [orderNum, setOrderNum] = useState('');
   const [checkoutForm, setCheckoutForm] = useState({
@@ -28,7 +28,8 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
       items: [...cart],
       subtotal: getSubtotal(),
       timestamp: new Date().toISOString(),
-      status: 'Pending'
+      status: 'Pending',
+      estimatedDelivery: getEstimatedDelivery()
     };
 
     if (onSaveOrder) {
@@ -38,6 +39,12 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
     setOrderNum(randomNum);
     setView('success');
     clearCart();
+  };
+
+  const getEstimatedDelivery = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + (deliveryAvailable ? 1 : 5));
+    return date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
   };
 
   const handleClose = () => {
@@ -72,6 +79,20 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
               <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted">
                 <i className="fas fa-shopping-basket fa-3x mb-3 text-warning opacity-50"></i>
                 <p className="fs-4">Your cart is empty</p>
+                {pastOrders.length > 0 && (
+                  <div className="mt-3 w-100">
+                    <p className="fs-5 text-warning">Quick Reorder</p>
+                    {pastOrders.map((order) => (
+                      <div key={order.id} className="d-flex justify-content-between align-items-center bg-dark p-2 rounded mb-2 border border-secondary">
+                        <div>
+                          <strong>{order.id}</strong>
+                          <div className="small text-muted">{order.items.length} items</div>
+                        </div>
+                        <button className="btn btn-sm btn-warning text-dark" onClick={() => onReorder(order)}>Reorder</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
               <React.Fragment>
@@ -182,6 +203,14 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
                 <option value="delivery">Cash on Delivery</option>
                 <option value="transfer">Bank Transfer (Manual)</option>
               </select>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label text-light fs-5">Estimated Delivery</label>
+              <div className="alert alert-info py-2">{getEstimatedDelivery()}</div>
+              {deliveryAvailable === false && (
+                <div className="text-warning small">Standard delivery applies.</div>
+              )}
             </div>
 
             <div className="border-top border-secondary pt-3 mt-auto">

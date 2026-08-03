@@ -172,9 +172,37 @@ export default function AdminOrdersModal({ isOpen, onClose, orders, onUpdateStat
                                 {order.customer.payment}
                               </span>
                             </p>
-                          </div>
+                           </div>
 
-                          {/* Ordered Items List */}
+                           {/* Tracking Info */}
+                           {order.estimatedDelivery && (
+                             <div className="col-md-12 mt-3 pt-3 border-top border-secondary">
+                               <h6 className="text-info text-uppercase fw-bold mb-2">Tracking</h6>
+                               <p className="mb-1"><strong>Estimated Delivery:</strong> {order.estimatedDelivery}</p>
+                               <div className="d-flex justify-content-between align-items-center">
+                                 {['Pending', 'Preparing', 'Out for Delivery', 'Delivered'].map((step, idx) => {
+                                   const currentIdx = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'].indexOf(order.status);
+                                   const isActive = idx <= currentIdx;
+                                   return (
+                                     <div key={step} className="text-center">
+                                       <div className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1"
+                                         style={{
+                                           width: '28px',
+                                           height: '28px',
+                                           backgroundColor: isActive ? '#ffb338' : '#333',
+                                           color: isActive ? '#000' : '#999'
+                                         }}>
+                                         {idx + 1}
+                                       </div>
+                                       <small className={isActive ? 'text-warning' : 'text-muted'}>{step}</small>
+                                     </div>
+                                   );
+                                 })}
+                               </div>
+                             </div>
+                           )}
+
+                           {/* Ordered Items List */}
                           <div className="col-md-7 ps-md-3">
                             <h6 className="text-warning text-uppercase fw-bold mb-2">
                               Items Ordered ({order.items.reduce((s, i) => s + i.count, 0)})
