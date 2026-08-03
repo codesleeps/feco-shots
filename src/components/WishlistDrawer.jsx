@@ -1,11 +1,13 @@
 import React from 'react';
 
 export default function WishlistDrawer({ isOpen, onClose, wishlist, onRemove, onMoveToCart }) {
+  if (!isOpen) return null;
+
   return (
     <React.Fragment>
-      <div className={`cart-backdrop${isOpen ? ' show' : ''}`} onClick={onClose} style={{ zIndex: 1040 }}></div>
+      <div className="cart-backdrop" onClick={onClose} style={{ zIndex: 1040 }}></div>
       <div
-        className={`cart-drawer${isOpen ? ' open' : ''}`}
+        className="cart-drawer open"
         style={{ zIndex: 1045 }}
       >
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom border-warning">
