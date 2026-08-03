@@ -2,6 +2,7 @@
   "name": "club-feco-react",
   "private": true,
   "version": "1.0.0",
+  "homepage": "https://codesleeps.github.io/club_feco",
   "type": "module",
   "scripts": {
     "dev": "vite",
