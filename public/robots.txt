@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /src/
+
+Sitemap: https://codesleeps.github.io/feco-shots/sitemap.xml
