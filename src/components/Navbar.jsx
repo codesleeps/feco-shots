@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
+export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWishlistClick, pendingOrdersCount = 0, onOpenAdminOrders, onOpenTracking }) {
   const collapseRef = useRef(null);
 
   const closeNavbar = () => {
@@ -70,11 +70,23 @@ export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0,
         </div>
         
         <div className="d-flex align-items-center">
+          {/* Track Order */}
+          {onOpenTracking && (
+            <button
+              onClick={onOpenTracking}
+              className="btn btn-outline-info btn-sm me-2 d-flex align-items-center"
+              style={{ borderRadius: '6px' }}
+              title="Track your order"
+            >
+              <i className="fas fa-truck me-1"></i> Track
+            </button>
+          )}
+
           {/* Store Owner Orders Button */}
           {onOpenAdminOrders && (
             <button
               onClick={onOpenAdminOrders}
-              className="btn btn-outline-warning btn-sm me-3 position-relative d-flex align-items-center"
+              className="btn btn-outline-warning btn-sm me-2 position-relative d-flex align-items-center"
               style={{ borderRadius: '6px' }}
               title="Store Owner - View Orders"
             >
@@ -87,10 +99,25 @@ export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0,
             </button>
           )}
 
+          {/* Wishlist Button */}
+          {onWishlistClick && (
+            <button
+              onClick={onWishlistClick}
+              className="btn btn-outline-danger btn-sm me-2 position-relative d-flex align-items-center"
+              style={{ borderRadius: '6px' }}
+              title="Wishlist"
+            >
+              <i className="fas fa-heart me-1"></i> Wishlist
+              {wishlistCount > 0 && (
+                <span className="badge rounded-pill bg-danger ms-1">{wishlistCount}</span>
+              )}
+            </button>
+          )}
+
           {/* Header Cart Button */}
           <button 
             onClick={onCartClick} 
-            className="btn btn-warning text-dark font-weight-bold btn-sm me-3 position-relative d-flex align-items-center" 
+            className="btn btn-warning text-dark font-weight-bold btn-sm d-flex align-items-center" 
             style={{ borderRadius: '6px', padding: '6px 14px' }}
             aria-label="Open Shopping Cart"
           >

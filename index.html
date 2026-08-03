@@ -213,7 +213,267 @@
       );
     }
 
-    function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
+    function WhatsAppButton({ phoneNumber = '447000000000' }) {
+      const message = encodeURIComponent('Hi Club Feco, I have a question about your products.');
+      const href = `https://wa.me/${phoneNumber}?text=${message}`;
+      return (
+        <a href={href} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 1055, backgroundColor: '#25D366', color: '#fff', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.35)' }}>
+          <i className="fab fa-whatsapp" style={{ fontSize: '32px' }}></i>
+        </a>
+      );
+    }
+
+    function NewsletterSignup() {
+      const [email, setEmail] = useState('');
+      const [phone, setPhone] = useState('');
+      const [subscribed, setSubscribed] = useState(false);
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const entry = { email: email.trim(), phone: phone.trim(), date: new Date().toISOString() };
+        const existing = JSON.parse(localStorage.getItem('feco_newsletter') || '[]');
+        existing.push(entry);
+        localStorage.setItem('feco_newsletter', JSON.stringify(existing));
+        setSubscribed(true);
+        setEmail('');
+        setPhone('');
+      };
+      return (
+        <section className="bg-black text-light py-5 border-top border-warning">
+          <div className="container">
+            <div className="row align-items-center g-4">
+              <div className="col-lg-6">
+                <h2 className="h3 fw-bold text-warning">Stay in the loop</h2>
+                <p className="mb-0">Get updates on new flavors, limited drops, and exclusive offers by email or SMS.</p>
+              </div>
+              <div className="col-lg-6">
+                {subscribed ? <div className="alert alert-success py-2">You're on the list!</div> : (
+                  <form onSubmit={handleSubmit} className="row g-2">
+                    <div className="col-sm-5">
+                      <input type="email" required placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control bg-dark text-light border-secondary" />
+                    </div>
+                    <div className="col-sm-5">
+                      <input type="tel" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} className="form-control bg-dark text-light border-secondary" />
+                    </div>
+                    <div className="col-sm-2">
+                      <button type="submit" className="btn btn-warning text-dark w-100 fw-bold">Sign Up</button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function DeliveryZoneChecker({ onDeliveryAvailable }) {
+      const [postcode, setPostcode] = useState('');
+      const [result, setResult] = useState(null);
+      const [loading, setLoading] = useState(false);
+      const allowedPrefixes = ['SW', 'SE', 'N', 'NW', 'W', 'E', 'EC', 'WC', 'BR', 'CR', 'DA', 'EN', 'IG', 'KT', 'RM', 'SM', 'TN', 'TW', 'UB', 'W', 'WD'];
+      const checkDelivery = (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setResult(null);
+        setTimeout(() => {
+          const upper = postcode.trim().toUpperCase();
+          const available = allowedPrefixes.some((prefix) => upper.startsWith(prefix));
+          const estimate = available ? 'Same day or next day' : '3-5 business days';
+          setResult({ available, estimate, postcode: upper });
+          setLoading(false);
+          if (onDeliveryAvailable) onDeliveryAvailable(available);
+        }, 600);
+      };
+      return (
+        <div className="bg-dark text-light p-3 border border-secondary rounded">
+          <h3 className="h6 fw-bold text-warning mb-2">Check Delivery</h3>
+          <form onSubmit={checkDelivery} className="row g-2">
+            <div className="col-8">
+              <input type="text" required placeholder="Enter postcode" value={postcode} onChange={(e) => setPostcode(e.target.value)} className="form-control bg-black text-light border-secondary" />
+            </div>
+            <div className="col-4">
+              <button type="submit" className="btn btn-warning text-dark w-100 fw-bold" disabled={loading}>{loading ? 'Checking...' : 'Check'}</button>
+            </div>
+          </form>
+          {result && (
+            <div className={`mt-2 small ${result.available ? 'text-success' : 'text-danger'}`}>
+              {result.available ? <>Delivers to {result.postcode} — estimated: {result.estimate}</> : <>Sorry, {result.postcode} is outside our standard delivery zone — estimated: {result.estimate}</>}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function WishlistDrawer({ isOpen, onClose, wishlist, onRemove, onMoveToCart }) {
+      return (
+        <React.Fragment>
+          <div className={`cart-backdrop${isOpen ? ' show' : ''}`} onClick={onClose} style={{ zIndex: 1040 }}></div>
+          <div className={`cart-drawer${isOpen ? ' open' : ''}`} style={{ zIndex: 1045 }}>
+            <div className="d-flex justify-content-between align-items-center p-3 border-bottom border-warning">
+              <h5 className="mb-0 text-warning">Wishlist</h5>
+              <button onClick={onClose} className="btn btn-link text-light">✕</button>
+            </div>
+            <div className="p-3" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+              {wishlist.length === 0 && <p className="text-muted">Your wishlist is empty.</p>}
+              {wishlist.map((item) => (
+                <div key={item.id} className="d-flex gap-3 mb-3 border-bottom border-secondary pb-3">
+                  <img src={item.imgSrc} alt={item.name} style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
+                  <div className="flex-grow-1">
+                    <div className="fw-bold text-light">{item.name}</div>
+                    <div className="small text-muted">{item.flavor} / {item.strength}</div>
+                    <div className="text-warning">£{item.price.toFixed(2)}</div>
+                    <div className="mt-2 d-flex gap-2">
+                      <button className="btn btn-sm btn-warning text-dark" onClick={() => onMoveToCart(item.id)}>Move to Cart</button>
+                      <button className="btn btn-sm btn-outline-danger" onClick={() => onRemove(item.id)}>Remove</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </React.Fragment>
+      );
+    }
+
+    function OrderTracking({ isOpen, onClose, orders }) {
+      const [orderId, setOrderId] = useState('');
+      const [found, setFound] = useState(null);
+      const STATUS_STEPS = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+      if (!isOpen) return null;
+      const track = (e) => {
+        e.preventDefault();
+        const order = orders.find((o) => o.id.toLowerCase() === orderId.trim().toLowerCase());
+        setFound(order || null);
+      };
+      const statusIndex = found ? Math.max(0, STATUS_STEPS.indexOf(found.status)) : -1;
+      return (
+        <div className="modal fade show" tabIndex="-1" role="dialog" style={{ display: 'block', zIndex: 1060 }}>
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content bg-black text-light border border-warning">
+              <div className="modal-header border-warning">
+                <h5 className="modal-title text-warning">Track Order</h5>
+                <button type="button" className="btn btn-link text-light" onClick={onClose}>✕</button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={track} className="row g-2 mb-3">
+                  <div className="col-8">
+                    <input type="text" required placeholder="Order number" value={orderId} onChange={(e) => setOrderId(e.target.value)} className="form-control bg-dark text-light border-secondary" />
+                  </div>
+                  <div className="col-4">
+                    <button type="submit" className="btn btn-warning text-dark w-100 fw-bold">Track</button>
+                  </div>
+                </form>
+                {found && (
+                  <div>
+                    <p className="mb-1"><strong>Order:</strong> {found.id}</p>
+                    <p className="mb-1"><strong>Customer:</strong> {found.customer?.name}</p>
+                    <div className="d-flex justify-content-between align-items-center mt-3">
+                      {STATUS_STEPS.map((step, idx) => (
+                        <div key={step} className="text-center">
+                          <div className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1" style={{ width: '32px', height: '32px', backgroundColor: idx <= statusIndex ? '#ffb338' : '#333', color: idx <= statusIndex ? '#000' : '#999' }}>{idx + 1}</div>
+                          <small className={idx <= statusIndex ? 'text-warning' : 'text-muted'}>{step}</small>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {!found && orderId && <p className="text-danger">Order not found.</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function ProductReviews({ productKey }) {
+      const [reviews, setReviews] = useState([]);
+      const [name, setName] = useState('');
+      const [rating, setRating] = useState(5);
+      const [comment, setComment] = useState('');
+      if (typeof productKey === 'undefined' || !productKey) return null;
+      if (reviews.length === 0 && typeof window !== 'undefined') {
+        const all = JSON.parse(localStorage.getItem('feco_reviews') || '{}');
+        setReviews(all[productKey] || []);
+      }
+      const submit = (e) => {
+        e.preventDefault();
+        const entry = { name: name.trim() || 'Anonymous', rating, comment: comment.trim(), date: new Date().toISOString() };
+        const all = JSON.parse(localStorage.getItem('feco_reviews') || '{}');
+        all[productKey] = [entry, ...(all[productKey] || [])];
+        localStorage.setItem('feco_reviews', JSON.stringify(all));
+        setReviews(all[productKey]);
+        setName('');
+        setComment('');
+        setRating(5);
+      };
+      const avg = reviews.length ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : '—';
+      return (
+        <div className="mt-3">
+          <div className="d-flex align-items-center gap-2 mb-2">
+            <strong className="text-warning">Reviews</strong>
+            <span className="badge bg-warning text-dark">{avg}</span>
+            <span className="text-muted small">({reviews.length})</span>
+          </div>
+          <ul className="list-unstyled mb-2">
+            {reviews.slice(0, 5).map((r, idx) => (
+              <li key={idx} className="border-bottom border-secondary pb-2 mb-2">
+                <div className="d-flex justify-content-between">
+                  <strong className="text-light small">{r.name}</strong>
+                  <span className="text-warning small">{'⭐'.repeat(r.rating)}</span>
+                </div>
+                <p className="mb-0 small text-muted">{r.comment}</p>
+              </li>
+            ))}
+          </ul>
+          <form onSubmit={submit} className="row g-2">
+            <div className="col-sm-3">
+              <input type="text" placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} className="form-control bg-dark text-light border-secondary" />
+            </div>
+            <div className="col-sm-2">
+              <select value={rating} onChange={(e) => setRating(Number(e.target.value))} className="form-select bg-dark text-light border-secondary">
+                {[5,4,3,2,1].map((n) => <option key={n} value={n}>{n} ⭐</option>)}
+              </select>
+            </div>
+            <div className="col-sm-4">
+              <input type="text" required placeholder="Write a review" value={comment} onChange={(e) => setComment(e.target.value)} className="form-control bg-dark text-light border-secondary" />
+            </div>
+            <div className="col-sm-3">
+              <button type="submit" className="btn btn-outline-warning w-100">Submit</button>
+            </div>
+          </form>
+        </div>
+      );
+    }
+
+    function NotifyMeButton({ productKey, flavor, onNotify }) {
+      const [email, setEmail] = useState('');
+      const [submitted, setSubmitted] = useState(false);
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const entry = { productKey, flavor, email, date: new Date().toISOString() };
+        const existing = JSON.parse(localStorage.getItem('feco_notify_me') || '[]');
+        existing.push(entry);
+        localStorage.setItem('feco_notify_me', JSON.stringify(existing));
+        setSubmitted(true);
+        if (onNotify) onNotify(entry);
+      };
+      return (
+        <div className="mt-2">
+          {submitted ? <div className="alert alert-success py-2">We'll notify you when this is back in stock.</div> : (
+            <form onSubmit={handleSubmit} className="row g-2">
+              <div className="col-sm-8">
+                <input type="email" required placeholder="Email for restock alert" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control bg-dark text-light border-secondary" />
+              </div>
+              <div className="col-sm-4">
+                <button type="submit" className="btn btn-outline-warning w-100">Notify Me</button>
+              </div>
+            </form>
+          )}
+        </div>
+      );
+    }
+
+    function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWishlistClick, pendingOrdersCount = 0, onOpenAdminOrders, onOpenTracking }) {
       const collapseRef = useRef(null);
 
       const closeNavbar = () => {
@@ -283,6 +543,18 @@
             </div>
 
             <div className="d-flex align-items-center">
+              {/* Track Order */}
+              {onOpenTracking && (
+                <button
+                  onClick={onOpenTracking}
+                  className="btn btn-outline-info btn-sm me-2 d-flex align-items-center"
+                  style={{ borderRadius: '6px' }}
+                  title="Track your order"
+                >
+                  <i className="fas fa-truck me-1"></i> Track
+                </button>
+              )}
+
               {/* Store Owner Orders Button */}
               {onOpenAdminOrders && (
                 <button
@@ -300,10 +572,25 @@
                 </button>
               )}
 
+              {/* Wishlist Button */}
+              {onWishlistClick && (
+                <button
+                  onClick={onWishlistClick}
+                  className="btn btn-outline-danger btn-sm me-2 position-relative d-flex align-items-center"
+                  style={{ borderRadius: '6px' }}
+                  title="Wishlist"
+                >
+                  <i className="fas fa-heart me-1"></i> Wishlist
+                  {wishlistCount > 0 && (
+                    <span className="badge rounded-pill bg-danger ms-1">{wishlistCount}</span>
+                  )}
+                </button>
+              )}
+
               {/* Header Cart Button */}
               <button
                 onClick={onCartClick}
-                className="btn btn-warning text-dark font-weight-bold btn-sm me-3 position-relative d-flex align-items-center"
+                className="btn btn-warning text-dark font-weight-bold btn-sm d-flex align-items-center"
                 style={{ borderRadius: '6px', padding: '6px 14px' }}
                 aria-label="Open Shopping Cart"
               >
@@ -431,108 +718,150 @@
       buttonId,
       ratingText = '⭐⭐⭐⭐⭐',
       onAddToCart,
-      imageMap
+      imageMap,
+      productKey,
+      wishlistIds = [],
+      onToggleWishlist,
+      outOfStock = false
     }) {
       const [selectedFlavor, setSelectedFlavor] = useState(flavors && flavors[0] && flavors[0].value ? flavors[0].value : '');
       const [selectedStrength, setSelectedStrength] = useState(strengths && strengths[0] && strengths[0].value ? strengths[0].value : '');
       const [selectedAmount, setSelectedAmount] = useState(amounts && amounts[0] && amounts[0].value ? amounts[0].value : '');
 
+      const currentItemId = typeof productKey !== 'undefined' && productKey ? `${productKey}-${selectedFlavor}-${selectedStrength}` : '';
+
+      const isWishlisted = wishlistIds && currentItemId ? wishlistIds.includes(currentItemId) : false;
+
       const handleOrderSubmit = () => {
         onAddToCart(selectedFlavor, selectedStrength, selectedAmount);
+      };
+
+      const handleWishlistToggle = () => {
+        if (!onToggleWishlist || !productKey) return;
+        onToggleWishlist({
+          id: currentItemId,
+          name: productKey,
+          imgSrc: (imageMap && imageMap[selectedFlavor]) || imgSrc,
+          flavor: selectedFlavor,
+          strength: selectedStrength,
+          price: 0,
+          count: 1
+        });
       };
 
       const currentImgSrc = (imageMap && imageMap[selectedFlavor]) || imgSrc;
 
       return (
         <div className="col">
-          <div className={`card h-100 border border-3 ${borderColorClass}`}>
-            <img
-              src={currentImgSrc}
-              className="card-img-top"
-              alt={imgAlt}
-              loading="lazy"
-              style={{ objectFit: 'contain', height: '295px', padding: '10px' }}
-            />
-            <div className="card-body px-2">
-              <div className="card-text text-light">
-                <a
-                  href="#exampleModal"
-                  type="button"
-                  data-mdb-toggle="modal"
-                  data-mdb-target="#exampleModal"
-                  aria-label="Submit Feedback"
-                  className="text-decoration-none"
-                >
-                  {ratingText}
-                </a>
-                <br />
-                <em className="fs-3">Selection</em>
+        <div className={`card h-100 border border-3 ${borderColorClass}`}>
+        <div className="position-relative">
+          <img
+            src={currentImgSrc}
+            className="card-img-top"
+            alt={imgAlt}
+            loading="lazy"
+            style={{ objectFit: 'contain', height: '295px', padding: '10px' }}
+          />
+          {onToggleWishlist && (
+            <button
+              onClick={handleWishlistToggle}
+              className="btn btn-link position-absolute top-0 end-0 m-2 p-1"
+              style={{ zIndex: 2, color: isWishlisted ? '#ffb338' : '#fff' }}
+              aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+            >
+              <i className={`${isWishlisted ? 'fas' : 'far'} fa-heart`} style={{ fontSize: '20px' }}></i>
+            </button>
+          )}
+        </div>
+        <div className="card-body px-2">
+          <div className="card-text text-light">
+            <a
+              href="#exampleModal"
+              type="button"
+              data-mdb-toggle="modal"
+              data-mdb-target="#exampleModal"
+              aria-label="Submit Feedback"
+              className="text-decoration-none"
+            >
+              {ratingText}
+            </a>
+            <br />
+            <em className="fs-3">Selection</em>
 
-                {/* Flavor Select */}
-                <div className="product-size-container mt-2">
-                  <select
-                    value={selectedFlavor}
-                    onChange={(e) => setSelectedFlavor(e.target.value)}
-                    aria-label="flavours"
-                    className="form-select bg-dark text-light border-secondary py-1"
-                    style={{ width: '100%', borderRadius: '4px' }}
-                  >
-                    {flavors.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Strength Select */}
-                <div className="product-quantity-container mt-2">
-                  <select
-                    value={selectedStrength}
-                    onChange={(e) => setSelectedStrength(e.target.value)}
-                    aria-label="strength"
-                    className="form-select bg-dark text-light border-secondary py-1"
-                    style={{ width: '100%', borderRadius: '4px' }}
-                  >
-                    {strengths.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Amount Select */}
-                <div className="product-quantity-container mt-2">
-                  <select
-                    value={selectedAmount}
-                    onChange={(e) => setSelectedAmount(e.target.value)}
-                    aria-label="amount"
-                    className="form-select bg-dark text-light border-secondary py-1"
-                    style={{ width: '100%', borderRadius: '4px' }}
-                  >
-                    {amounts.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Add to Cart Trigger */}
-              <button
-                id={buttonId}
-                onClick={handleOrderSubmit}
-                className="button-85 mt-3 w-100 border-0"
-                role="button"
+            {/* Flavor Select */}
+            <div className="product-size-container mt-2">
+              <select
+                value={selectedFlavor}
+                onChange={(e) => setSelectedFlavor(e.target.value)}
+                aria-label="flavours"
+                className="form-select bg-dark text-light border-secondary py-1"
+                style={{ width: '100%', borderRadius: '4px' }}
               >
-                <span className="text-light text-decoration-none d-block w-100 h-100 py-1">
-                  Add to Cart
-                </span>
-              </button>
+                {flavors.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            {/* Strength Select */}
+            <div className="product-quantity-container mt-2">
+              <select
+                value={selectedStrength}
+                onChange={(e) => setSelectedStrength(e.target.value)}
+                aria-label="strength"
+                className="form-select bg-dark text-light border-secondary py-1"
+                style={{ width: '100%', borderRadius: '4px' }}
+              >
+                {strengths.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Amount Select */}
+            <div className="product-quantity-container mt-2">
+              <select
+                value={selectedAmount}
+                onChange={(e) => setSelectedAmount(e.target.value)}
+                aria-label="amount"
+                className="form-select bg-dark text-light border-secondary py-1"
+                style={{ width: '100%', borderRadius: '4px' }}
+              >
+                {amounts.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {outOfStock && (
+              <div className="mt-2">
+                <span className="badge bg-danger">Out of Stock</span>
+              </div>
+            )}
           </div>
+
+          {/* Add to Cart Trigger */}
+          {!outOfStock && (
+            <button
+              id={buttonId}
+              onClick={handleOrderSubmit}
+              className="button-85 mt-3 w-100 border-0"
+              role="button"
+            >
+              <span className="text-light text-decoration-none d-block w-100 h-100 py-1">
+                Add to Cart
+              </span>
+            </button>
+          )}
+
+          {productKey && <ProductReviews productKey={productKey} />}
+          {outOfStock && <NotifyMeButton productKey={productKey} flavor={selectedFlavor} />}
         </div>
       );
     }
@@ -599,7 +928,7 @@
       );
     }
 
-    function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart, onSaveOrder }) {
+    function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart, onSaveOrder, deliveryAvailable, onReorder, pastOrders = [] }) {
       const [view, setView] = useState('cart'); // 'cart' | 'checkout' | 'success'
       const [orderNum, setOrderNum] = useState('');
       const [checkoutForm, setCheckoutForm] = useState({
@@ -627,7 +956,8 @@
           items: [...cart],
           subtotal: getSubtotal(),
           timestamp: new Date().toISOString(),
-          status: 'Pending'
+          status: 'Pending',
+          estimatedDelivery: getEstimatedDelivery()
         };
 
         if (onSaveOrder) {
@@ -637,6 +967,12 @@
         setOrderNum(randomNum);
         setView('success');
         clearCart();
+      };
+
+      const getEstimatedDelivery = () => {
+        const date = new Date();
+        date.setDate(date.getDate() + (deliveryAvailable ? 1 : 5));
+        return date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
       };
 
       const handleClose = () => {
@@ -668,10 +1004,24 @@
             {view === 'cart' && (
               <div className="d-flex flex-column flex-grow-1" style={{ overflow: 'hidden' }}>
                 {cart.length === 0 ? (
-                  <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted">
-                    <i className="fas fa-shopping-basket fa-3x mb-3 text-warning opacity-50"></i>
-                    <p className="fs-4">Your cart is empty</p>
-                  </div>
+                    <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted">
+                      <i className="fas fa-shopping-basket fa-3x mb-3 text-warning opacity-50"></i>
+                      <p className="fs-4">Your cart is empty</p>
+                      {pastOrders.length > 0 && (
+                        <div className="mt-3 w-100">
+                          <p className="fs-5 text-warning">Quick Reorder</p>
+                          {pastOrders.map((order) => (
+                            <div key={order.id} className="d-flex justify-content-between align-items-center bg-dark p-2 rounded mb-2 border border-secondary">
+                              <div>
+                                <strong>{order.id}</strong>
+                                <div className="small text-muted">{order.items.length} items</div>
+                              </div>
+                              <button className="btn btn-sm btn-warning text-dark" onClick={() => onReorder(order)}>Reorder</button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                 ) : (
                   <React.Fragment>
                     <div className="flex-grow-1" style={{ overflowY: 'auto' }}>
@@ -781,6 +1131,14 @@
                     <option value="delivery">Cash on Delivery</option>
                     <option value="transfer">Bank Transfer (Manual)</option>
                   </select>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label text-light fs-5">Estimated Delivery</label>
+                  <div className="alert alert-info py-2">{getEstimatedDelivery()}</div>
+                  {deliveryAvailable === false && (
+                    <div className="text-warning small">Standard delivery applies.</div>
+                  )}
                 </div>
 
                 <div className="border-top border-warning pt-3 mt-auto">
@@ -1019,10 +1377,38 @@
                                   <span className="text-capitalize text-warning">
                                     {order.customer.payment}
                                   </span>
-                                </p>
-                              </div>
+                                 </p>
+                               </div>
 
-                              <div className="col-md-7 ps-md-3">
+                               {/* Tracking Info */}
+                               {order.estimatedDelivery && (
+                                 <div className="col-md-12 mt-3 pt-3 border-top border-secondary">
+                                   <h6 className="text-info text-uppercase fw-bold mb-2">Tracking</h6>
+                                   <p className="mb-1"><strong>Estimated Delivery:</strong> {order.estimatedDelivery}</p>
+                                   <div className="d-flex justify-content-between align-items-center">
+                                     {['Pending', 'Preparing', 'Out for Delivery', 'Delivered'].map((step, idx) => {
+                                       const currentIdx = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'].indexOf(order.status);
+                                       const isActive = idx <= currentIdx;
+                                       return (
+                                         <div key={step} className="text-center">
+                                           <div className="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1"
+                                             style={{
+                                               width: '28px',
+                                               height: '28px',
+                                               backgroundColor: isActive ? '#ffb338' : '#333',
+                                               color: isActive ? '#000' : '#999'
+                                             }}>
+                                             {idx + 1}
+                                           </div>
+                                           <small className={isActive ? 'text-warning' : 'text-muted'}>{step}</small>
+                                         </div>
+                                       );
+                                     })}
+                                   </div>
+                                 </div>
+                               )}
+
+                               <div className="col-md-7 ps-md-3">
                                 <h6 className="text-warning text-uppercase fw-bold mb-2">
                                   Items Ordered ({order.items.reduce((s, i) => s + i.count, 0)})
                                 </h6>
@@ -1237,6 +1623,17 @@
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isPinModalOpen, setIsPinModalOpen] = useState(false);
       const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
+      const [wishlist, setWishlist] = useState(() => {
+        try {
+          const saved = localStorage.getItem('feco_wishlist');
+          return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+          return [];
+        }
+      });
+      const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+      const [isTrackingOpen, setIsTrackingOpen] = useState(false);
+      const [deliveryAvailable, setDeliveryAvailable] = useState(null);
       const [orders, setOrders] = useState(() => {
         try {
           const saved = localStorage.getItem('feco_orders');
@@ -1351,6 +1748,56 @@
       const getCartCount = () => {
         return cart.reduce((sum, item) => sum + item.count, 0);
       };
+
+      const addToWishlist = (item) => {
+        setWishlist((prev) => {
+          const exists = prev.find((i) => i.id === item.id);
+          if (exists) return prev;
+          const updated = [...prev, item];
+          localStorage.setItem('feco_wishlist', JSON.stringify(updated));
+          return updated;
+        });
+      };
+
+      const removeFromWishlist = (id) => {
+        setWishlist((prev) => {
+          const updated = prev.filter((i) => i.id !== id);
+          localStorage.setItem('feco_wishlist', JSON.stringify(updated));
+          return updated;
+        });
+      };
+
+      const moveToCart = (id) => {
+        const item = wishlist.find((i) => i.id === id);
+        if (item) {
+          handleAddToCart(item.name, item.imgSrc, item.flavor, item.strength, '1', item.price, null, {});
+          removeFromWishlist(id);
+        }
+      };
+
+      const toggleWishlist = (item) => {
+        setWishlist((prev) => {
+          const exists = prev.find((i) => i.id === item.id);
+          let updated;
+          if (exists) {
+            updated = prev.filter((i) => i.id !== item.id);
+          } else {
+            updated = [...prev, item];
+          }
+          localStorage.setItem('feco_wishlist', JSON.stringify(updated));
+          return updated;
+        });
+      };
+
+      const isInWishlist = (id) => wishlist.some((i) => i.id === id);
+
+      const reorder = (order) => {
+        order.items.forEach((item) => {
+          handleAddToCart(item.name, item.imgSrc, item.flavor, item.strength, String(item.count || 1), item.price, null, {});
+        });
+      };
+
+      const wishlistCount = wishlist.reduce((sum, item) => sum + item.count, 0);
 
       const smokelessFlavors = [
         { value: 'Pineapple', label: 'Pineapple' },
@@ -1505,10 +1952,16 @@
           <Navbar
             cartCount={getCartCount()}
             onCartClick={() => setIsCartOpen(true)}
+            wishlistCount={wishlistCount}
+            onWishlistClick={() => setIsWishlistOpen(true)}
             pendingOrdersCount={orders.filter((o) => o.status === 'Pending').length}
             onOpenAdminOrders={() => setIsPinModalOpen(true)}
+            onOpenTracking={() => setIsTrackingOpen(true)}
           />
           <Hero />
+
+          <NewsletterSignup />
+          <DeliveryZoneChecker onDeliveryAvailable={setDeliveryAvailable} />
 
           <section className="news-input p-4">
             <div className="container">
@@ -1544,6 +1997,9 @@
                 borderColorClass="border-warning"
                 buttonId="feedbackButtonSmokeless"
                 imageMap={smokelessImages}
+                productKey="smokeless"
+                wishlistIds={wishlist.map((i) => i.id)}
+                onToggleWishlist={toggleWishlist}
                 onAddToCart={(flavor, strength, amount) =>
                   handleAddToCart('Smokeless Juice', './app/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
                 }
@@ -1574,6 +2030,9 @@
                 borderColorClass="border-warning"
                 buttonId="feedbackButtonShots"
                 imageMap={shotsImages}
+                productKey="shots"
+                wishlistIds={wishlist.map((i) => i.id)}
+                onToggleWishlist={toggleWishlist}
                 onAddToCart={(flavor, strength, amount) =>
                   handleAddToCart('Feco Shot', './app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
                 }
@@ -1605,6 +2064,9 @@
                 borderColorClass="border-success"
                 buttonId="feedbackButtonCocktails"
                 imageMap={contenderImages}
+                productKey="contender"
+                wishlistIds={wishlist.map((i) => i.id)}
+                onToggleWishlist={toggleWishlist}
                 onAddToCart={(flavor, strength, amount) =>
                   handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
                 }
@@ -1635,6 +2097,9 @@
                 borderColorClass="border-warning"
                 buttonId="feedbackButtonChocolate"
                 imageMap={chocolateImages}
+                productKey="chocolate"
+                wishlistIds={wishlist.map((i) => i.id)}
+                onToggleWishlist={toggleWishlist}
                 onAddToCart={(flavor, strength, amount) =>
                   handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
                 }
@@ -1738,7 +2203,29 @@
             removeItem={removeItem}
             clearCart={clearCart}
             onSaveOrder={handleSaveOrder}
+            deliveryAvailable={deliveryAvailable}
+            onReorder={reorder}
+            pastOrders={orders}
           />
+
+          {/* Wishlist Drawer */}
+          <WishlistDrawer
+            isOpen={isWishlistOpen}
+            onClose={() => setIsWishlistOpen(false)}
+            wishlist={wishlist}
+            onRemove={removeFromWishlist}
+            onMoveToCart={moveToCart}
+          />
+
+          {/* Order Tracking Modal */}
+          <OrderTracking
+            isOpen={isTrackingOpen}
+            onClose={() => setIsTrackingOpen(false)}
+            orders={orders}
+          />
+
+          {/* WhatsApp Button */}
+          <WhatsAppButton phoneNumber="447000000000" />
 
           {/* Store Owner Orders Management Modal */}
           <AdminOrdersModal
