@@ -149,21 +149,19 @@ export default function App() {
 
   const smokelessQuantities = [
     { value: '100mg', label: '100mg' },
-    { value: '200mg', label: '200mg' },
-    { value: '300mg', label: '300mg' },
-    { value: '400mg', label: '400mg' },
-    { value: '500mg', label: '500mg' }
+    { value: '250mg', label: '250mg' },
+    { value: '500mg', label: '500mg' },
+    { value: '1000mg', label: '1000mg' }
   ];
 
   const calculateSmokelessPrice = (strength) => {
     switch (strength) {
-      case '200mg': return 14.99;
-      case '300mg': return 19.99;
-      case '400mg': return 24.99;
-      case '500mg': return 29.99;
+      case '250mg': return 20.00;
+      case '500mg': return 30.00;
+      case '1000mg': return 50.00;
       case '100mg':
       default:
-        return 9.99;
+        return 10.00;
     }
   };
 
@@ -179,22 +177,67 @@ export default function App() {
     { value: 'Cherry', label: 'Cherry' }
   ];
 
-  const genericQuantities = Array.from({ length: 7 }, (_, i) => ({
-    value: String(i + 1),
-    label: String(i + 1)
-  }));
+  const shotsQuantities = [
+    { value: '250mg', label: '250mg' },
+    { value: '500mg', label: '500mg' },
+    { value: '1000mg', label: '1000mg' }
+  ];
+
+  const calculateShotsPrice = (strength) => {
+    switch (strength) {
+      case '500mg': return 30.00;
+      case '1000mg': return 50.00;
+      case '250mg':
+      default:
+        return 20.00;
+    }
+  };
 
   const chocolateFlavors = [
-    { value: 'Baileys & Honeycomb', label: 'Baileys & Honeycomb 250mg' },
-    { value: 'Cashews', label: 'Cashews 250mg' },
-    { value: 'Dry Roasted Nuts', label: 'Dry Roasted Nuts 250mg' },
-    { value: 'Fruit & Nut', label: 'Fruit & Nut 250mg' },
-    { value: 'Honey Roasted Nuts', label: 'Honey Roasted Nuts 250mg' },
-    { value: 'Milk Chocolate', label: 'Milk Chocolate 250mg' },
-    { value: 'Rum & Raisin', label: 'Rum & Raisin 250mg' },
-    { value: 'Vodka & Cranberries', label: 'Vodka & Cranberries 250mg' },
-    { value: 'Whiskey & Fruits', label: 'Whiskey & Fruits 500mg' }
+    { value: 'Baileys & Honeycomb', label: 'Baileys & Honeycomb' },
+    { value: 'Cashews', label: 'Cashews' },
+    { value: 'Dry Roasted Nuts', label: 'Dry Roasted Nuts' },
+    { value: 'Fruit & Nut', label: 'Fruit & Nut' },
+    { value: 'Honey Roasted Nuts', label: 'Honey Roasted Nuts' },
+    { value: 'Milk Chocolate', label: 'Milk Chocolate' },
+    { value: 'Rum & Raisin', label: 'Rum & Raisin' },
+    { value: 'Vodka & Cranberries', label: 'Vodka & Cranberries' },
+    { value: 'Whiskey & Fruits', label: 'Whiskey & Fruits' }
   ];
+
+  const chocolateQuantities = [
+    { value: '100mg', label: '100mg' },
+    { value: '250mg', label: '250mg' },
+    { value: '500mg', label: '500mg' },
+    { value: '1000mg', label: '1000mg' }
+  ];
+
+  const calculateChocolatePrice = (strength) => {
+    switch (strength) {
+      case '250mg': return 20.00;
+      case '500mg': return 30.00;
+      case '1000mg': return 50.00;
+      case '100mg':
+      default:
+        return 10.00;
+    }
+  };
+
+  const contenderQuantities = [
+    { value: '2000mg', label: '2000mg' },
+    { value: '3000mg', label: '3000mg' },
+    { value: '4000mg', label: '4000mg' }
+  ];
+
+  const calculateContenderPrice = (strength) => {
+    switch (strength) {
+      case '3000mg': return 120.00;
+      case '4000mg': return 150.00;
+      case '2000mg':
+      default:
+        return 80.00;
+    }
+  };
 
   // Image Mapping Sets (Map option value to local image file path)
   const smokelessImages = {
@@ -292,7 +335,7 @@ export default function App() {
           buttonId="feedbackButtonSmokeless"
           imageMap={smokelessImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 9.99, calculateSmokelessPrice, smokelessImages)
+            handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 10.00, calculateSmokelessPrice, smokelessImages)
           }
         />
       </ProductSection>
@@ -316,12 +359,12 @@ export default function App() {
           imgSrc="/img/shots/FECO SHOTS - FRUIT PUNCH.png"
           imgAlt="Feco Shots Syrups"
           flavors={shotsFlavors}
-          quantities={genericQuantities}
+          quantities={shotsQuantities}
           borderColorClass="border-warning"
           buttonId="feedbackButtonShots"
           imageMap={shotsImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 19.99, null, shotsImages)
+            handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 20.00, calculateShotsPrice, shotsImages)
           }
         />
       </ProductSection>
@@ -346,12 +389,12 @@ export default function App() {
           imgSrc="/img/contender/CONTENDER FRUIT PUNCH (2).png"
           imgAlt="CBD cocktails"
           flavors={shotsFlavors}
-          quantities={genericQuantities}
+          quantities={contenderQuantities}
           borderColorClass="border-success"
           buttonId="feedbackButtonCocktails"
           imageMap={contenderImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 24.99, null, contenderImages)
+            handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 80.00, calculateContenderPrice, contenderImages)
           }
         />
       </ProductSection>
@@ -375,12 +418,12 @@ export default function App() {
           imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
           imgAlt="CBD chocolates"
           flavors={chocolateFlavors}
-          quantities={genericQuantities}
+          quantities={chocolateQuantities}
           borderColorClass="border-warning"
           buttonId="feedbackButtonChocolate"
           imageMap={chocolateImages}
           onAddToCart={(flavor, qty) => 
-            handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 14.99, null, chocolateImages)
+            handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 10.00, calculateChocolatePrice, chocolateImages)
           }
         />
       </ProductSection>
