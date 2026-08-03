@@ -15,8 +15,8 @@ import NewsletterSignup from './components/NewsletterSignup';
 import DeliveryZoneChecker from './components/DeliveryZoneChecker';
 import WishlistDrawer from './components/WishlistDrawer';
 import OrderTracking from './components/OrderTracking';
-
 import ProductReviewsModal from './components/ProductReviewsModal';
+import AuthModal from './components/AuthModal';
 
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
@@ -26,6 +26,25 @@ export default function App() {
   const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [activeReviewProduct, setActiveReviewProduct] = useState(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('feco_current_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    localStorage.setItem('feco_current_user', JSON.stringify(user));
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('feco_current_user');
+  };
   const [wishlist, setWishlist] = useState(() => {
     try {
       const saved = localStorage.getItem('feco_wishlist');
@@ -369,6 +388,8 @@ export default function App() {
         pendingOrdersCount={orders.filter((o) => o.status === 'Pending').length}
         onOpenAdminOrders={() => setIsPinModalOpen(true)}
         onOpenTracking={() => setIsTrackingOpen(true)}
+        currentUser={currentUser}
+        onOpenAuth={() => setIsAuthOpen(true)}
       />
       <Hero />
 
@@ -663,6 +684,16 @@ export default function App() {
         isOpen={isReviewsOpen}
         onClose={() => setIsReviewsOpen(false)}
         activeProduct={activeReviewProduct}
+      />
+
+      {/* Customer Auth & Account Modal */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        currentUser={currentUser}
+        onLoginSuccess={handleLoginSuccess}
+        onLogout={handleLogout}
+        userOrders={orders.filter((o) => currentUser && o.customer && o.customer.name && o.customer.name.toLowerCase().includes(currentUser.name.toLowerCase()))}
       />
 
       {/* Age Verification Gate (18+) */}

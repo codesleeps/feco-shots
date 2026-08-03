@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeItem, clearCart, onSaveOrder, deliveryAvailable, onReorder, pastOrders = [] }) {
   const [view, setView] = useState('cart'); // 'cart' | 'checkout' | 'success'
@@ -11,6 +11,25 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
     payment: 'delivery',
     notifySmsEmail: true
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      try {
+        const savedUser = JSON.parse(localStorage.getItem('feco_current_user') || 'null');
+        if (savedUser) {
+          setCheckoutForm((prev) => ({
+            ...prev,
+            name: prev.name || savedUser.name || '',
+            email: prev.email || savedUser.email || '',
+            phone: prev.phone || savedUser.phone || '',
+            address: prev.address || savedUser.address || ''
+          }));
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [isOpen, view]);
 
   const getSubtotal = () => {
     return cart.reduce((total, item) => total + (item.price * item.count), 0);

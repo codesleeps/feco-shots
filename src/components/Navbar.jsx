@@ -1,6 +1,16 @@
 import React, { useRef } from 'react';
 
-export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWishlistClick, pendingOrdersCount = 0, onOpenAdminOrders, onOpenTracking }) {
+export default function Navbar({ 
+  cartCount, 
+  onCartClick, 
+  wishlistCount = 0, 
+  onWishlistClick, 
+  pendingOrdersCount = 0, 
+  onOpenAdminOrders, 
+  onOpenTracking,
+  currentUser,
+  onOpenAuth
+}) {
   const collapseRef = useRef(null);
 
   const closeNavbar = () => {
@@ -85,6 +95,19 @@ export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWi
         
         {/* Responsive Header Action Buttons Container */}
         <div className="d-flex flex-wrap align-items-center justify-content-end gap-1 ms-auto py-1">
+          {/* User Account / Auth Button */}
+          {onOpenAuth && (
+            <button
+              onClick={onOpenAuth}
+              className={`btn ${currentUser ? 'btn-warning text-dark font-weight-bold' : 'btn-outline-warning'} btn-sm px-2 py-1 d-flex align-items-center`}
+              style={{ borderRadius: '6px', fontSize: '12px' }}
+              title={currentUser ? `Account: ${currentUser.name}` : 'Sign In / Account'}
+            >
+              <i className="fas fa-user me-1"></i>
+              {currentUser ? (currentUser.name ? currentUser.name.split(' ')[0] : 'Account') : 'Login'}
+            </button>
+          )}
+
           {/* Track Order */}
           {onOpenTracking && (
             <button
