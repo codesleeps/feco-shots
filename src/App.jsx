@@ -30,16 +30,20 @@ export default function App() {
   });
 
   const filterMatches = (title, flavorsList, strengthsList) => {
-    if (!searchTerm) return true;
-    const term = searchTerm.toLowerCase();
-    const titleMatch = title.toLowerCase().includes(term);
-    const flavorMatch = flavorsList.some((f) =>
-      f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
-    );
-    const strengthMatch = strengthsList?.some((s) =>
-      s.value.toLowerCase().includes(term) || s.label.toLowerCase().includes(term)
-    );
-    return titleMatch || flavorMatch || strengthMatch;
+    try {
+      if (!searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      const titleMatch = title.toLowerCase().includes(term);
+      const flavorMatch = Array.isArray(flavorsList) && flavorsList.some((f) =>
+        f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
+      );
+      const strengthMatch = Array.isArray(strengthsList) && strengthsList.some((s) =>
+        s.value.toLowerCase().includes(term) || s.label.toLowerCase().includes(term)
+      );
+      return titleMatch || flavorMatch || strengthMatch;
+    } catch (e) {
+      return true;
+    }
   };
 
   useEffect(() => {
