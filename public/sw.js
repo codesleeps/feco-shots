@@ -69,7 +69,9 @@ self.addEventListener("install", (event) => {
 
 // Implementing cache-first
 self.addEventListener("fetch", (event) => {
-  event.respondWith(caches.match(event.request)).then((cachedResponse) => {
-    return cachedResponse || fetch(event.request);
-  });
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
 });
