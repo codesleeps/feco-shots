@@ -4,17 +4,17 @@ export default function ProductCard({
   imgSrc,
   imgAlt,
   flavors,
-  strengths,
-  amounts,
+  strengths = [],
+  amounts = [],
   borderColorClass = 'border-warning',
   buttonId,
   ratingText = '⭐⭐⭐⭐⭐',
   onAddToCart,
   imageMap
 }) {
-  const [selectedFlavor, setSelectedFlavor] = useState(flavors[0]?.value || '');
-  const [selectedStrength, setSelectedStrength] = useState(strengths[0]?.value || '');
-  const [selectedAmount, setSelectedAmount] = useState(amounts[0]?.value || '');
+  const [selectedFlavor, setSelectedFlavor] = useState(flavors?.[0]?.value || '');
+  const [selectedStrength, setSelectedStrength] = useState(strengths?.[0]?.value || '');
+  const [selectedAmount, setSelectedAmount] = useState(amounts?.[0]?.value || '');
 
   const handleOrderSubmit = () => {
     onAddToCart(selectedFlavor, selectedStrength, selectedAmount);
