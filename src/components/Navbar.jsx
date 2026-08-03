@@ -12,19 +12,33 @@ export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWi
   };
 
   return (
-    <nav className="navbar navbar-expand-lg fixed-top navbar">
-      <div className="container-fluid">
-        <button
-          className="navbar-toggler text-white"
-          type="button"
-          data-mdb-toggle="collapse"
-          data-mdb-target="#navbarExample01"
-          aria-controls="navbarExample01"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i className="fas fa-bars text-warning"></i>
-        </button>
+    <nav className="navbar navbar-expand-lg fixed-top bg-black border-bottom border-warning py-1 py-lg-2">
+      <div className="container-fluid px-2 px-sm-3">
+        <div className="d-flex align-items-center me-2">
+          <button
+            className="navbar-toggler text-white me-2 p-1"
+            type="button"
+            data-mdb-toggle="collapse"
+            data-mdb-target="#navbarExample01"
+            aria-controls="navbarExample01"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <i className="fas fa-bars text-warning fs-3"></i>
+          </button>
+          
+          <a className="navbar-brand me-1 p-0 d-flex align-items-center" href="#about">
+            <img
+              src="./img/logo/logo113x113.png"
+              className="rounded-circle"
+              width="50"
+              height="50"
+              alt="Club Feco Logo"
+              loading="lazy"
+            />
+          </a>
+        </div>
+
         <div className="collapse navbar-collapse" id="navbarExample01" ref={collapseRef}>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
@@ -69,13 +83,14 @@ export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWi
           </ul>
         </div>
         
-        <div className="d-flex align-items-center">
+        {/* Responsive Header Action Buttons Container */}
+        <div className="d-flex flex-wrap align-items-center justify-content-end gap-1 ms-auto py-1">
           {/* Track Order */}
           {onOpenTracking && (
             <button
               onClick={onOpenTracking}
-              className="btn btn-outline-info btn-sm me-2 d-flex align-items-center"
-              style={{ borderRadius: '6px' }}
+              className="btn btn-outline-info btn-sm px-2 py-1 d-flex align-items-center"
+              style={{ borderRadius: '6px', fontSize: '12px' }}
               title="Track your order"
             >
               <i className="fas fa-truck me-1"></i> Track
@@ -86,13 +101,13 @@ export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWi
           {onOpenAdminOrders && (
             <button
               onClick={onOpenAdminOrders}
-              className="btn btn-outline-warning btn-sm me-2 position-relative d-flex align-items-center"
-              style={{ borderRadius: '6px' }}
+              className="btn btn-outline-warning btn-sm px-2 py-1 position-relative d-flex align-items-center"
+              style={{ borderRadius: '6px', fontSize: '12px' }}
               title="Store Owner - View Orders"
             >
               <i className="fas fa-clipboard-list me-1"></i> Orders
               {pendingOrdersCount > 0 && (
-                <span className="badge rounded-pill bg-danger ms-1">
+                <span className="badge rounded-pill bg-danger ms-1" style={{ fontSize: '10px' }}>
                   {pendingOrdersCount}
                 </span>
               )}
@@ -103,13 +118,13 @@ export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWi
           {onWishlistClick && (
             <button
               onClick={onWishlistClick}
-              className="btn btn-outline-danger btn-sm me-2 position-relative d-flex align-items-center"
-              style={{ borderRadius: '6px' }}
+              className="btn btn-outline-danger btn-sm px-2 py-1 position-relative d-flex align-items-center"
+              style={{ borderRadius: '6px', fontSize: '12px' }}
               title="Wishlist"
             >
               <i className="fas fa-heart me-1"></i> Wishlist
               {wishlistCount > 0 && (
-                <span className="badge rounded-pill bg-danger ms-1">{wishlistCount}</span>
+                <span className="badge rounded-pill bg-danger ms-1" style={{ fontSize: '10px' }}>{wishlistCount}</span>
               )}
             </button>
           )}
@@ -117,41 +132,20 @@ export default function Navbar({ cartCount, onCartClick, wishlistCount = 0, onWi
           {/* Header Cart Button */}
           <button 
             onClick={onCartClick} 
-            className="btn btn-warning text-dark font-weight-bold btn-sm d-flex align-items-center" 
-            style={{ borderRadius: '6px', padding: '6px 14px' }}
+            className="btn btn-warning text-dark font-weight-bold btn-sm px-2 py-1 d-flex align-items-center" 
+            style={{ borderRadius: '6px', fontSize: '12px' }}
             aria-label="Open Shopping Cart"
           >
             <i className="fas fa-shopping-cart me-1"></i> Cart
             {cartCount > 0 && (
               <span 
-                className="badge rounded-pill bg-danger ms-2"
-                style={{ fontSize: '11px' }}
+                className="badge rounded-pill bg-danger ms-1"
+                style={{ fontSize: '10px' }}
               >
                 {cartCount}
               </span>
             )}
           </button>
-
-          <div className="dropdown">
-            <a
-              className="dropdown-toggle d-flex align-items-center hidden-arrow"
-              href="#about"
-              id="navbarDropdownMenuAvatar"
-              role="button"
-              data-mdb-toggle="dropdown"
-              aria-expanded="false"
-              aria-label="Club Feco Logo"
-            >
-              <img
-                src="./img/logo/logo113x113.png"
-                className="rounded-circle"
-                width="75"
-                height="75"
-                alt="Brand Logo gold lion head with crown"
-                loading="lazy"
-              />
-            </a>
-          </div>
         </div>
       </div>
     </nav>
