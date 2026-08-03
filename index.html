@@ -43,7 +43,7 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
     function AgeGateModal() {
       const [isVerified, setIsVerified] = useState(true);
@@ -273,6 +273,16 @@
     }
 
     function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
+      const collapseRef = useRef(null);
+
+      const closeNavbar = () => {
+        if (collapseRef && collapseRef.current) {
+          collapseRef.current.classList.remove('show');
+          const toggler = document.querySelector('[data-mdb-target="#navbarExample01"]');
+          if (toggler) toggler.setAttribute('aria-expanded', 'false');
+        }
+      };
+
       return (
         <nav className="navbar navbar-expand-lg fixed-top navbar">
           <div className="container-fluid">
@@ -287,30 +297,30 @@
             >
               <i className="fas fa-bars text-warning"></i>
             </button>
-            <div className="collapse navbar-collapse" id="navbarExample01">
+            <div className="collapse navbar-collapse" id="navbarExample01" ref={collapseRef}>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <a className="nav-link text-warning" href="#about" aria-label="About Club Feco">
+                  <a className="nav-link text-warning" href="#about" onClick={closeNavbar} aria-label="About Club Feco">
                     About
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-warning" href="#smokeless" aria-label="Read more about our Smokeless Range">
+                  <a className="nav-link text-warning" href="#smokeless" onClick={closeNavbar} aria-label="Read more about our Smokeless Range">
                     Smokeless
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-warning" href="#shots" aria-label="Read more about our CBD shots">
+                  <a className="nav-link text-warning" href="#shots" onClick={closeNavbar} aria-label="Read more about our CBD shots">
                     Shots
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our Contender range">
+                  <a className="nav-link text-warning" href="#cocktails" onClick={closeNavbar} aria-label="Read more about our Contender range">
                     Contender
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-warning" href="#chocolates" aria-label="Read more about our CBD chocolates">
+                  <a className="nav-link text-warning" href="#chocolates" onClick={closeNavbar} aria-label="Read more about our CBD chocolates">
                     Chocolates
                   </a>
                 </li>
@@ -320,6 +330,7 @@
                     href="#cart"
                     onClick={(e) => {
                       e.preventDefault();
+                      closeNavbar();
                       onCartClick();
                     }}
                     aria-label="Open Shopping Cart"
@@ -473,7 +484,8 @@
       imgSrc,
       imgAlt,
       flavors,
-      quantities,
+      strengths,
+      amounts,
       borderColorClass = 'border-warning',
       buttonId,
       ratingText = '⭐⭐⭐⭐⭐',
@@ -481,10 +493,11 @@
       imageMap
     }) {
       const [selectedFlavor, setSelectedFlavor] = useState(flavors[0]?.value || '');
-      const [selectedQuantity, setSelectedQuantity] = useState(quantities[0]?.value || '');
+      const [selectedStrength, setSelectedStrength] = useState(strengths[0]?.value || '');
+      const [selectedAmount, setSelectedAmount] = useState(amounts[0]?.value || '');
 
       const handleOrderSubmit = () => {
-        onAddToCart(selectedFlavor, selectedQuantity);
+        onAddToCart(selectedFlavor, selectedStrength, selectedAmount);
       };
 
       const currentImgSrc = (imageMap && imageMap[selectedFlavor]) || imgSrc;
@@ -531,16 +544,33 @@
                   </select>
                 </div>
 
-                {/* Quantity Select */}
+                {/* Strength Select */}
                 <div className="product-quantity-container mt-2">
                   <select
-                    value={selectedQuantity}
-                    onChange={(e) => setSelectedQuantity(e.target.value)}
-                    aria-label="quantity"
+                    value={selectedStrength}
+                    onChange={(e) => setSelectedStrength(e.target.value)}
+                    aria-label="strength"
                     className="form-select bg-dark text-light border-secondary py-1"
                     style={{ width: '100%', borderRadius: '4px' }}
                   >
-                    {quantities.map((opt) => (
+                    {strengths.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Amount Select */}
+                <div className="product-quantity-container mt-2">
+                  <select
+                    value={selectedAmount}
+                    onChange={(e) => setSelectedAmount(e.target.value)}
+                    aria-label="amount"
+                    className="form-select bg-dark text-light border-secondary py-1"
+                    style={{ width: '100%', borderRadius: '4px' }}
+                  >
+                    {amounts.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>
@@ -715,7 +745,7 @@
                           <div className="flex-grow-1">
                             <h5 className="text-light m-0 font-weight-bold">{item.name}</h5>
                             <span className="text-muted fs-6">
-                              Flavor: <strong className="text-warning">{item.flavor}</strong> | Qty: {item.quantitySelect}
+                              Flavor: <strong className="text-warning">{item.flavor}</strong> | Strength: {item.strength}
                             </span>
                             <div className="d-flex align-items-center justify-content-between mt-2">
                               <span className="text-warning fs-5 fw-bold">£{(item.price * item.count).toFixed(2)}</span>
@@ -1077,7 +1107,7 @@
                                         <div>
                                           <div className="fw-bold">{item.name}</div>
                                           <small className="text-muted">
-                                            {item.flavor} ({item.quantitySelect}) x {item.count}
+                                            {item.flavor} ({item.strength}) x {item.count}
                                           </small>
                                         </div>
                                       </div>
@@ -1327,16 +1357,17 @@
         });
       };
 
-      const handleAddToCart = (productName, defaultImgSrc, flavor, quantitySelect, basePrice, priceCalculator, imageMap) => {
-        const itemPrice = priceCalculator ? priceCalculator(quantitySelect) : basePrice;
+      const handleAddToCart = (productName, defaultImgSrc, flavor, strength, amount, basePrice, priceCalculator, imageMap) => {
+        const itemPrice = priceCalculator ? priceCalculator(strength) : basePrice;
+        const totalUnits = parseInt(amount, 10) || 1;
         const itemImgSrc = (imageMap && imageMap[flavor]) || defaultImgSrc;
-        const itemId = `${productName}-${flavor}-${quantitySelect}`;
+        const itemId = `${productName}-${flavor}-${strength}`;
 
         setCart((prevCart) => {
           const existingItem = prevCart.find((i) => i.id === itemId);
           if (existingItem) {
             return prevCart.map((i) =>
-              i.id === itemId ? { ...i, count: i.count + 1 } : i
+              i.id === itemId ? { ...i, count: i.count + totalUnits } : i
             );
           } else {
             return [
@@ -1346,9 +1377,10 @@
                 name: productName,
                 imgSrc: itemImgSrc,
                 flavor,
-                quantitySelect,
+                strength,
+                amount: totalUnits,
                 price: itemPrice,
-                count: 1
+                count: totalUnits
               }
             ];
           }
@@ -1389,12 +1421,17 @@
         { value: 'Grape', label: 'Grape' }
       ];
 
-      const smokelessQuantities = [
+      const smokelessStrengths = [
         { value: '100mg', label: '100mg' },
         { value: '250mg', label: '250mg' },
         { value: '500mg', label: '500mg' },
         { value: '1000mg', label: '1000mg' }
       ];
+
+      const genericAmounts = Array.from({ length: 7 }, (_, i) => ({
+        value: String(i + 1),
+        label: String(i + 1)
+      }));
 
       const calculateSmokelessPrice = (strength) => {
         switch (strength) {
@@ -1419,7 +1456,7 @@
         { value: 'Cherry', label: 'Cherry' }
       ];
 
-      const shotsQuantities = [
+      const shotsStrengths = [
         { value: '250mg', label: '250mg' },
         { value: '500mg', label: '500mg' },
         { value: '1000mg', label: '1000mg' }
@@ -1447,7 +1484,7 @@
         { value: 'Whiskey & Fruits', label: 'Whiskey & Fruits' }
       ];
 
-      const chocolateQuantities = [
+      const chocolateStrengths = [
         { value: '100mg', label: '100mg' },
         { value: '250mg', label: '250mg' },
         { value: '500mg', label: '500mg' },
@@ -1465,7 +1502,7 @@
         }
       };
 
-      const contenderQuantities = [
+      const contenderStrengths = [
         { value: '2000mg', label: '2000mg' },
         { value: '3000mg', label: '3000mg' },
         { value: '4000mg', label: '4000mg' }
@@ -1581,12 +1618,13 @@
                 imgSrc="./app/img/smokeless/Smokeless - Pineapple.png"
                 imgAlt="CBD Fresh Fruit Juices"
                 flavors={smokelessFlavors}
-                quantities={smokelessQuantities}
+                strengths={smokelessStrengths}
+                amounts={genericAmounts}
                 borderColorClass="border-warning"
                 buttonId="feedbackButtonSmokeless"
                 imageMap={smokelessImages}
-                onAddToCart={(flavor, qty) =>
-                  handleAddToCart('Smokeless Juice', './app/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 10.00, calculateSmokelessPrice, smokelessImages)
+                onAddToCart={(flavor, strength, amount) =>
+                  handleAddToCart('Smokeless Juice', './app/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
                 }
               />
             </ProductSection>
@@ -1612,12 +1650,13 @@
                 imgSrc="./app/img/shots/FECO SHOTS - FRUIT PUNCH.png"
                 imgAlt="Jar of topicals cream"
                 flavors={shotsFlavors}
-                quantities={shotsQuantities}
+                strengths={shotsStrengths}
+                amounts={genericAmounts}
                 borderColorClass="border-warning"
                 buttonId="feedbackButtonShots"
                 imageMap={shotsImages}
-                onAddToCart={(flavor, qty) =>
-                  handleAddToCart('Feco Shot', './app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 20.00, calculateShotsPrice, shotsImages)
+                onAddToCart={(flavor, strength, amount) =>
+                  handleAddToCart('Feco Shot', './app/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
                 }
               />
             </ProductSection>
@@ -1644,12 +1683,13 @@
                 imgSrc="./app/img/contender/CONTENDER FRUIT PUNCH (2).png"
                 imgAlt="CBD cocktails"
                 flavors={shotsFlavors}
-                quantities={contenderQuantities}
+                strengths={contenderStrengths}
+                amounts={genericAmounts}
                 borderColorClass="border-success"
                 buttonId="feedbackButtonCocktails"
                 imageMap={contenderImages}
-                onAddToCart={(flavor, qty) =>
-                  handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 80.00, calculateContenderPrice, contenderImages)
+                onAddToCart={(flavor, strength, amount) =>
+                  handleAddToCart('Contender Cocktail', './app/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
                 }
               />
             </ProductSection>
@@ -1675,12 +1715,13 @@
                 imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
                 imgAlt="CBD chocolates"
                 flavors={chocolateFlavors}
-                quantities={chocolateQuantities}
+                strengths={chocolateStrengths}
+                amounts={genericAmounts}
                 borderColorClass="border-warning"
                 buttonId="feedbackButtonChocolate"
                 imageMap={chocolateImages}
-                onAddToCart={(flavor, qty) =>
-                  handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 10.00, calculateChocolatePrice, chocolateImages)
+                onAddToCart={(flavor, strength, amount) =>
+                  handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
                 }
               />
             </ProductSection>

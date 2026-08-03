@@ -4,7 +4,8 @@ export default function ProductCard({
   imgSrc,
   imgAlt,
   flavors,
-  quantities,
+  strengths,
+  amounts,
   borderColorClass = 'border-warning',
   buttonId,
   ratingText = '⭐⭐⭐⭐⭐',
@@ -12,13 +13,13 @@ export default function ProductCard({
   imageMap
 }) {
   const [selectedFlavor, setSelectedFlavor] = useState(flavors[0]?.value || '');
-  const [selectedQuantity, setSelectedQuantity] = useState(quantities[0]?.value || '');
+  const [selectedStrength, setSelectedStrength] = useState(strengths[0]?.value || '');
+  const [selectedAmount, setSelectedAmount] = useState(amounts[0]?.value || '');
 
   const handleOrderSubmit = () => {
-    onAddToCart(selectedFlavor, selectedQuantity);
+    onAddToCart(selectedFlavor, selectedStrength, selectedAmount);
   };
 
-  // Resolve current image dynamically based on selected flavor mapping
   const currentImgSrc = (imageMap && imageMap[selectedFlavor]) || imgSrc;
 
   return (
@@ -63,16 +64,33 @@ export default function ProductCard({
               </select>
             </div>
 
-            {/* Quantity Select */}
+            {/* Strength Select */}
             <div className="product-quantity-container mt-2">
               <select
-                value={selectedQuantity}
-                onChange={(e) => setSelectedQuantity(e.target.value)}
-                aria-label="quantity"
+                value={selectedStrength}
+                onChange={(e) => setSelectedStrength(e.target.value)}
+                aria-label="strength"
                 className="form-select bg-dark text-light border-secondary py-1"
                 style={{ width: '100%', borderRadius: '4px' }}
               >
-                {quantities.map((opt) => (
+                {strengths.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Amount Select */}
+            <div className="product-quantity-container mt-2">
+              <select
+                value={selectedAmount}
+                onChange={(e) => setSelectedAmount(e.target.value)}
+                aria-label="amount"
+                className="form-select bg-dark text-light border-secondary py-1"
+                style={{ width: '100%', borderRadius: '4px' }}
+              >
+                {amounts.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>

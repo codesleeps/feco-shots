@@ -86,9 +86,9 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQty, removeIte
                       />
                       <div className="flex-grow-1 text-light">
                         <h5 className="fs-5 mb-0 fw-bold">{item.name}</h5>
-                        <span className="text-muted fs-6" style={{ letterSpacing: '0' }}>
-                          {item.flavor} / {item.quantitySelect}
-                        </span>
+                         <span className="text-muted fs-6" style={{ letterSpacing: '0' }}>
+                           {item.flavor} / {item.strength} x {item.count}
+                         </span>
                         <div className="d-flex align-items-center justify-content-between mt-2">
                           <span className="text-warning fs-5 fw-bold">£{(item.price * item.count).toFixed(2)}</span>
                           

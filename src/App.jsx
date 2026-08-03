@@ -80,20 +80,19 @@ export default function App() {
   };
 
   // Add Item to Checkout Cart
-  const handleAddToCart = (productName, defaultImgSrc, flavor, quantitySelect, basePrice, priceCalculator, imageMap) => {
-    const itemPrice = priceCalculator ? priceCalculator(quantitySelect) : basePrice;
+  const handleAddToCart = (productName, defaultImgSrc, flavor, strength, amount, basePrice, priceCalculator, imageMap) => {
+    const itemPrice = priceCalculator ? priceCalculator(strength) : basePrice;
+    const totalUnits = parseInt(amount, 10) || 1;
     
-    // Resolve dynamic image based on flavor selection map
     const itemImgSrc = (imageMap && imageMap[flavor]) || defaultImgSrc;
     
-    // Dynamic ID key based on properties
-    const itemId = `${productName}-${flavor}-${quantitySelect}`;
+    const itemId = `${productName}-${flavor}-${strength}`;
 
     setCart((prevCart) => {
       const existingItem = prevCart.find((i) => i.id === itemId);
       if (existingItem) {
         return prevCart.map((i) => 
-          i.id === itemId ? { ...i, count: i.count + 1 } : i
+          i.id === itemId ? { ...i, count: i.count + totalUnits } : i
         );
       } else {
         return [
@@ -103,9 +102,10 @@ export default function App() {
             name: productName,
             imgSrc: itemImgSrc,
             flavor,
-            quantitySelect,
+            strength,
+            amount: totalUnits,
             price: itemPrice,
-            count: 1
+            count: totalUnits
           }
         ];
       }
@@ -138,7 +138,6 @@ export default function App() {
     return cart.reduce((sum, item) => sum + item.count, 0);
   };
 
-  // Product Lists
   const smokelessFlavors = [
     { value: 'Pineapple', label: 'Pineapple' },
     { value: 'Mango', label: 'Mango' },
@@ -147,12 +146,17 @@ export default function App() {
     { value: 'Grape', label: 'Grape' }
   ];
 
-  const smokelessQuantities = [
+  const smokelessStrengths = [
     { value: '100mg', label: '100mg' },
     { value: '250mg', label: '250mg' },
     { value: '500mg', label: '500mg' },
     { value: '1000mg', label: '1000mg' }
   ];
+
+  const genericAmounts = Array.from({ length: 7 }, (_, i) => ({
+    value: String(i + 1),
+    label: String(i + 1)
+  }));
 
   const calculateSmokelessPrice = (strength) => {
     switch (strength) {
@@ -177,7 +181,7 @@ export default function App() {
     { value: 'Cherry', label: 'Cherry' }
   ];
 
-  const shotsQuantities = [
+  const shotsStrengths = [
     { value: '250mg', label: '250mg' },
     { value: '500mg', label: '500mg' },
     { value: '1000mg', label: '1000mg' }
@@ -205,7 +209,7 @@ export default function App() {
     { value: 'Whiskey & Fruits', label: 'Whiskey & Fruits' }
   ];
 
-  const chocolateQuantities = [
+  const chocolateStrengths = [
     { value: '100mg', label: '100mg' },
     { value: '250mg', label: '250mg' },
     { value: '500mg', label: '500mg' },
@@ -223,7 +227,7 @@ export default function App() {
     }
   };
 
-  const contenderQuantities = [
+  const contenderStrengths = [
     { value: '2000mg', label: '2000mg' },
     { value: '3000mg', label: '3000mg' },
     { value: '4000mg', label: '4000mg' }
@@ -330,12 +334,13 @@ export default function App() {
           imgSrc="/img/smokeless/Smokeless - Pineapple.png"
           imgAlt="CBD Fresh Fruit Juices"
           flavors={smokelessFlavors}
-          quantities={smokelessQuantities}
+          strengths={smokelessStrengths}
+          amounts={genericAmounts}
           borderColorClass="border-warning"
           buttonId="feedbackButtonSmokeless"
           imageMap={smokelessImages}
-          onAddToCart={(flavor, qty) => 
-            handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, qty, 10.00, calculateSmokelessPrice, smokelessImages)
+          onAddToCart={(flavor, strength, amount) => 
+            handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
           }
         />
       </ProductSection>
@@ -359,12 +364,13 @@ export default function App() {
           imgSrc="/img/shots/FECO SHOTS - FRUIT PUNCH.png"
           imgAlt="Feco Shots Syrups"
           flavors={shotsFlavors}
-          quantities={shotsQuantities}
+          strengths={shotsStrengths}
+          amounts={genericAmounts}
           borderColorClass="border-warning"
           buttonId="feedbackButtonShots"
           imageMap={shotsImages}
-          onAddToCart={(flavor, qty) => 
-            handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, qty, 20.00, calculateShotsPrice, shotsImages)
+          onAddToCart={(flavor, strength, amount) => 
+            handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
           }
         />
       </ProductSection>
@@ -389,12 +395,13 @@ export default function App() {
           imgSrc="/img/contender/CONTENDER FRUIT PUNCH (2).png"
           imgAlt="CBD cocktails"
           flavors={shotsFlavors}
-          quantities={contenderQuantities}
+          strengths={contenderStrengths}
+          amounts={genericAmounts}
           borderColorClass="border-success"
           buttonId="feedbackButtonCocktails"
           imageMap={contenderImages}
-          onAddToCart={(flavor, qty) => 
-            handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, qty, 80.00, calculateContenderPrice, contenderImages)
+          onAddToCart={(flavor, strength, amount) => 
+            handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
           }
         />
       </ProductSection>
@@ -418,12 +425,13 @@ export default function App() {
           imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
           imgAlt="CBD chocolates"
           flavors={chocolateFlavors}
-          quantities={chocolateQuantities}
+          strengths={chocolateStrengths}
+          amounts={genericAmounts}
           borderColorClass="border-warning"
           buttonId="feedbackButtonChocolate"
           imageMap={chocolateImages}
-          onAddToCart={(flavor, qty) => 
-            handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, qty, 10.00, calculateChocolatePrice, chocolateImages)
+          onAddToCart={(flavor, strength, amount) => 
+            handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
           }
         />
       </ProductSection>

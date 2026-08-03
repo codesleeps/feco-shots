@@ -200,9 +200,9 @@ export default function AdminOrdersModal({ isOpen, onClose, orders, onUpdateStat
                                     />
                                     <div>
                                       <div className="fw-bold">{item.name}</div>
-                                      <small className="text-muted">
-                                        {item.flavor} ({item.quantitySelect}) x {item.count}
-                                      </small>
+                                        <small className="text-muted">
+                                          {item.flavor} ({item.strength}) x {item.count}
+                                        </small>
                                     </div>
                                   </div>
                                   <div className="fw-bold text-warning">

@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
+  const collapseRef = useRef(null);
+
+  const closeNavbar = () => {
+    if (collapseRef.current) {
+      collapseRef.current.classList.remove('show');
+      const toggler = document.querySelector('[data-mdb-target="#navbarExample01"]');
+      if (toggler) toggler.setAttribute('aria-expanded', 'false');
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg fixed-top navbar">
       <div className="container-fluid">
@@ -15,30 +25,30 @@ export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0,
         >
           <i className="fas fa-bars text-warning"></i>
         </button>
-        <div className="collapse navbar-collapse" id="navbarExample01">
+        <div className="collapse navbar-collapse" id="navbarExample01" ref={collapseRef}>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link text-warning" href="#about" aria-label="About Club Feco">
+              <a className="nav-link text-warning" href="#about" onClick={closeNavbar} aria-label="About Club Feco">
                 About
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-warning" href="#smokeless" aria-label="Read more about our Smokeless Range">
+              <a className="nav-link text-warning" href="#smokeless" onClick={closeNavbar} aria-label="Read more about our Smokeless Range">
                 Smokeless
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-warning" href="#shots" aria-label="Read more about our CBD shots">
+              <a className="nav-link text-warning" href="#shots" onClick={closeNavbar} aria-label="Read more about our CBD shots">
                 Shots
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-warning" href="#cocktails" aria-label="Read more about our Contender range">
+              <a className="nav-link text-warning" href="#cocktails" onClick={closeNavbar} aria-label="Read more about our Contender range">
                 Contender
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link text-warning" href="#chocolates" aria-label="Read more about our CBD chocolates">
+              <a className="nav-link text-warning" href="#chocolates" onClick={closeNavbar} aria-label="Read more about our CBD chocolates">
                 Chocolates
               </a>
             </li>
@@ -48,6 +58,7 @@ export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0,
                 href="#cart"
                 onClick={(e) => {
                   e.preventDefault();
+                  closeNavbar();
                   onCartClick();
                 }}
                 aria-label="Open Shopping Cart"
