@@ -34,7 +34,7 @@ const resourcesToPrecache = [
   "app/img/chocolates/VODKA & CRANBERRIES 500MG.webp",
   "app/img/contender/CONTENDER_MANGO400x280.webp",
   "app/img/gummies/gum_one.webp",
-  "app/img/gummies/gummies_batch.webpapp/img/gummies/gummies_batch.webp",
+  "app/img/gummies/gummies_batch.webp",
   "app/img/honey/HONEY 500MG.webp",
   "app/img/logo/hero2_501x301.webp",
   "app/img/logo/leaf.png",
@@ -58,7 +58,11 @@ self.addEventListener("install", (event) => {
   console.log("Service worker install event!");
   event.waitUntil(
     caches.open(cacheName).then((cache) => {
-      return cache.addAll(resourcesToPrecache);
+      return Promise.allSettled(
+        resourcesToPrecache.map((url) =>
+          cache.add(url).catch((err) => console.warn("Failed to precache:", url, err))
+        )
+      );
     })
   );
 });
