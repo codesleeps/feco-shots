@@ -213,65 +213,6 @@
       );
     }
 
-    function ProductSearchBar({ searchTerm, setSearchTerm, activeCategory, setActiveCategory }) {
-      const categories = [
-        { id: 'all', label: 'All Products' },
-        { id: 'smokeless', label: 'Smokeless Range' },
-        { id: 'shots', label: 'Feco Shots' },
-        { id: 'cocktails', label: 'Contender Selection' },
-        { id: 'chocolates', label: 'Chocolates' }
-      ];
-
-      return (
-        <section className="bg-black py-4 border-top border-bottom border-secondary">
-          <div className="container">
-            <div className="row g-3 align-items-center">
-              <div className="col-md-5">
-                <div className="input-group">
-                  <span className="input-group-text bg-dark text-warning border-secondary">
-                    <i className="fas fa-search"></i>
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control bg-dark text-light border-secondary py-2"
-                    placeholder="Search flavors, strength (250mg), or product..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  {searchTerm && (
-                    <button
-                      className="btn btn-dark text-warning border-secondary"
-                      onClick={() => setSearchTerm('')}
-                      title="Clear search"
-                    >
-                      &times;
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="col-md-7">
-                <div className="d-flex flex-wrap gap-2 justify-content-md-end">
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategory(cat.id)}
-                      className={`btn btn-sm ${
-                        activeCategory === cat.id ? 'btn-warning text-dark fw-bold' : 'btn-outline-secondary text-light'
-                      }`}
-                      style={{ borderRadius: '20px', padding: '6px 14px' }}
-                    >
-                      {cat.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
     function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0, onOpenAdminOrders }) {
       const collapseRef = useRef(null);
 
@@ -1296,8 +1237,6 @@
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isPinModalOpen, setIsPinModalOpen] = useState(false);
       const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
-      const [searchTerm, setSearchTerm] = useState('');
-      const [activeCategory, setActiveCategory] = useState('all');
       const [orders, setOrders] = useState(() => {
         try {
           const saved = localStorage.getItem('feco_orders');
@@ -1318,15 +1257,6 @@
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
       }, []);
-
-      useEffect(() => {
-        if (searchTerm.trim()) {
-          const firstSection = document.querySelector('section[id]');
-          if (firstSection) {
-            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }
-      }, [searchTerm]);
 
       const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1570,23 +1500,6 @@
         'Whiskey & Fruits': './public/img/chocolates/WHISKEY & FRUITS  500MG.png'
       };
 
-      const filterMatches = (title, flavorsList, strengthsList) => {
-        try {
-          if (!searchTerm) return true;
-          const term = searchTerm.toLowerCase();
-          const titleMatch = title.toLowerCase().includes(term);
-          const flavorMatch = Array.isArray(flavorsList) && flavorsList.some((f) =>
-            f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
-          );
-          const strengthMatch = Array.isArray(strengthsList) && strengthsList.some((s) =>
-            s.value.toLowerCase().includes(term) || s.label.toLowerCase().includes(term)
-          );
-          return titleMatch || flavorMatch || strengthMatch;
-        } catch (e) {
-          return true;
-        }
-      };
-
       return (
         <div className="bg-black text-light min-vh-100">
           <Navbar
@@ -1596,13 +1509,6 @@
             onOpenAdminOrders={() => setIsPinModalOpen(true)}
           />
           <Hero />
-
-          <ProductSearchBar
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
 
           <section className="news-input p-4">
             <div className="container">
@@ -1615,8 +1521,7 @@
           <About />
 
           {/* Smokeless Section */}
-          {(activeCategory === 'all' || activeCategory === 'smokeless') && filterMatches('Smokeless Selection', smokelessFlavors, smokelessStrengths) && (
-            <ProductSection
+          <ProductSection
               id="smokeless"
               title="Smokeless Selection"
               imgSrc="./app/img/about/smokeless_about.webp"
@@ -1644,11 +1549,9 @@
                 }
               />
             </ProductSection>
-          )}
 
           {/* Shots Section */}
-          {(activeCategory === 'all' || activeCategory === 'shots') && filterMatches('Shots Selection', shotsFlavors, shotsStrengths) && (
-            <ProductSection
+          <ProductSection
               id="shots"
               title="Shots Selection"
               imgSrc="./app/img/about/shots_selection_500x332.webp"
@@ -1676,11 +1579,9 @@
                 }
               />
             </ProductSection>
-          )}
 
           {/* Contender Section */}
-          {(activeCategory === 'all' || activeCategory === 'cocktails') && filterMatches('Contender Selection', shotsFlavors, contenderStrengths) && (
-            <ProductSection
+          <ProductSection
               id="cocktails"
               title="Contender Selection"
               imgSrc="./app/img/about/club_feco_500x282.webp"
@@ -1709,11 +1610,9 @@
                 }
               />
             </ProductSection>
-          )}
 
           {/* Chocolate Section */}
-          {(activeCategory === 'all' || activeCategory === 'chocolates') && filterMatches('Chocolate Selection', chocolateFlavors, chocolateStrengths) && (
-            <ProductSection
+          <ProductSection
               id="chocolates"
               title="Chocolate Selection"
               imgSrc="./app/img/about/chocolate_about_500x391.webp"
@@ -1741,7 +1640,6 @@
                 }
               />
             </ProductSection>
-          )}
 
           <section className="bg-black py-5">
             <div

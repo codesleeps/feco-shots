@@ -10,7 +10,6 @@ import CartDrawer from './components/CartDrawer';
 import AdminOrdersModal from './components/AdminOrdersModal';
 import AgeGateModal from './components/AgeGateModal';
 import OwnerPinModal from './components/OwnerPinModal';
-import ProductSearchBar from './components/ProductSearchBar';
 
 export default function App() {
   const [showScrollBtn, setShowScrollBtn] = useState(false);
@@ -18,8 +17,6 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isAdminOrdersOpen, setIsAdminOrdersOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
   const [orders, setOrders] = useState(() => {
     try {
       const saved = localStorage.getItem('feco_orders');
@@ -28,23 +25,6 @@ export default function App() {
       return [];
     }
   });
-
-  const filterMatches = (title, flavorsList, strengthsList) => {
-    try {
-      if (!searchTerm) return true;
-      const term = searchTerm.toLowerCase();
-      const titleMatch = title.toLowerCase().includes(term);
-      const flavorMatch = Array.isArray(flavorsList) && flavorsList.some((f) =>
-        f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
-      );
-      const strengthMatch = Array.isArray(strengthsList) && strengthsList.some((s) =>
-        s.value.toLowerCase().includes(term) || s.label.toLowerCase().includes(term)
-      );
-      return titleMatch || flavorMatch || strengthMatch;
-    } catch (e) {
-      return true;
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,15 +37,6 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (searchTerm.trim()) {
-      const firstSection = document.querySelector('section[id]');
-      if (firstSection) {
-        firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-  }, [searchTerm]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -323,14 +294,6 @@ export default function App() {
       />
       <Hero />
 
-      {/* Interactive Search & Category Filter Bar */}
-      <ProductSearchBar
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
-      />
-
       <section className="news-input p-4">
         <div className="container">
           <div className="d-md-flex justify-content-between align-items-center">
@@ -342,8 +305,7 @@ export default function App() {
       <About />
 
       {/* Smokeless Section */}
-      {(activeCategory === 'all' || activeCategory === 'smokeless') && filterMatches('Smokeless Selection', smokelessFlavors, smokelessStrengths) && (
-        <ProductSection
+      <ProductSection
           id="smokeless"
           title="Smokeless Selection"
           imgSrc="/img/about/smokeless_about.webp"
@@ -369,13 +331,11 @@ export default function App() {
             onAddToCart={(flavor, strength, amount) => 
               handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
             }
-          />
-        </ProductSection>
-      )}
+            />
+          </ProductSection>
 
       {/* Shots Section */}
-      {(activeCategory === 'all' || activeCategory === 'shots') && filterMatches('Shots Selection', shotsFlavors, shotsStrengths) && (
-        <ProductSection
+      <ProductSection
           id="shots"
           title="Shots Selection"
           imgSrc="/img/about/shots_selection_500x332.webp"
@@ -403,10 +363,8 @@ export default function App() {
             }
           />
         </ProductSection>
-      )}
 
       {/* Cocktails Section */}
-      {(activeCategory === 'all' || activeCategory === 'cocktails') && filterMatches('Contender Selection', shotsFlavors, contenderStrengths) && (
         <ProductSection
           id="cocktails"
           title="Contender Selection"
@@ -436,10 +394,8 @@ export default function App() {
             }
           />
         </ProductSection>
-      )}
 
       {/* Chocolate Section */}
-      {(activeCategory === 'all' || activeCategory === 'chocolates') && filterMatches('Chocolate Selection', chocolateFlavors, chocolateStrengths) && (
         <ProductSection
           id="chocolates"
           title="Chocolate Selection"
@@ -468,7 +424,6 @@ export default function App() {
             }
           />
         </ProductSection>
-      )}
 
       {/* Carousel */}
       <section className="bg-black py-5">
