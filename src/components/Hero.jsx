@@ -19,7 +19,7 @@ export default function Hero() {
               </div>
 
               <a
-                href="https://www.bccannabisstores.com/"
+                href="https://www.medicann.co.uk/eligibility"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="animated-button1 mt-5"

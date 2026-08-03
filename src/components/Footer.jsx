@@ -70,13 +70,13 @@ export default function Footer() {
                 <i className="fas fa-home me-3 text-light"></i> Brumstadam
               </p>
               <p>
-                <i className="fas fa-envelope me-3 text-light"></i> info@example.com
+                <i className="fas fa-envelope me-3 text-light"></i> bmsc@example.com
               </p>
               <p>
-                <i className="fas fa-phone me-3 text-light"></i> + 0121 456788
+                <i className="fas fa-phone me-3 text-light"></i> + 0121 420710
               </p>
               <p>
-                <i className="fas fa-print me-3 text-light"></i> + 0121 456789
+                <i className="fas fa-print me-3 text-light"></i> + 0777 420710
               </p>
             </div>
 
