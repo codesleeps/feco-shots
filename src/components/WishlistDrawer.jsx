@@ -2,11 +2,12 @@ import React from 'react';
 
 export default function WishlistDrawer({ isOpen, onClose, wishlist, onRemove, onMoveToCart }) {
   return (
-    <div className={`cart-backdrop${isOpen ? ' show' : ''}`} onClick={onClose} style={{ zIndex: 1040 }}></div>
-    <div
-      className={`cart-drawer${isOpen ? ' open' : ''}`}
-      style={{ zIndex: 1045 }}
-    >
+    <React.Fragment>
+      <div className={`cart-backdrop${isOpen ? ' show' : ''}`} onClick={onClose} style={{ zIndex: 1040 }}></div>
+      <div
+        className={`cart-drawer${isOpen ? ' open' : ''}`}
+        style={{ zIndex: 1045 }}
+      >
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom border-warning">
         <h5 className="mb-0 text-warning">Wishlist</h5>
         <button onClick={onClose} className="btn btn-link text-light">✕</button>
@@ -28,6 +29,7 @@ export default function WishlistDrawer({ isOpen, onClose, wishlist, onRemove, on
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </React.Fragment>
   );
 }

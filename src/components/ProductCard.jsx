@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import ProductReviews from './ProductReviews';
+import NotifyMeButton from './NotifyMeButton';
 
 export default function ProductCard({
   imgSrc,
