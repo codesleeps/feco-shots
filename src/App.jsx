@@ -363,13 +363,6 @@ export default function App() {
       />
       <Hero />
 
-      <section className="news-input p-4">
-        <div className="container">
-          <div className="d-md-flex justify-content-between align-items-center">
-            <h2 className="mb-3 mb-md-0">Contact your local supplier...</h2>
-          </div>
-        </div>
-      </section>
 
       <NewsletterSignup />
       <DeliveryZoneChecker onDeliveryAvailable={setDeliveryAvailable} />
