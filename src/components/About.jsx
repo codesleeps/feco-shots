@@ -7,7 +7,7 @@ export default function About() {
         <div className="row">
           <div className="col-lg-4">
             <img
-              src="/app/img/about/about_club_500x334.webp"
+              src="./img/about/about_club_500x334.webp"
               width="500"
               height="334"
               loading="lazy"

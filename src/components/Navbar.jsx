@@ -116,7 +116,7 @@ export default function Navbar({ cartCount, onCartClick, pendingOrdersCount = 0,
               aria-label="Club Feco Logo"
             >
               <img
-                src="/app/img/logo/logo113x113.png"
+                src="./img/logo/logo113x113.png"
                 className="rounded-circle"
                 width="75"
                 height="75"

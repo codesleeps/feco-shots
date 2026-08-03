@@ -271,46 +271,46 @@ export default function App() {
 
   // Image Mapping Sets (Map option value to local image file path)
   const smokelessImages = {
-    Pineapple: '/img/smokeless/Smokeless - Pineapple.png',
-    Mango: '/img/smokeless/Smokeless - Mango.png',
-    Apple: '/img/smokeless/Smokeless - Apple.png',
-    Orange: '/img/smokeless/Smokeless - Orange.png',
-    Grape: '/img/smokeless/Smokeless - Grape.png'
+    Pineapple: './img/smokeless/Smokeless - Pineapple.png',
+    Mango: './img/smokeless/Smokeless - Mango.png',
+    Apple: './img/smokeless/Smokeless - Apple.png',
+    Orange: './img/smokeless/Smokeless - Orange.png',
+    Grape: './img/smokeless/Smokeless - Grape.png'
   };
 
   const shotsImages = {
-    'Fruit Punch': '/img/shots/FECO SHOTS - FRUIT PUNCH.png',
-    Strawberry: '/img/shots/FECO_SHOTS_STRAWBERRY.png',
-    'Kola Champagne': '/img/shots/FECO SHOTS - KOLA CHAMPAGNE.png',
-    Grape: '/img/shots/FECO SHOTS - GRAPE (2).png',
-    Pineapple: '/img/shots/FECO SHOTS - PINEAPPLE.png',
-    Mango: '/img/shots/FECO SHOTS - MANGO.png',
-    'Pineapple & Ginger': '/img/shots/FECO SHOTS - PINEAPPLE & GINGER.png',
-    'S&G': '/img/shots/FECO SHOTS - SORREL & GINGER_LITE.png',
-    Cherry: '/img/shots/FECO_SHOTS_CHERRY_LITE.webp'
+    'Fruit Punch': './img/shots/FECO SHOTS - FRUIT PUNCH.png',
+    Strawberry: './img/shots/FECO_SHOTS_STRAWBERRY.png',
+    'Kola Champagne': './img/shots/FECO SHOTS - KOLA CHAMPAGNE.png',
+    Grape: './img/shots/FECO SHOTS - GRAPE (2).png',
+    Pineapple: './img/shots/FECO SHOTS - PINEAPPLE.png',
+    Mango: './img/shots/FECO SHOTS - MANGO.png',
+    'Pineapple & Ginger': './img/shots/FECO SHOTS - PINEAPPLE & GINGER.png',
+    'S&G': './img/shots/FECO SHOTS - SORREL & GINGER_LITE.png',
+    Cherry: './img/shots/FECO_SHOTS_CHERRY_LITE.webp'
   };
 
   const contenderImages = {
-    'Fruit Punch': '/img/contender/CONTENDER FRUIT PUNCH (2).png',
-    Strawberry: '/img/contender/CONTENDER STRAWBERRY (2).png',
-    'Kola Champagne': '/img/contender/CONTENDER KOLA CHAMPAGNE (2).png',
-    Grape: '/img/contender/CONTENDER GRAPE (2).png',
-    Pineapple: '/img/contender/CONTENDER PINEAPPLE (2).png',
-    Mango: '/img/contender/CONTENDER_MANGO400x280.webp',
-    'S&G': '/img/contender/CONTENDER S&G.png',
-    Cherry: '/img/contender/CONTENDER CHERRY (2).png'
+    'Fruit Punch': './img/contender/CONTENDER FRUIT PUNCH (2).png',
+    Strawberry: './img/contender/CONTENDER STRAWBERRY (2).png',
+    'Kola Champagne': './img/contender/CONTENDER KOLA CHAMPAGNE (2).png',
+    Grape: './img/contender/CONTENDER GRAPE (2).png',
+    Pineapple: './img/contender/CONTENDER PINEAPPLE (2).png',
+    Mango: './img/contender/CONTENDER_MANGO400x280.webp',
+    'S&G': './img/contender/CONTENDER S&G.png',
+    Cherry: './img/contender/CONTENDER CHERRY (2).png'
   };
 
   const chocolateImages = {
-    'Baileys & Honeycomb': './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
-    Cashews: './public/img/chocolates/CASHEWS 250MG.png',
-    'Dry Roasted Nuts': './public/img/chocolates/DRY ROASTED NUTS 250MG.png',
-    'Fruit & Nut': './public/img/chocolates/FRUIT & NUT 250MG.png',
-    'Honey Roasted Nuts': './public/img/chocolates/HONEY ROASTED NUTS 250MG.png',
-    'Milk Chocolate': './public/img/chocolates/MILK CHOCOLATE 250MG.png',
-    'Rum & Raisin': './public/img/chocolates/RUM & RAISIN 250MG.png',
-    'Vodka & Cranberries': './public/img/chocolates/VODKA & CRANBERRIES 250MG.png',
-    'Whiskey & Fruits': './public/img/chocolates/WHISKEY & FRUITS  500MG.png'
+    'Baileys & Honeycomb': './public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png',
+    Cashews: './public./img/chocolates/CASHEWS 250MG.png',
+    'Dry Roasted Nuts': './public./img/chocolates/DRY ROASTED NUTS 250MG.png',
+    'Fruit & Nut': './public./img/chocolates/FRUIT & NUT 250MG.png',
+    'Honey Roasted Nuts': './public./img/chocolates/HONEY ROASTED NUTS 250MG.png',
+    'Milk Chocolate': './public./img/chocolates/MILK CHOCOLATE 250MG.png',
+    'Rum & Raisin': './public./img/chocolates/RUM & RAISIN 250MG.png',
+    'Vodka & Cranberries': './public./img/chocolates/VODKA & CRANBERRIES 250MG.png',
+    'Whiskey & Fruits': './public./img/chocolates/WHISKEY & FRUITS  500MG.png'
   };
 
   return (
@@ -346,7 +346,7 @@ export default function App() {
         <ProductSection
           id="smokeless"
           title="Smokeless Selection"
-          imgSrc="/img/about/smokeless_about.webp"
+          imgSrc="../img/about/smokeless_about.webp"
           imgAlt="CBD Fresh Juices in Glasses"
           subTitle="CBD with a Burst of Freshness"
           description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
@@ -358,7 +358,7 @@ export default function App() {
           ]}
         >
           <ProductCard
-            imgSrc="/img/smokeless/Smokeless - Pineapple.png"
+            imgSrc="./img/smokeless/Smokeless - Pineapple.png"
             imgAlt="CBD Fresh Fruit Juices"
             flavors={smokelessFlavors}
             strengths={smokelessStrengths}
@@ -367,7 +367,7 @@ export default function App() {
             buttonId="feedbackButtonSmokeless"
             imageMap={smokelessImages}
             onAddToCart={(flavor, strength, amount) => 
-              handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
+              handleAddToCart('Smokeless Juice', './img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
             }
           />
         </ProductSection>
@@ -378,7 +378,7 @@ export default function App() {
         <ProductSection
           id="shots"
           title="Shots Selection"
-          imgSrc="/img/about/shots_selection_500x332.webp"
+          imgSrc="./img/about/shots_selection_500x332.webp"
           imgAlt="CBD Tincture Bottles"
           subTitle="Pure, Potent, and Packed with Benefits"
           description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
@@ -390,7 +390,7 @@ export default function App() {
           ]}
         >
           <ProductCard
-            imgSrc="/img/shots/FECO SHOTS - FRUIT PUNCH.png"
+            imgSrc="./img/shots/FECO SHOTS - FRUIT PUNCH.png"
             imgAlt="Feco Shots Syrups"
             flavors={shotsFlavors}
             strengths={shotsStrengths}
@@ -399,7 +399,7 @@ export default function App() {
             buttonId="feedbackButtonShots"
             imageMap={shotsImages}
             onAddToCart={(flavor, strength, amount) => 
-              handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
+              handleAddToCart('Feco Shot', './img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
             }
           />
         </ProductSection>
@@ -410,7 +410,7 @@ export default function App() {
         <ProductSection
           id="cocktails"
           title="Contender Selection"
-          imgSrc="/img/about/club_feco_500x282.webp"
+          imgSrc="./img/about/club_feco_500x282.webp"
           imgAlt="Various CBD drinks in glasses"
           subTitle="Embrace the spirit of adventure"
           description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
@@ -423,7 +423,7 @@ export default function App() {
           ]}
         >
           <ProductCard
-            imgSrc="/img/contender/CONTENDER FRUIT PUNCH (2).png"
+            imgSrc="./img/contender/CONTENDER FRUIT PUNCH (2).png"
             imgAlt="CBD cocktails"
             flavors={shotsFlavors}
             strengths={contenderStrengths}
@@ -432,7 +432,7 @@ export default function App() {
             buttonId="feedbackButtonCocktails"
             imageMap={contenderImages}
             onAddToCart={(flavor, strength, amount) => 
-              handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
+              handleAddToCart('Contender Cocktail', './img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
             }
           />
         </ProductSection>
@@ -443,7 +443,7 @@ export default function App() {
         <ProductSection
           id="chocolates"
           title="Chocolate Selection"
-          imgSrc="/img/about/chocolate_about_500x391.webp"
+          imgSrc="./img/about/chocolate_about_500x391.webp"
           imgAlt="CBD Chocolate Selection"
           subTitle="CBD-Infused Chocolates: A Decadent Delight"
           description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
@@ -455,7 +455,7 @@ export default function App() {
           ]}
         >
           <ProductCard
-            imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
+            imgSrc="./public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
             imgAlt="CBD chocolates"
             flavors={chocolateFlavors}
             strengths={chocolateStrengths}
@@ -464,7 +464,7 @@ export default function App() {
             buttonId="feedbackButtonChocolate"
             imageMap={chocolateImages}
             onAddToCart={(flavor, strength, amount) => 
-              handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
+              handleAddToCart('Infused Chocolate Bar', './public./img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
             }
           />
         </ProductSection>
@@ -501,7 +501,7 @@ export default function App() {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <img
-                src="/img/carousel/cannabisPlant.webp"
+                src="../img/carousel/cannabisPlant.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="Cannabis Plant"
@@ -510,7 +510,7 @@ export default function App() {
             </div>
             <div className="carousel-item">
               <img
-                src="/img/about/chocolate_about_500x391.webp"
+                src="../img/about/chocolate_about_500x391.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="CBD Chocolates"
@@ -519,7 +519,7 @@ export default function App() {
             </div>
             <div className="carousel-item">
               <img
-                src="/img/carousel/tincturePipe.webp"
+                src="../img/carousel/tincturePipe.webp"
                 loading="lazy"
                 className="d-block w-100 rounded"
                 alt="CBD Tincture Collection"

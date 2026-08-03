@@ -6,7 +6,7 @@ export default function Hero() {
       <div
         className="p-5 text-center bg-image"
         style={{
-          backgroundImage: "url('/app/img/logo/hero2_501x301.webp')",
+          backgroundImage: "url('./img/logo/hero2_501x301.webp')",
           height: '500px',
         }}
       >

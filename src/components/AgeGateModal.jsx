@@ -30,7 +30,7 @@ export default function AgeGateModal() {
           <div className="modal-content bg-black border border-warning text-light p-4 text-center">
             <div className="mb-3">
               <img
-                src="./app/img/logo/leaf.png"
+                src="./img/logo/leaf.png"
                 alt="Club Feco Leaf Logo"
                 width="60"
                 height="55"
