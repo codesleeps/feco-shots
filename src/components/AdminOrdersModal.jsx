@@ -3,8 +3,17 @@ import React, { useState } from 'react';
 export default function AdminOrdersModal({ isOpen, onClose, orders, onUpdateStatus, onDeleteOrder, onClearCompleted }) {
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [waPhone, setWaPhone] = useState(() => localStorage.getItem('feco_whatsapp_number') || '447000000000');
+  const [waSaved, setWaSaved] = useState(false);
 
   if (!isOpen) return null;
+
+  const handleSaveWaPhone = (e) => {
+    e.preventDefault();
+    localStorage.setItem('feco_whatsapp_number', waPhone.trim());
+    setWaSaved(true);
+    setTimeout(() => setWaSaved(false), 2500);
+  };
 
   const filteredOrders = orders.filter((order) => {
     const matchesStatus = filterStatus === 'All' || order.status === filterStatus;
@@ -54,6 +63,32 @@ export default function AdminOrdersModal({ isOpen, onClose, orders, onUpdateStat
 
             {/* Modal Body */}
             <div className="modal-body p-4">
+              {/* WhatsApp Store Contact Bar */}
+              <div className="bg-dark border border-secondary rounded p-2 mb-3">
+                <form onSubmit={handleSaveWaPhone} className="row g-2 align-items-center">
+                  <div className="col-sm-4">
+                    <span className="small text-warning fw-bold d-flex align-items-center">
+                      <i className="fab fa-whatsapp text-success me-1 fs-5"></i> Store WhatsApp Number:
+                    </span>
+                  </div>
+                  <div className="col-sm-5">
+                    <input
+                      type="text"
+                      placeholder="e.g. 447123456789"
+                      value={waPhone}
+                      onChange={(e) => setWaPhone(e.target.value)}
+                      className="form-control form-control-sm bg-black text-light border-secondary"
+                    />
+                  </div>
+                  <div className="col-sm-3 d-flex align-items-center gap-2">
+                    <button type="submit" className="btn btn-warning btn-sm fw-bold">
+                      Save Number
+                    </button>
+                    {waSaved && <span className="text-success small"><i className="fas fa-check"></i> Saved!</span>}
+                  </div>
+                </form>
+              </div>
+
               {/* Controls & Search */}
               <div className="row g-3 mb-4">
                 <div className="col-md-6">
