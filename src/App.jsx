@@ -29,6 +29,19 @@ export default function App() {
     }
   });
 
+  const filterMatches = (title, flavorsList, strengthsList) => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    const titleMatch = title.toLowerCase().includes(term);
+    const flavorMatch = flavorsList.some((f) =>
+      f.value.toLowerCase().includes(term) || f.label.toLowerCase().includes(term)
+    );
+    const strengthMatch = strengthsList?.some((s) =>
+      s.value.toLowerCase().includes(term) || s.label.toLowerCase().includes(term)
+    );
+    return titleMatch || flavorMatch || strengthMatch;
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -40,6 +53,15 @@ export default function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      const firstSection = document.querySelector('section[id]');
+      if (firstSection) {
+        firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [searchTerm]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -316,125 +338,133 @@ export default function App() {
       <About />
 
       {/* Smokeless Section */}
-      <ProductSection
-        id="smokeless"
-        title="Smokeless Selection"
-        imgSrc="/img/about/smokeless_about.webp"
-        imgAlt="CBD Fresh Juices in Glasses"
-        subTitle="CBD with a Burst of Freshness"
-        description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
-        bullets={[
-          '100% Pure & Natural.',
-          'Various strengths available',
-          'A Refreshing Twist on Wellness',
-          'Vegan Friendly'
-        ]}
-      >
-        <ProductCard
-          imgSrc="/img/smokeless/Smokeless - Pineapple.png"
-          imgAlt="CBD Fresh Fruit Juices"
-          flavors={smokelessFlavors}
-          strengths={smokelessStrengths}
-          amounts={genericAmounts}
-          borderColorClass="border-warning"
-          buttonId="feedbackButtonSmokeless"
-          imageMap={smokelessImages}
-          onAddToCart={(flavor, strength, amount) => 
-            handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
-          }
-        />
-      </ProductSection>
+      {(activeCategory === 'all' || activeCategory === 'smokeless') && filterMatches('Smokeless Selection', smokelessFlavors, smokelessStrengths) && (
+        <ProductSection
+          id="smokeless"
+          title="Smokeless Selection"
+          imgSrc="/img/about/smokeless_about.webp"
+          imgAlt="CBD Fresh Juices in Glasses"
+          subTitle="CBD with a Burst of Freshness"
+          description="Our CBD-infused fresh juices offer a delightful way to incorporate CBD into your daily routine. Sourced from premium hemp extracts, our CBD is blended with the purest, juiciest fruits to create a truly refreshing and revitalizing experience. Each sip provides a moment of relaxation and rejuvenation, making it the perfect addition to your morning routine or as a pick-me-up throughout the day."
+          bullets={[
+            '100% Pure & Natural.',
+            'Various strengths available',
+            'A Refreshing Twist on Wellness',
+            'Vegan Friendly'
+          ]}
+        >
+          <ProductCard
+            imgSrc="/img/smokeless/Smokeless - Pineapple.png"
+            imgAlt="CBD Fresh Fruit Juices"
+            flavors={smokelessFlavors}
+            strengths={smokelessStrengths}
+            amounts={genericAmounts}
+            borderColorClass="border-warning"
+            buttonId="feedbackButtonSmokeless"
+            imageMap={smokelessImages}
+            onAddToCart={(flavor, strength, amount) => 
+              handleAddToCart('Smokeless Juice', '/img/smokeless/Smokeless - Pineapple.png', flavor, strength, amount, 10.00, calculateSmokelessPrice, smokelessImages)
+            }
+          />
+        </ProductSection>
+      )}
 
       {/* Shots Section */}
-      <ProductSection
-        id="shots"
-        title="Shots Selection"
-        imgSrc="/img/about/shots_selection_500x332.webp"
-        imgAlt="CBD Tincture Bottles"
-        subTitle="Pure, Potent, and Packed with Benefits"
-        description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
-        bullets={[
-          '100% Pure Sugar Cane Rum.',
-          'Rapid Long Lasting Effects',
-          'A Unique Blend Formulated by A.I.',
-          'Official Collector\'s Edition Rum'
-        ]}
-      >
-        <ProductCard
-          imgSrc="/img/shots/FECO SHOTS - FRUIT PUNCH.png"
-          imgAlt="Feco Shots Syrups"
-          flavors={shotsFlavors}
-          strengths={shotsStrengths}
-          amounts={genericAmounts}
-          borderColorClass="border-warning"
-          buttonId="feedbackButtonShots"
-          imageMap={shotsImages}
-          onAddToCart={(flavor, strength, amount) => 
-            handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
-          }
-        />
-      </ProductSection>
+      {(activeCategory === 'all' || activeCategory === 'shots') && filterMatches('Shots Selection', shotsFlavors, shotsStrengths) && (
+        <ProductSection
+          id="shots"
+          title="Shots Selection"
+          imgSrc="/img/about/shots_selection_500x332.webp"
+          imgAlt="CBD Tincture Bottles"
+          subTitle="Pure, Potent, and Packed with Benefits"
+          description="We've taken the last 7 years to perfect our recipe because we specialize in only providing the Highest Quality Best Tasting infused syrups. No other syrup compares to Feco Shots! Just like our other CBD products, our canna-infused syrups undergo rigorous quality testing to ensure they meet Our High Standards. We take pride in delivering a pure and potent experience that you can trust."
+          bullets={[
+            '100% Pure Sugar Cane Rum.',
+            'Rapid Long Lasting Effects',
+            'A Unique Blend Formulated by A.I.',
+            'Official Collector\'s Edition Rum'
+          ]}
+        >
+          <ProductCard
+            imgSrc="/img/shots/FECO SHOTS - FRUIT PUNCH.png"
+            imgAlt="Feco Shots Syrups"
+            flavors={shotsFlavors}
+            strengths={shotsStrengths}
+            amounts={genericAmounts}
+            borderColorClass="border-warning"
+            buttonId="feedbackButtonShots"
+            imageMap={shotsImages}
+            onAddToCart={(flavor, strength, amount) => 
+              handleAddToCart('Feco Shot', '/img/shots/FECO SHOTS - FRUIT PUNCH.png', flavor, strength, amount, 20.00, calculateShotsPrice, shotsImages)
+            }
+          />
+        </ProductSection>
+      )}
 
       {/* Cocktails Section */}
-      <ProductSection
-        id="cocktails"
-        title="Contender Selection"
-        imgSrc="/img/about/club_feco_500x282.webp"
-        imgAlt="Various CBD drinks in glasses"
-        subTitle="Embrace the spirit of adventure"
-        description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
-        bullets={[
-          '100% Pure Sugar Cane Rum',
-          'An Exceptional Blend Perfected by Artificial Intelligence',
-          'Encounter Swift and Enduring Pleasures',
-          'The Apex of Distinction',
-          'An Official Collector\'s Edition Rum'
-        ]}
-      >
-        <ProductCard
-          imgSrc="/img/contender/CONTENDER FRUIT PUNCH (2).png"
-          imgAlt="CBD cocktails"
-          flavors={shotsFlavors}
-          strengths={contenderStrengths}
-          amounts={genericAmounts}
-          borderColorClass="border-success"
-          buttonId="feedbackButtonCocktails"
-          imageMap={contenderImages}
-          onAddToCart={(flavor, strength, amount) => 
-            handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
-          }
-        />
-      </ProductSection>
+      {(activeCategory === 'all' || activeCategory === 'cocktails') && filterMatches('Contender Selection', shotsFlavors, contenderStrengths) && (
+        <ProductSection
+          id="cocktails"
+          title="Contender Selection"
+          imgSrc="/img/about/club_feco_500x282.webp"
+          imgAlt="Various CBD drinks in glasses"
+          subTitle="Embrace the spirit of adventure"
+          description="Prepare to transcend ordinary spirits with our unparalleled fusion of high-end oils and Jamaican White Rum. Meticulously crafted for versatility, it seamlessly combines with a multitude of spirits and cocktails, offering a truly unique and indulgent experience."
+          bullets={[
+            '100% Pure Sugar Cane Rum',
+            'An Exceptional Blend Perfected by Artificial Intelligence',
+            'Encounter Swift and Enduring Pleasures',
+            'The Apex of Distinction',
+            'An Official Collector\'s Edition Rum'
+          ]}
+        >
+          <ProductCard
+            imgSrc="/img/contender/CONTENDER FRUIT PUNCH (2).png"
+            imgAlt="CBD cocktails"
+            flavors={shotsFlavors}
+            strengths={contenderStrengths}
+            amounts={genericAmounts}
+            borderColorClass="border-success"
+            buttonId="feedbackButtonCocktails"
+            imageMap={contenderImages}
+            onAddToCart={(flavor, strength, amount) => 
+              handleAddToCart('Contender Cocktail', '/img/contender/CONTENDER FRUIT PUNCH (2).png', flavor, strength, amount, 80.00, calculateContenderPrice, contenderImages)
+            }
+          />
+        </ProductSection>
+      )}
 
       {/* Chocolate Section */}
-      <ProductSection
-        id="chocolates"
-        title="Chocolate Selection"
-        imgSrc="/img/about/chocolate_about_500x391.webp"
-        imgAlt="CBD Chocolate Selection"
-        subTitle="CBD-Infused Chocolates: A Decadent Delight"
-        description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
-        bullets={[
-          'Delicious Wellness',
-          'Various strengths available',
-          'New Alcohol Infused Chocolates',
-          'Wide selection available'
-        ]}
-      >
-        <ProductCard
-          imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
-          imgAlt="CBD chocolates"
-          flavors={chocolateFlavors}
-          strengths={chocolateStrengths}
-          amounts={genericAmounts}
-          borderColorClass="border-warning"
-          buttonId="feedbackButtonChocolate"
-          imageMap={chocolateImages}
-          onAddToCart={(flavor, strength, amount) => 
-            handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
-          }
-        />
-      </ProductSection>
+      {(activeCategory === 'all' || activeCategory === 'chocolates') && filterMatches('Chocolate Selection', chocolateFlavors, chocolateStrengths) && (
+        <ProductSection
+          id="chocolates"
+          title="Chocolate Selection"
+          imgSrc="/img/about/chocolate_about_500x391.webp"
+          imgAlt="CBD Chocolate Selection"
+          subTitle="CBD-Infused Chocolates: A Decadent Delight"
+          description="We use a variety of chocolates according to each recipe to ensure that we achieve a unique set of chocolates for our infusion."
+          bullets={[
+            'Delicious Wellness',
+            'Various strengths available',
+            'New Alcohol Infused Chocolates',
+            'Wide selection available'
+          ]}
+        >
+          <ProductCard
+            imgSrc="./public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png"
+            imgAlt="CBD chocolates"
+            flavors={chocolateFlavors}
+            strengths={chocolateStrengths}
+            amounts={genericAmounts}
+            borderColorClass="border-warning"
+            buttonId="feedbackButtonChocolate"
+            imageMap={chocolateImages}
+            onAddToCart={(flavor, strength, amount) => 
+              handleAddToCart('Infused Chocolate Bar', './public/img/chocolates/BAILEYS & HONEYCOMB 250MG.png', flavor, strength, amount, 10.00, calculateChocolatePrice, chocolateImages)
+            }
+          />
+        </ProductSection>
+      )}
 
       {/* Carousel */}
       <section className="bg-black py-5">
