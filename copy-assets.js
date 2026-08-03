@@ -29,6 +29,7 @@ function copyDir(src, dest) {
 
 try {
   copyDir(path.join(__dirname, 'app', 'img'), path.join(__dirname, 'public', 'img'));
+  copyDir(path.join(__dirname, 'app', 'css'), path.join(__dirname, 'public', 'css'));
   console.log('ASSETS COPY COMPLETE');
 } catch (e) {
   console.error('Error during copy:', e.message);
